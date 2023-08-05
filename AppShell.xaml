@@ -1,0 +1,27 @@
+<Shell
+    x:Class="Volleyball_Teams.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:app="clr-namespace:Volleyball_Teams"
+    xmlns:local="clr-namespace:Volleyball_Teams.Views"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    Title="Volleyball_Teams"
+    FlyoutBehavior="Disabled">
+
+    <TabBar>
+
+        <ShellContent
+            ContentTemplate="{DataTemplate local:ItemsPage}"
+            Icon="{FontImage FontFamily=FontAwesomeSolid,
+                             Color=Black,
+                             Glyph={x:Static style:FontAwesomeSolid.User}}"
+            Route="ItemsPage" />
+        <ShellContent
+            ContentTemplate="{DataTemplate local:AboutPage}"
+            Icon="{FontImage FontFamily=FontAwesomeSolid,
+                             Color=Black,
+                             Glyph={x:Static style:FontAwesomeSolid.VolleyballBall}}"
+            Route="AboutPage" />
+    </TabBar>
+
+</Shell>

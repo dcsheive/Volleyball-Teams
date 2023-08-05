@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Volleyball_Teams.Views.AboutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:Volleyball_Teams.Models"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
+    xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
+    Title="{Binding Title}">
+
+    <Grid RowDefinitions="*,12*">
+        <FlexLayout
+            Grid.Row="0"
+            Margin="10,0"
+            Direction="Row"
+            JustifyContent="SpaceEvenly">
+            <Frame
+                Padding="5"
+                BackgroundColor="Transparent"
+                BorderColor="Transparent">
+                <Image
+                    Grid.Column="0"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                    <Image.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.Minus}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </Image.Source>
+                </Image>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding RemoveTeamCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+            <Label VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Teams: " />
+                        <Span Text="{Binding NumTeams}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Frame
+                Padding="5"
+                BackgroundColor="Transparent"
+                BorderColor="Transparent">
+                <Image
+                    Grid.Column="0"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                    <Image.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.Plus}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </Image.Source>
+                </Image>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AddTeamCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+
+        </FlexLayout>
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding LoadPlayersCommand}"
+            CommandParameter="False"
+            IsRefreshing="{Binding IsBusy}">
+            <CollectionView
+                IsGrouped="True"
+                ItemsSource="{Binding Teams}"
+                SelectionMode="None">
+                <CollectionView.EmptyView>
+
+                    <ActivityIndicator
+                        HorizontalOptions="FillAndExpand"
+                        IsRunning="True"
+                        VerticalOptions="FillAndExpand"
+                        WidthRequest="50"
+                        Color="{StaticResource Primary}" />
+                </CollectionView.EmptyView>
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <Label
+                            Margin="10,5"
+                            FontAttributes="Bold"
+                            FontSize="Large">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Team " />
+                                    <Span Text="{Binding NumberText}" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </DataTemplate>
+                </CollectionView.GroupHeaderTemplate>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label
+                            Grid.Column="1"
+                            Margin="20,0"
+                            FontSize="Small"
+                            LineBreakMode="NoWrap"
+                            MaxLines="1"
+                            Style="{DynamicResource ListItemTextStyle}"
+                            Text="{Binding Name}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+
+</ContentPage>

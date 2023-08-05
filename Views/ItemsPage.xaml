@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Volleyball_Teams.Views.ItemsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Volleyball_Teams.ViewModels"
+    xmlns:model="clr-namespace:Volleyball_Teams.Models"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="BrowseItemsPage"
+    Title="{Binding Title}"
+    NavigationPage.HasBackButton="False">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding AddItemCommand}"
+            IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                        Color=White,
+                                        Glyph={x:Static style:FontAwesomeSolid.PlusCircle}}"
+            Text="Add" />
+    </ContentPage.ToolbarItems>
+    <Grid RowDefinitions="*,13*">
+
+        <FlexLayout
+            Grid.Row="0"
+            Direction="Row"
+            JustifyContent="SpaceBetween">
+            <Label Margin="10,0" VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Players: " />
+                        <Span Text="{Binding Players.Count}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Label Margin="10,0" VerticalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Here: " />
+                        <Span Text="{Binding HereCount}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </FlexLayout>
+        <RefreshView
+            Grid.Row="1"
+            Command="{Binding LoadPlayersCommand}"
+            IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Players}" SelectionMode="None">
+                <CollectionView.EmptyView>
+
+                    <ActivityIndicator
+                        HorizontalOptions="CenterAndExpand"
+                        IsRunning="True"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="50"
+                        Color="{StaticResource Primary}" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="28" />
+                                <RowDefinition Height="28" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.RowSpan="2" Padding="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="32" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Grid.Column="0"
+                                    HorizontalOptions="Fill"
+                                    VerticalOptions="Fill">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FontAwesomeSolid"
+                                            Glyph="{x:Static style:FontAwesomeSolid.User}"
+                                            Size="32"
+                                            Color="{StaticResource Primary}" />
+                                    </Image.Source>
+                                </Image>
+                            </Grid>
+                            <Label
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="Small"
+                                LineBreakMode="NoWrap"
+                                MaxLines="1"
+                                Style="{DynamicResource ListItemTextStyle}"
+                                Text="{Binding Name}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                FontSize="Small"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="1"
+                                Style="{DynamicResource ListItemDetailTextStyle}"
+                                Text="Here">
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding IsHere}"
+                                        TargetType="Label"
+                                        Value="False">
+                                        <Setter Property="Text" Value="Not Here" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <StackLayout
+                                Grid.RowSpan="2"
+                                Grid.Column="2"
+                                HorizontalOptions="End"
+                                Orientation="Horizontal">
+                                <Switch IsToggled="{Binding IsHere}">
+                                    <Switch.Behaviors>
+                                        <toolkit:EventToCommandBehavior
+                                            Command="{Binding Path=BindingContext.ItemSelectionChangedCommand, Source={x:Reference BrowseItemsPage}}"
+                                            CommandParameter="{Binding .}"
+                                            EventName="Toggled" />
+                                    </Switch.Behaviors>
+                                </Switch>
+                                <Frame
+                                    Margin="50,0,0,0"
+                                    Padding="10,0"
+                                    BackgroundColor="Transparent"
+                                    BorderColor="Transparent">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.DeletePlayerCommand, Source={x:Reference BrowseItemsPage}}" CommandParameter="{Binding .}" />
+                                    </Frame.GestureRecognizers>
+                                    <StackLayout
+                                        HorizontalOptions="CenterAndExpand"
+                                        Orientation="Vertical"
+                                        VerticalOptions="CenterAndExpand">
+                                        <Image HorizontalOptions="Fill" VerticalOptions="Fill">
+                                            <Image.Source>
+                                                <FontImageSource
+                                                    FontFamily="FontAwesomeSolid"
+                                                    Glyph="{x:Static style:FontAwesomeSolid.Trash}"
+                                                    Size="32"
+                                                    Color="{StaticResource Primary}" />
+                                            </Image.Source>
+                                        </Image>
+
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+
+                            <Grid.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding IsHere}"
+                                    TargetType="Grid"
+                                    Value="False">
+                                    <Setter Property="BackgroundColor" Value="Gray" />
+                                </DataTrigger>
+                            </Grid.Triggers>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+
+</ContentPage>
