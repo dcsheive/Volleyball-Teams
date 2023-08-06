@@ -52,6 +52,7 @@
                     <ActivityIndicator
                         HorizontalOptions="CenterAndExpand"
                         IsRunning="True"
+                        IsVisible="{Binding DidNotFinishLoading}"
                         VerticalOptions="CenterAndExpand"
                         WidthRequest="50"
                         Color="{StaticResource Primary}" />

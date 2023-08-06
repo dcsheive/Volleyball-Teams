@@ -75,10 +75,10 @@
                 ItemsSource="{Binding Teams}"
                 SelectionMode="None">
                 <CollectionView.EmptyView>
-
                     <ActivityIndicator
                         HorizontalOptions="FillAndExpand"
                         IsRunning="True"
+                        IsVisible="{Binding DidNotFinishLoading}"
                         VerticalOptions="FillAndExpand"
                         WidthRequest="50"
                         Color="{StaticResource Primary}" />

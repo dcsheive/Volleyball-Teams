@@ -29,6 +29,9 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool isBusy;
 
+        [ObservableProperty]
+        private bool didNotFinishLoading;
+
         public AboutViewModel(IDataStore<Player> dataStore, ILogger<ItemsViewModel> logger)
         {
             this.dataStore = dataStore;
@@ -38,6 +41,7 @@ namespace Volleyball_Teams.ViewModels
             Players = new List<Player>();
             IsBusy = false;
             NumTeams = Preferences.Get("NumTeams",2);
+            DidNotFinishLoading = true;
 
         }
 
@@ -106,6 +110,7 @@ namespace Volleyball_Teams.ViewModels
             }
             finally
             {
+                DidNotFinishLoading = false;
                 IsBusy = false;
                 logger.LogDebug("Set IsBusy to false");
             }
@@ -113,8 +118,8 @@ namespace Volleyball_Teams.ViewModels
 
         async public void OnAppearing()
         {
+            DidNotFinishLoading = true;
             await LoadPlayers("True");
-
         }
     }
 }

@@ -15,8 +15,6 @@ namespace Volleyball_Teams.ViewModels
         ILogger<ItemsViewModel> logger;
 
         public ObservableCollection<Player> Players { get; set; }
-        [ObservableProperty]
-        private Player? selectedItem = default;
 
         [ObservableProperty]
         private string? title;
@@ -26,6 +24,9 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private int hereCount;
+
+        [ObservableProperty]
+        private bool didNotFinishLoading;
         public ItemsViewModel(IDataStore<Player> dataStore, ILogger<ItemsViewModel> logger)
         {
             this.dataStore = dataStore;
@@ -33,6 +34,7 @@ namespace Volleyball_Teams.ViewModels
             Title = "Players";
             Players = new ObservableCollection<Player>();
             IsBusy = false;
+            DidNotFinishLoading = true;
         }
 
 
@@ -95,6 +97,7 @@ namespace Volleyball_Teams.ViewModels
             }
             finally
             {
+                DidNotFinishLoading = false;
                 IsBusy = false;
                 logger.LogDebug("Set IsBusy to false");
             }
@@ -102,9 +105,8 @@ namespace Volleyball_Teams.ViewModels
 
         async public void OnAppearing()
         {
-            SelectedItem = null;
+            DidNotFinishLoading = true;
             await LoadPlayers();
-
         }
 
         void UpdateHereCount()
