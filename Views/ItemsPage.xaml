@@ -20,7 +20,6 @@
             Text="Add" />
     </ContentPage.ToolbarItems>
     <Grid RowDefinitions="*,13*">
-
         <FlexLayout
             Grid.Row="0"
             Direction="Row"
@@ -48,7 +47,6 @@
             IsRefreshing="{Binding IsBusy}">
             <CollectionView ItemsSource="{Binding Players}" SelectionMode="None">
                 <CollectionView.EmptyView>
-
                     <ActivityIndicator
                         HorizontalOptions="CenterAndExpand"
                         IsRunning="True"
@@ -62,16 +60,18 @@
                         <Grid Padding="10">
 
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="28" />
-                                <RowDefinition Height="28" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
 
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.RowSpan="2" Padding="10">
+                            <Grid Grid.RowSpan="3" Padding="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32" />
                                 </Grid.ColumnDefinitions>
@@ -113,9 +113,13 @@
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
+                            <template:Stars
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                NumStars="{Binding NumStars}" />
                             <StackLayout
-                                Grid.RowSpan="2"
-                                Grid.Column="2"
+                                Grid.RowSpan="3"
+                                Grid.Column="3"
                                 HorizontalOptions="End"
                                 Orientation="Horizontal">
                                 <Switch IsToggled="{Binding IsHere}">
@@ -127,12 +131,12 @@
                                     </Switch.Behaviors>
                                 </Switch>
                                 <Frame
-                                    Margin="50,0,0,0"
+                                    Margin="30,0,0,0"
                                     Padding="10,0"
                                     BackgroundColor="Transparent"
                                     BorderColor="Transparent">
                                     <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.DeletePlayerCommand, Source={x:Reference BrowseItemsPage}}" CommandParameter="{Binding .}" />
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BrowseItemsPage}}" CommandParameter="{Binding .}" />
                                     </Frame.GestureRecognizers>
                                     <StackLayout
                                         HorizontalOptions="CenterAndExpand"
@@ -142,12 +146,11 @@
                                             <Image.Source>
                                                 <FontImageSource
                                                     FontFamily="FontAwesomeSolid"
-                                                    Glyph="{x:Static style:FontAwesomeSolid.Trash}"
+                                                    Glyph="{x:Static style:FontAwesomeSolid.Edit}"
                                                     Size="32"
                                                     Color="{StaticResource Primary}" />
                                             </Image.Source>
                                         </Image>
-
                                     </StackLayout>
                                 </Frame>
                             </StackLayout>

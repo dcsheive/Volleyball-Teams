@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Volleyball_Teams.Views.Templates.Stars"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <StackLayout Orientation="Horizontal">
+        <Image x:Name="Star1">
+            <Image.Source>
+                <FontImageSource
+                    FontFamily="FontAwesomeSolid"
+                    Glyph="{x:Static style:FontAwesomeSolid.Star}"
+                    Size="14"
+                    Color="{StaticResource Primary}" />
+            </Image.Source>
+        </Image>
+        <Image x:Name="Star2" IsVisible="false">
+            <Image.Source>
+                <FontImageSource
+                    FontFamily="FontAwesomeSolid"
+                    Glyph="{x:Static style:FontAwesomeSolid.Star}"
+                    Size="14"
+                    Color="{StaticResource Primary}" />
+            </Image.Source>
+        </Image>
+        <Image x:Name="Star3" IsVisible="false">
+            <Image.Source>
+                <FontImageSource
+                    FontFamily="FontAwesomeSolid"
+                    Glyph="{x:Static style:FontAwesomeSolid.Star}"
+                    Size="14"
+                    Color="{StaticResource Primary}" />
+            </Image.Source>
+        </Image>
+        <Image x:Name="Star4" IsVisible="false">
+            <Image.Source>
+                <FontImageSource
+                    FontFamily="FontAwesomeSolid"
+                    Glyph="{x:Static style:FontAwesomeSolid.Star}"
+                    Size="14"
+                    Color="{StaticResource Primary}" />
+            </Image.Source>
+        </Image>
+        <Image x:Name="Star5" IsVisible="false">
+            <Image.Source>
+                <FontImageSource
+                    FontFamily="FontAwesomeSolid"
+                    Glyph="{x:Static style:FontAwesomeSolid.Star}"
+                    Size="14"
+                    Color="{StaticResource Primary}" />
+            </Image.Source>
+        </Image>
+    </StackLayout>
+</ContentView>

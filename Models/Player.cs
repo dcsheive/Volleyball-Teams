@@ -9,7 +9,8 @@ namespace Volleyball_Teams.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Name { get; set; } = "";
-        public bool IsHere { get; set; }
+        public bool IsHere { get; set; } = true;
+        public string NumStars { get; set; } = "1";
 
         public event PropertyChangedEventHandler? PropertyChanged;
     }

@@ -10,14 +10,21 @@ namespace Volleyball_Teams.Views
 {
     public partial class NewItemPage : ContentPage
     {
+        NewItemViewModel _viewModel;
         public NewItemPage(NewItemViewModel viewModel)
         {
             InitializeComponent();
             if (viewModel == null) { throw new ArgumentNullException(nameof(viewModel)); }
-            BindingContext = viewModel;
+            BindingContext = _viewModel = viewModel;
             Loaded += Page_Loaded;
             Unloaded += Page_Unloaded;
 
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.OnAppearing();
         }
 
         private void Page_Loaded(object sender, EventArgs e)

@@ -22,6 +22,12 @@
                              Color=Black,
                              Glyph={x:Static style:FontAwesomeSolid.VolleyballBall}}"
             Route="AboutPage" />
+        <ShellContent
+            ContentTemplate="{DataTemplate local:SettingsPage}"
+            Icon="{FontImage FontFamily=FontAwesomeSolid,
+                             Color=Black,
+                             Glyph={x:Static style:FontAwesomeSolid.Gear}}"
+            Route="SettingsPage" />
     </TabBar>
 
 </Shell>

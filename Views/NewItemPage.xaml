@@ -21,7 +21,22 @@
                     </Keyboard>
                 </Entry.Keyboard>
             </Entry>
-            <StackLayout Orientation="Horizontal" Spacing="10">
+            <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
+                <Label
+                    FontSize="Medium"
+                    Text="Rank"
+                    VerticalTextAlignment="Center" />
+                <Picker
+                    FontSize="Medium"
+                    HorizontalTextAlignment="Center"
+                    ItemsSource="{Binding Stars}"
+                    SelectedItem="{Binding SelectedStar}"
+                    WidthRequest="30" />
+            </FlexLayout>
+            <StackLayout
+                Margin="0,10"
+                Orientation="Horizontal"
+                Spacing="10">
                 <Button
                     Command="{Binding CancelCommand}"
                     HorizontalOptions="FillAndExpand"
@@ -32,6 +47,11 @@
                     HorizontalOptions="FillAndExpand"
                     Text="Save" />
             </StackLayout>
+            <Button
+                Command="{Binding DeleteCommand}"
+                HorizontalOptions="FillAndExpand"
+                IsVisible="{Binding ShowDelete}"
+                Text="Delete" />
         </StackLayout>
     </ContentPage.Content>
 

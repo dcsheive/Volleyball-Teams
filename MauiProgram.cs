@@ -38,6 +38,8 @@ namespace Volleyball_Teams
             builder.Services.AddScoped<AboutPage>();
             builder.Services.AddScoped<NewItemViewModel>();
             builder.Services.AddScoped<NewItemPage>();
+            builder.Services.AddScoped<SettingsViewModel>();
+            builder.Services.AddScoped<SettingsPage>();
 
             return builder.Build();
         }

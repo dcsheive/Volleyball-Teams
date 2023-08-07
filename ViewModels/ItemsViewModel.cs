@@ -42,7 +42,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async void OnAddItem(object obj)
         {
-            await Shell.Current.GoToAsync(nameof(NewItemPage));
+            await Shell.Current.GoToAsync($"{nameof(NewItemPage)}?ID=");
         }
 
         [RelayCommand]
@@ -59,21 +59,12 @@ namespace Volleyball_Teams.ViewModels
             UpdateHereCount();
         }
 
-
         [RelayCommand]
-        private async void DeletePlayer(object sender)
+        private async void EditItem(object obj)
         {
-            Player? item = sender as Player;
-            if (item == null)
-            {
-                logger.LogWarning("item is null.");
-                return;
-            }
-            Players.Remove(item);
-            UpdateHereCount();
-            await dataStore.DeleteItemAsync(item);
+            Player p = (Player)obj;
+            await Shell.Current.GoToAsync($"{nameof(NewItemPage)}?ID={p.Id}");
         }
-
 
         [RelayCommand]
         private async Task LoadPlayers()

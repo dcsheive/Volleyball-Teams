@@ -143,9 +143,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\Templates\KeyValueView.xaml">
+	  <Compile Update="Views\Templates\Stars.xaml.cs">
+	    <DependentUpon>Stars.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Templates\Stars.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadUnhandledDeviceExceptionVolleyballTeamsHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

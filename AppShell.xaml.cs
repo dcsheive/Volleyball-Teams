@@ -15,16 +15,6 @@ namespace Volleyball_Teams
             CurrentAppShell = this;
         }
 
-        /// <summary>
-        /// Logout
-        /// </summary>
-        private async void OnMenuItemClicked(object sender, EventArgs e)
-        {
-            Debug.WriteLine("AppShell: Logout");
-
-            await Current.GoToAsync("//LoginPage");
-        }
-
         protected override void OnNavigating(ShellNavigatingEventArgs args)
         {
             base.OnNavigating(args);

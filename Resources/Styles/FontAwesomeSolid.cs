@@ -354,6 +354,7 @@ namespace Volleyball_Teams.Resources.Styles
         public const string Gamepad = "\uf11b";
         public const string GasPump = "\uf52f";
         public const string Gavel = "\uf0e3";
+        public const string Gear = "\uf013";
         public const string Gem = "\uf3a5";
         public const string Genderless = "\uf22d";
         public const string Ghost = "\uf6e2";
