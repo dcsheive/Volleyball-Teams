@@ -38,21 +38,21 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        private async void Cancel()
+        private async Task Cancel()
         {
             await Shell.Current.GoToAsync("..");
         }
 
 
         [RelayCommand]
-        private async void Delete()
+        private async Task Delete()
         {
             await dataStore.DeleteItemAsync(MyPlayer);
             await Shell.Current.GoToAsync("..");
         }
 
         [RelayCommand(CanExecute = nameof(ValidateSave))]
-        private async void Save()
+        private async Task Save()
         {
             logger.LogDebug("Save: Name: {name}", Name);
             MyPlayer.Name = Name;

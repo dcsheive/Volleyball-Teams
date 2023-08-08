@@ -45,7 +45,7 @@
         <RefreshView
             Grid.Row="1"
             Command="{Binding LoadPlayersCommand}"
-            IsRefreshing="{Binding IsBusy}">
+            IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Players}" SelectionMode="None">
                 <CollectionView.EmptyView>
                     <ActivityIndicator

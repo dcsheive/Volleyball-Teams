@@ -23,7 +23,7 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        private async void SaveRank()
+        private async Task SaveRank()
         {
             Preferences.Set(Constants.Settings.UseRank, UseRank);
         }

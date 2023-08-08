@@ -30,6 +30,9 @@ namespace Volleyball_Teams.ViewModels
         private bool isBusy;
 
         [ObservableProperty]
+        private bool isRefreshing;
+
+        [ObservableProperty]
         private bool useRank;
 
         [ObservableProperty]
@@ -45,36 +48,53 @@ namespace Volleyball_Teams.ViewModels
             IsBusy = false;
             NumTeams = Preferences.Get(Constants.Settings.NumTeams, 2);
             DidNotFinishLoading = true;
-
         }
 
-
         [RelayCommand]
-        private async Task AddTeam()
+        private void AddTeam()
+        {
+            Task.Run(() => DoAddTeam());
+        }
+        private void DoAddTeam()
         {
             if (NumTeams >= Players.Count) return;
+            if (IsBusy) return;
+            IsBusy = true;
             NumTeams++;
             Preferences.Set(Constants.Settings.NumTeams, NumTeams);
-            await LoadPlayers();
+            LoadPlayers();
+            IsBusy = false;
         }
 
         [RelayCommand]
-        private async Task RemoveTeam()
+        private void RemoveTeam()
+        {
+            Task.Run(() => DoRemoveTeam());
+        }
+        private  void DoRemoveTeam()
         {
             if (NumTeams <= 1) return;
+            if (IsBusy) return;
+            IsBusy = true;
             NumTeams--;
             Preferences.Set(Constants.Settings.NumTeams, NumTeams);
-            await LoadPlayers();
+            LoadPlayers();
+            IsBusy = false;
         }
 
         [RelayCommand]
-        private async Task LoadPlayers(string pageLoad = "False")
+        public void LoadPlayers(string pageLoad = "false")
         {
-            bool isPageLoad = Convert.ToBoolean(pageLoad);
+            Task.Run(async() => await DoLoadPlayers(pageLoad));
+        }
+        private async Task DoLoadPlayers(string pageLoad)
+        {
+            if (IsBusy) return;
+            IsBusy = true;
             logger.LogDebug($"IsBusy={IsBusy}");
+            bool isPageLoad = Convert.ToBoolean(pageLoad);
             try
             {
-
                 if (isPageLoad)
                 {
 
@@ -99,6 +119,7 @@ namespace Volleyball_Teams.ViewModels
             {
                 DidNotFinishLoading = false;
                 IsBusy = false;
+                IsRefreshing = false;
                 logger.LogDebug("Set IsBusy to false");
             }
         }
@@ -158,7 +179,7 @@ namespace Volleyball_Teams.ViewModels
         {
             DidNotFinishLoading = true;
             UseRank = Preferences.Get(Constants.Settings.UseRank, false);
-            await LoadPlayers("True");
+            LoadPlayers("True");
         }
     }
 }

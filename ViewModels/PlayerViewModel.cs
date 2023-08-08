@@ -26,6 +26,9 @@ namespace Volleyball_Teams.ViewModels
         private bool isBusy;
 
         [ObservableProperty]
+        private bool isRefreshing;
+
+        [ObservableProperty]
         private int hereCount;
 
         [ObservableProperty]
@@ -44,20 +47,23 @@ namespace Volleyball_Teams.ViewModels
                 Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
                 SortText = Constants.Settings.SortByName;
             }
-
         }
 
-
-
         [RelayCommand]
-        private async void OnAddItem(object obj)
+        private async Task OnAddItem(object obj)
         {
             await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID=");
         }
 
         [RelayCommand]
-        private async void Sort()
+        private void Sort()
         {
+            Task.Run(() => DoSort());
+        }
+        private void DoSort()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
             if (SortText == Constants.Settings.SortByName)
             {
                 SortText = Constants.Settings.SortByRank;
@@ -76,6 +82,7 @@ namespace Volleyball_Teams.ViewModels
                 SortByName();
                 Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
             }
+            IsBusy = false;
         }
 
         private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
@@ -83,7 +90,7 @@ namespace Volleyball_Teams.ViewModels
         private void SortByDate() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Id));
 
         [RelayCommand]
-        private async void ItemSelectionChanged(object sender)
+        private async Task ItemSelectionChanged(object sender)
         {
             Player? item = sender as Player;
             if (item == null)
@@ -97,15 +104,21 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        private async void EditItem(object obj)
+        private async Task EditItem(object obj)
         {
             Player p = (Player)obj;
             await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID={p.Id}");
         }
 
         [RelayCommand]
-        private async Task LoadPlayers()
+        private void LoadPlayers()
         {
+            Task.Run(() => DoLoadPlayers());
+        }
+        private async Task DoLoadPlayers()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
             logger.LogDebug($"IsBusy={IsBusy}");
             try
             {
@@ -130,14 +143,16 @@ namespace Volleyball_Teams.ViewModels
             {
                 DidNotFinishLoading = false;
                 IsBusy = false;
+                IsRefreshing = false;
                 logger.LogDebug("Set IsBusy to false");
             }
         }
 
+
         async public void OnAppearing()
         {
             DidNotFinishLoading = true;
-            await LoadPlayers();
+            LoadPlayers();
         }
 
         void UpdateHereCount()
