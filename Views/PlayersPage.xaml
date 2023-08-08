@@ -12,6 +12,7 @@
     Title="{Binding Title}"
     NavigationPage.HasBackButton="False">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SortCommand}" Text="{Binding SortText}" />
         <ToolbarItem
             Command="{Binding AddItemCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,

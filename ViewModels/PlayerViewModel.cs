@@ -20,6 +20,9 @@ namespace Volleyball_Teams.ViewModels
         private string? title;
 
         [ObservableProperty]
+        private string sortText;
+
+        [ObservableProperty]
         private bool isBusy;
 
         [ObservableProperty]
@@ -35,6 +38,13 @@ namespace Volleyball_Teams.ViewModels
             Players = new ObservableCollection<Player>();
             IsBusy = false;
             DidNotFinishLoading = true;
+            SortText = Preferences.Get(Constants.Settings.SortBy, Constants.Settings.SortByName);
+            if (string.IsNullOrEmpty(SortText))
+            {
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
+                SortText = Constants.Settings.SortByName;
+            }
+
         }
 
 
@@ -44,6 +54,33 @@ namespace Volleyball_Teams.ViewModels
         {
             await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID=");
         }
+
+        [RelayCommand]
+        private async void Sort()
+        {
+            if (SortText == Constants.Settings.SortByName)
+            {
+                SortText = Constants.Settings.SortByRank;
+                SortByRank();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRank);
+            }
+            else if (SortText == Constants.Settings.SortByRank)
+            {
+                SortText = Constants.Settings.SortByDate;
+                SortByDate();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByDate);
+            }
+            else
+            {
+                SortText = Constants.Settings.SortByName;
+                SortByName();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
+            }
+        }
+
+        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
+        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStars));
+        private void SortByDate() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Id));
 
         [RelayCommand]
         private async void ItemSelectionChanged(object sender)
@@ -81,6 +118,9 @@ namespace Volleyball_Teams.ViewModels
                     logger.LogDebug($"{item.Name}, {item.IsHere}");
                 }
                 UpdateHereCount();
+                if (SortText == Constants.Settings.SortByName) SortByName();
+                else if (SortText == Constants.Settings.SortByDate) SortByDate();
+                else SortByRank();
             }
             catch (Exception ex)
             {

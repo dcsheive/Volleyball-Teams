@@ -44,6 +44,11 @@ namespace Volleyball_Teams.Util
         {
             public const string UseRank= "UseRank";
             public const string NumTeams = "NumTeams";
+            public const string SortBy = "SortBy";
+            public const string SortByName = "Sort By: Name";
+            public const string SortByRank = "Sort By: Rank";
+            public const string SortByDate = "Sort By: Date";
+
         }
     }
 }
