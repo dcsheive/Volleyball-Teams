@@ -90,7 +90,7 @@ namespace Volleyball_Teams.ViewModels
                 ShowDelete = false;
                 MyPlayer = new Player();
                 Name = string.Empty;
-                SelectedStar = "1";
+                SelectedStar = "3";
             }
         }
     }
