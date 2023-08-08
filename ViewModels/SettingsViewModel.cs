@@ -8,14 +8,14 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        ILogger<ItemsViewModel> logger;
+        ILogger<PlayersViewModel> logger;
 
         [ObservableProperty]
         private string? title;
 
         [ObservableProperty]
         private bool useRank;
-        public SettingsViewModel(ILogger<ItemsViewModel> logger)
+        public SettingsViewModel(ILogger<PlayersViewModel> logger)
         {
             Title = "Settings";
             this.logger = logger;

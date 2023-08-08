@@ -32,12 +32,12 @@ namespace Volleyball_Teams
 		builder.Logging.SetMinimumLevel(LogLevel.Debug);
 #endif
             builder.Services.AddSingleton<IDataStore<Player>, MockDataStore>();
-            builder.Services.AddScoped<ItemsViewModel>();
-            builder.Services.AddScoped<ItemsPage>();
-            builder.Services.AddScoped<AboutViewModel>();
-            builder.Services.AddScoped<AboutPage>();
-            builder.Services.AddScoped<NewItemViewModel>();
-            builder.Services.AddScoped<NewItemPage>();
+            builder.Services.AddScoped<PlayersViewModel>();
+            builder.Services.AddScoped<PlayersPage>();
+            builder.Services.AddScoped<TeamsViewModel>();
+            builder.Services.AddScoped<TeamsPage>();
+            builder.Services.AddScoped<NewPlayerViewModel>();
+            builder.Services.AddScoped<NewPlayerPage>();
             builder.Services.AddScoped<SettingsViewModel>();
             builder.Services.AddScoped<SettingsPage>();
 

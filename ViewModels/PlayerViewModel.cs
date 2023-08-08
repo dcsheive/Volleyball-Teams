@@ -9,10 +9,10 @@ using Volleyball_Teams.Views;
 
 namespace Volleyball_Teams.ViewModels
 {
-    public partial class ItemsViewModel : ObservableObject
+    public partial class PlayersViewModel : ObservableObject
     {
         readonly IDataStore<Player> dataStore;
-        ILogger<ItemsViewModel> logger;
+        ILogger<PlayersViewModel> logger;
 
         public ObservableCollection<Player> Players { get; set; }
 
@@ -27,7 +27,7 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool didNotFinishLoading;
-        public ItemsViewModel(IDataStore<Player> dataStore, ILogger<ItemsViewModel> logger)
+        public PlayersViewModel(IDataStore<Player> dataStore, ILogger<PlayersViewModel> logger)
         {
             this.dataStore = dataStore;
             this.logger = logger;
@@ -42,7 +42,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async void OnAddItem(object obj)
         {
-            await Shell.Current.GoToAsync($"{nameof(NewItemPage)}?ID=");
+            await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID=");
         }
 
         [RelayCommand]
@@ -63,7 +63,7 @@ namespace Volleyball_Teams.ViewModels
         private async void EditItem(object obj)
         {
             Player p = (Player)obj;
-            await Shell.Current.GoToAsync($"{nameof(NewItemPage)}?ID={p.Id}");
+            await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID={p.Id}");
         }
 
         [RelayCommand]

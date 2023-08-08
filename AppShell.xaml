@@ -11,17 +11,17 @@
     <TabBar>
 
         <ShellContent
-            ContentTemplate="{DataTemplate local:ItemsPage}"
+            ContentTemplate="{DataTemplate local:PlayersPage}"
             Icon="{FontImage FontFamily=FontAwesomeSolid,
                              Color=Black,
                              Glyph={x:Static style:FontAwesomeSolid.User}}"
-            Route="ItemsPage" />
+            Route="PlayersPage" />
         <ShellContent
-            ContentTemplate="{DataTemplate local:AboutPage}"
+            ContentTemplate="{DataTemplate local:TeamsPage}"
             Icon="{FontImage FontFamily=FontAwesomeSolid,
                              Color=Black,
                              Glyph={x:Static style:FontAwesomeSolid.VolleyballBall}}"
-            Route="AboutPage" />
+            Route="TeamsPage" />
         <ShellContent
             ContentTemplate="{DataTemplate local:SettingsPage}"
             Icon="{FontImage FontFamily=FontAwesomeSolid,

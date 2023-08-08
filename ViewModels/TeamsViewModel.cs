@@ -11,11 +11,11 @@ using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.ViewModels
 {
-    public partial class AboutViewModel : ObservableObject
+    public partial class TeamsViewModel : ObservableObject
     {
 
         readonly IDataStore<Player> dataStore;
-        ILogger<ItemsViewModel> logger;
+        ILogger<PlayersViewModel> logger;
 
         public ObservableCollection<Team> Teams { get; private set; }
         private List<Player> Players;
@@ -32,7 +32,7 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool didNotFinishLoading;
 
-        public AboutViewModel(IDataStore<Player> dataStore, ILogger<ItemsViewModel> logger)
+        public TeamsViewModel(IDataStore<Player> dataStore, ILogger<PlayersViewModel> logger)
         {
             this.dataStore = dataStore;
             this.logger = logger;
@@ -40,7 +40,7 @@ namespace Volleyball_Teams.ViewModels
             Teams = new ObservableCollection<Team>();
             Players = new List<Player>();
             IsBusy = false;
-            NumTeams = Preferences.Get("NumTeams",2);
+            NumTeams = Preferences.Get("NumTeams", 2);
             DidNotFinishLoading = true;
 
         }

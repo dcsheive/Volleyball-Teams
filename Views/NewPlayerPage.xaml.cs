@@ -8,10 +8,10 @@ using Volleyball_Teams.ViewModels;
 
 namespace Volleyball_Teams.Views
 {
-    public partial class NewItemPage : ContentPage
+    public partial class NewPlayerPage : ContentPage
     {
-        NewItemViewModel _viewModel;
-        public NewItemPage(NewItemViewModel viewModel)
+        NewPlayerViewModel _viewModel;
+        public NewPlayerPage(NewPlayerViewModel viewModel)
         {
             InitializeComponent();
             if (viewModel == null) { throw new ArgumentNullException(nameof(viewModel)); }

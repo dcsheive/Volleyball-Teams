@@ -8,7 +8,7 @@ namespace Volleyball_Teams
         public App()
         {
             InitializeComponent();
-            Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
+            Routing.RegisterRoute(nameof(NewPlayerPage), typeof(NewPlayerPage));
 
             MainPage = new AppShell();
         }

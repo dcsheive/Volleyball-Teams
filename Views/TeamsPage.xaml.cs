@@ -1,15 +1,16 @@
-﻿using System.Diagnostics;
-using Volleyball_Teams.Models;
+﻿using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using System;
+using System.ComponentModel;
 using Volleyball_Teams.ViewModels;
-using Volleyball_Teams.Views;
 
 namespace Volleyball_Teams.Views
 {
-    public partial class ItemsPage : ContentPage
+    public partial class TeamsPage : ContentPage
     {
-        ItemsViewModel _viewModel;
+        TeamsViewModel _viewModel;
 
-        public ItemsPage(ItemsViewModel viewModel)
+        public TeamsPage(TeamsViewModel viewModel)
         {
             InitializeComponent();
 

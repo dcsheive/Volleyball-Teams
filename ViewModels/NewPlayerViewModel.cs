@@ -8,12 +8,12 @@ using Volleyball_Teams.Services;
 namespace Volleyball_Teams.ViewModels
 {
     [QueryProperty(nameof(ID), "ID")]
-    public partial class NewItemViewModel : ObservableObject
+    public partial class NewPlayerViewModel : ObservableObject
     {
         public string ID { get; set; }
 
         readonly IDataStore<Player>? dataStore;
-        ILogger<NewItemViewModel> logger;
+        ILogger<NewPlayerViewModel> logger;
         public ObservableCollection<string> Stars { get; set; }
         public string SelectedStar { get; set; }
         public Player MyPlayer { get; set; }
@@ -24,7 +24,7 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool showDelete;
 
-        public NewItemViewModel(IDataStore<Player> dataStore, ILogger<NewItemViewModel> logger)
+        public NewPlayerViewModel(IDataStore<Player> dataStore, ILogger<NewPlayerViewModel> logger)
         {
             if (dataStore == null) { throw new ArgumentNullException(nameof(dataStore)); }
             this.dataStore = dataStore;

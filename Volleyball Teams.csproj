@@ -143,6 +143,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\NewPlayerPage.xaml.cs">
+	    <DependentUpon>NewPlayerPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\PlayersPage.xaml.cs">
+	    <DependentUpon>PlayersPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TeamsPage.xaml.cs">
+	    <DependentUpon>TeamsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\Templates\Stars.xaml.cs">
 	    <DependentUpon>Stars.xaml</DependentUpon>
 	  </Compile>

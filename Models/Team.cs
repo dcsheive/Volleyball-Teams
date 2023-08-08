@@ -10,6 +10,7 @@ namespace Volleyball_Teams.Models
     {
         public int Number { get; private set; }
         public string NumberText { get; private set; }
+        public int Power { get; set; }
 
         public Team(int number, List<Player> players) : base(players)
         {
