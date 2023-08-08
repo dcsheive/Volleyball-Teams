@@ -7,6 +7,7 @@
     xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
     xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
+    x:Name="BrowseTeamsPage"
     Title="{Binding Title}">
 
     <Grid RowDefinitions="*,12*">
@@ -85,29 +86,47 @@
                 </CollectionView.EmptyView>
                 <CollectionView.GroupHeaderTemplate>
                     <DataTemplate>
-                        <Label
+                        <FlexLayout
                             Margin="10,5"
-                            FontAttributes="Bold"
-                            FontSize="Large">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Team " />
-                                    <Span Text="{Binding NumberText}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                            Direction="Row"
+                            JustifyContent="SpaceBetween">
+                            <Label FontAttributes="Bold" FontSize="Large">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Team " />
+                                        <Span Text="{Binding NumberText}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}" VerticalTextAlignment="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Power: " />
+                                        <Span Text="{Binding Power}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </FlexLayout>
                     </DataTemplate>
                 </CollectionView.GroupHeaderTemplate>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Label
-                            Grid.Column="1"
+                        <FlexLayout
                             Margin="20,0"
-                            FontSize="Small"
-                            LineBreakMode="NoWrap"
-                            MaxLines="1"
-                            Style="{DynamicResource ListItemTextStyle}"
-                            Text="{Binding Name}" />
+                            Direction="Row"
+                            JustifyContent="SpaceBetween">
+                            <Label
+                                Grid.Column="1"
+                                FontSize="Small"
+                                LineBreakMode="NoWrap"
+                                MaxLines="1"
+                                Style="{DynamicResource ListItemTextStyle}"
+                                Text="{Binding Name}" />
+                            <template:Stars
+                                IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
+                                NumStars="{Binding NumStars}"
+                                StarSize="12" />
+                        </FlexLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

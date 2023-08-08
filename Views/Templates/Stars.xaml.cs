@@ -46,6 +46,24 @@ namespace Volleyball_Teams.Views.Templates
             set => SetValue(NumStarsProperty, value);
         }
 
+        public static readonly BindableProperty StarSizeProperty = BindableProperty.Create(nameof(StarSize), typeof(string), typeof(Stars), "14", propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            var control = (Stars)bindable;
+            control.StarSize = newValue as string;
+            int stars = int.Parse(control.StarSize);
+            control.Star1Source.Size = stars;
+            control.Star2Source.Size = stars;
+            control.Star3Source.Size = stars;
+            control.Star4Source.Size = stars;
+            control.Star5Source.Size = stars;
+        });
+
+        public string StarSize
+        {
+            get => GetValue(StarSizeProperty) as string;
+            set => SetValue(StarSizeProperty, value);
+        }
+
         public Stars()
         {
             InitializeComponent();

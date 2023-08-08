@@ -39,5 +39,11 @@ namespace Volleyball_Teams.Util
                 list[n] = value;
             }
         }
+
+        public class Settings
+        {
+            public const string UseRank= "UseRank";
+            public const string NumTeams = "NumTeams";
+        }
     }
 }

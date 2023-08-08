@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
+using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -24,12 +25,12 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async void SaveRank()
         {
-            Preferences.Set("UseRank", UseRank);
+            Preferences.Set(Constants.Settings.UseRank, UseRank);
         }
 
         public async void OnAppearing()
         {
-            UseRank = Preferences.Get("UseRank", false);
+            UseRank = Preferences.Get(Constants.Settings.UseRank, false);
         }
     }
 }

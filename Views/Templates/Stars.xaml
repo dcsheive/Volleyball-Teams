@@ -9,6 +9,7 @@
         <Image x:Name="Star1">
             <Image.Source>
                 <FontImageSource
+                    x:Name="Star1Source"
                     FontFamily="FontAwesomeSolid"
                     Glyph="{x:Static style:FontAwesomeSolid.Star}"
                     Size="14"
@@ -18,6 +19,7 @@
         <Image x:Name="Star2" IsVisible="false">
             <Image.Source>
                 <FontImageSource
+                    x:Name="Star2Source"
                     FontFamily="FontAwesomeSolid"
                     Glyph="{x:Static style:FontAwesomeSolid.Star}"
                     Size="14"
@@ -27,6 +29,7 @@
         <Image x:Name="Star3" IsVisible="false">
             <Image.Source>
                 <FontImageSource
+                    x:Name="Star3Source"
                     FontFamily="FontAwesomeSolid"
                     Glyph="{x:Static style:FontAwesomeSolid.Star}"
                     Size="14"
@@ -36,6 +39,7 @@
         <Image x:Name="Star4" IsVisible="false">
             <Image.Source>
                 <FontImageSource
+                    x:Name="Star4Source"
                     FontFamily="FontAwesomeSolid"
                     Glyph="{x:Static style:FontAwesomeSolid.Star}"
                     Size="14"
@@ -45,6 +49,7 @@
         <Image x:Name="Star5" IsVisible="false">
             <Image.Source>
                 <FontImageSource
+                    x:Name="Star5Source"
                     FontFamily="FontAwesomeSolid"
                     Glyph="{x:Static style:FontAwesomeSolid.Star}"
                     Size="14"
