@@ -53,6 +53,11 @@ namespace Volleyball_Teams.Services
             return rows > 0;
         }
 
+        public async Task DeleteAllItemsAsync()
+        {
+            int rows = await Database.DeleteAllAsync<Player>();
+        }
+
         public async Task<Player?> GetItemAsync(int id)
         {
             return await Database.Table<Player>().Where(s => s.Id == id).FirstOrDefaultAsync();

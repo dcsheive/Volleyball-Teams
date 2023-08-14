@@ -10,6 +10,7 @@ namespace Volleyball_Teams.Services
         Task<bool> UpdateItemAsync(T item);
         Task<bool> UpdateItemsAsync(List<T> item);
         Task<bool> DeleteItemAsync(T item);
+        Task DeleteAllItemsAsync();
         Task<T?> GetItemAsync(int id);
         Task<T?> GetItemByNameAsync(string name);
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
