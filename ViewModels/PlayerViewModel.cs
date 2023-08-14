@@ -24,7 +24,7 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
-        
+
         [ObservableProperty]
         private bool isAllHere;
 
@@ -168,9 +168,9 @@ namespace Volleyball_Teams.ViewModels
         }
         private async Task DoHereAll()
         {
+            if (DoNotRunAllHere) return;
             if (IsBusy) return;
             IsBusy = true;
-            if (DoNotRunAllHere) return;
             DoNotRunHere = true;
             List<Player> list = Players.ToList();
             if (IsAllHere) HereText = Constants.Settings.AllHere;
@@ -204,7 +204,11 @@ namespace Volleyball_Teams.ViewModels
 
         void UpdateHereCount()
         {
+            DoNotRunAllHere = true;
             HereCount = Players.Count(p => p.IsHere);
+            if (HereCount == 0) { IsAllHere = false; HereText = Constants.Settings.NoneHere; }
+            if (HereCount == Players.Count) { IsAllHere = true; HereText = Constants.Settings.AllHere; }
+            DoNotRunAllHere = false;
         }
     }
 }
