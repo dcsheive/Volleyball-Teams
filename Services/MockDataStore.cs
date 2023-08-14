@@ -40,6 +40,13 @@ namespace Volleyball_Teams.Services
             return rows > 0;
         }
 
+        public async Task<bool> UpdateItemsAsync(List<Player> item)
+        {
+            if (item == null) { throw new ArgumentNullException(nameof(item)); }
+            int rows = await Database.UpdateAllAsync(item);
+            return rows > 0;
+        }
+
         public async Task<bool> DeleteItemAsync(Player item)
         {
             int rows = await Database.DeleteAsync(item);
@@ -48,7 +55,12 @@ namespace Volleyball_Teams.Services
 
         public async Task<Player?> GetItemAsync(int id)
         {
-            return await Database.Table<Player>().Where(s => s.Id == id).FirstAsync();
+            return await Database.Table<Player>().Where(s => s.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<Player?> GetItemByNameAsync(string name)
+        {
+            return await Database.Table<Player>().Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Player>> GetItemsAsync(bool forceRefresh = false)

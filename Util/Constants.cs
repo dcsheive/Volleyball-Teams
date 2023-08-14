@@ -48,7 +48,8 @@ namespace Volleyball_Teams.Util
             public const string SortByName = "Sort By: Name";
             public const string SortByRank = "Sort By: Rank";
             public const string SortByDate = "Sort By: Date";
-
+            public const string AllHere = "All Here";
+            public const string NoneHere = "None Here";
         }
     }
 }

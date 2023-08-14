@@ -23,9 +23,10 @@
     <Grid RowDefinitions="*,13*">
         <FlexLayout
             Grid.Row="0"
+            Margin="10,0"
             Direction="Row"
             JustifyContent="SpaceBetween">
-            <Label Margin="10,0" VerticalTextAlignment="Center">
+            <Label VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Text="Players: " />
@@ -33,7 +34,7 @@
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label Margin="10,0" VerticalTextAlignment="Center">
+            <Label VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>
                         <Span Text="Here: " />
@@ -41,6 +42,17 @@
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
+            <HorizontalStackLayout>
+                <Label
+                    Margin="5,0"
+                    Text="{Binding HereText}"
+                    VerticalTextAlignment="Center" />
+                <Switch IsToggled="{Binding IsAllHere}">
+                    <Switch.Behaviors>
+                        <toolkit:EventToCommandBehavior Command="{Binding HereAllCommand}" EventName="Toggled" />
+                    </Switch.Behaviors>
+                </Switch>
+            </HorizontalStackLayout>
         </FlexLayout>
         <RefreshView
             Grid.Row="1"
@@ -126,7 +138,7 @@
                                 <Switch IsToggled="{Binding IsHere}">
                                     <Switch.Behaviors>
                                         <toolkit:EventToCommandBehavior
-                                            Command="{Binding Path=BindingContext.ItemSelectionChangedCommand, Source={x:Reference BrowsePlayersPage}}"
+                                            Command="{Binding Path=BindingContext.HereCommand, Source={x:Reference BrowsePlayersPage}}"
                                             CommandParameter="{Binding .}"
                                             EventName="Toggled" />
                                     </Switch.Behaviors>

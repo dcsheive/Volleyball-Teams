@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
@@ -57,11 +58,23 @@ namespace Volleyball_Teams.ViewModels
             logger.LogDebug("Save: Name: {name}", Name);
             MyPlayer.Name = Name;
             MyPlayer.NumStars = SelectedStar;
+            if (await CheckDB())
+            {
+                await Application.Current.MainPage.DisplayAlert("Name Found", "This name has already been used.", "OK");
+                return;
+            }
             if (string.IsNullOrEmpty(ID))
                 _ = await dataStore.AddItemAsync(MyPlayer);
             else
                 await dataStore.UpdateItemAsync(MyPlayer);
             await Shell.Current.GoToAsync("..");
+        }
+
+        private async Task<bool> CheckDB()
+        {
+            Player p = await dataStore.GetItemByNameAsync(Name);
+            if (p == null) return false;
+            return true;
         }
 
         private bool ValidateSave()

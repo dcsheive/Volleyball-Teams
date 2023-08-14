@@ -24,6 +24,12 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool isBusy;
+        
+        [ObservableProperty]
+        private bool isAllHere;
+
+        [ObservableProperty]
+        private string hereText;
 
         [ObservableProperty]
         private bool isRefreshing;
@@ -33,6 +39,9 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool didNotFinishLoading;
+
+        private bool DoNotRunHere;
+        private bool DoNotRunAllHere;
         public PlayersViewModel(IDataStore<Player> dataStore, ILogger<PlayersViewModel> logger)
         {
             this.dataStore = dataStore;
@@ -41,6 +50,9 @@ namespace Volleyball_Teams.ViewModels
             Players = new ObservableCollection<Player>();
             IsBusy = false;
             DidNotFinishLoading = true;
+            IsAllHere = true;
+            DoNotRunHere = false;
+            HereText = Constants.Settings.AllHere;
             SortText = Preferences.Get(Constants.Settings.SortBy, Constants.Settings.SortByName);
             if (string.IsNullOrEmpty(SortText))
             {
@@ -90,8 +102,9 @@ namespace Volleyball_Teams.ViewModels
         private void SortByDate() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Id));
 
         [RelayCommand]
-        private async Task ItemSelectionChanged(object sender)
+        private async Task Here(object sender)
         {
+            if (DoNotRunHere) return;
             Player? item = sender as Player;
             if (item == null)
             {
@@ -148,6 +161,40 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
+        [RelayCommand]
+        private void HereAll()
+        {
+            Task.Run(() => DoHereAll());
+        }
+        private async Task DoHereAll()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            if (DoNotRunAllHere) return;
+            DoNotRunHere = true;
+            List<Player> list = Players.ToList();
+            if (IsAllHere) HereText = Constants.Settings.AllHere;
+            else HereText = Constants.Settings.NoneHere;
+            try
+            {
+                foreach (Player p in list)
+                {
+                    p.IsHere = IsAllHere;
+                }
+                await dataStore.UpdateItemsAsync(list);
+                UpdateHereCount();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("{ex}", ex);
+            }
+            finally
+            {
+                IsBusy = false;
+                DoNotRunHere = false;
+            }
+
+        }
 
         async public void OnAppearing()
         {
