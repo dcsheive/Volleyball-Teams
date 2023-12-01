@@ -112,6 +112,7 @@
                                     Grid.Row="2"
                                     Grid.Column="0"
                                     HorizontalOptions="CenterAndExpand"
+                                    IsVisible="{Binding Source={x:Reference BrowsePlayersPage}, Path=BindingContext.UseRank}}"
                                     NumStars="{Binding NumStarsDisplay}"
                                     StarSize="10" />
                             </Grid>

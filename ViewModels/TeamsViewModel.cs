@@ -338,7 +338,7 @@ namespace Volleyball_Teams.ViewModels
         async public void OnAppearing()
         {
             DidNotFinishLoading = true;
-            UseRank = Preferences.Get(Constants.Settings.UseRank, false);
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
             if (Players.Count == 0)
                 LoadPlayers("True");
         }

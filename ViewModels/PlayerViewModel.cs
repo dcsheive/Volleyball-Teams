@@ -35,6 +35,9 @@ namespace Volleyball_Teams.ViewModels
         private bool isRefreshing;
 
         [ObservableProperty]
+        private bool useRank;
+
+        [ObservableProperty]
         private int hereCount;
 
         [ObservableProperty]
@@ -216,6 +219,7 @@ namespace Volleyball_Teams.ViewModels
 
         async public void OnAppearing()
         {
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
             DidNotFinishLoading = true;
             LoadPlayers();
         }

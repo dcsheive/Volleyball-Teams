@@ -69,7 +69,7 @@ namespace Volleyball_Teams.ViewModels
 
         public async void OnAppearing()
         {
-            UseRank = Preferences.Get(Constants.Settings.UseRank, false);
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
             UseScore = Preferences.Get(Constants.Settings.UseScore, false);
         }
     }
