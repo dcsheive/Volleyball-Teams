@@ -14,7 +14,7 @@ namespace Volleyball_Teams.ViewModels
     public partial class TeamsViewModel : ObservableObject
     {
 
-        readonly IDataStore<Player> dataStore;
+        readonly IPlayerStore<Player> dataStore;
         ILogger<PlayersViewModel> logger;
 
         public ObservableCollection<Team> Teams { get; private set; }
@@ -38,7 +38,7 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool didNotFinishLoading;
 
-        public TeamsViewModel(IDataStore<Player> dataStore, ILogger<PlayersViewModel> logger)
+        public TeamsViewModel(IPlayerStore<Player> dataStore, ILogger<PlayersViewModel> logger)
         {
             this.dataStore = dataStore;
             this.logger = logger;
@@ -99,7 +99,7 @@ namespace Volleyball_Teams.ViewModels
                 {
 
                     Players.Clear();
-                    var items = await dataStore.GetItemsHereAsync(true);
+                    var items = await dataStore.GetPlayersHereAsync();
                     foreach (var item in items)
                     {
                         Players.Add(item);

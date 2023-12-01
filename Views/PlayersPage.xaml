@@ -21,28 +21,29 @@
             Text="Add" />
     </ContentPage.ToolbarItems>
     <Grid RowDefinitions="*,13*">
-        <FlexLayout
-            Grid.Row="0"
-            Margin="10,0"
-            Direction="Row"
-            JustifyContent="SpaceBetween">
-            <Label VerticalTextAlignment="Center">
+        <Grid Grid.Row="0" Margin="10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="Players: " />
                         <Span Text="{Binding Players.Count}" />
+                        <Span Text=" Players" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <Label VerticalTextAlignment="Center">
+            <Label Grid.Column="1" VerticalTextAlignment="Center">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="Here: " />
                         <Span Text="{Binding HereCount}" />
+                        <Span Text=" Here" />
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
-            <HorizontalStackLayout>
+            <HorizontalStackLayout Grid.Column="2">
                 <Label
                     Margin="5,0"
                     Text="{Binding HereText}"
@@ -53,7 +54,7 @@
                     </Switch.Behaviors>
                 </Switch>
             </HorizontalStackLayout>
-        </FlexLayout>
+        </Grid>
         <RefreshView
             Grid.Row="1"
             Command="{Binding LoadPlayersCommand}"
@@ -80,15 +81,20 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
 
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.RowSpan="3" Padding="10">
+                            <Grid Grid.RowSpan="3" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="32" />
+                                    <ColumnDefinition Width="80" />
                                 </Grid.ColumnDefinitions>
                                 <Image
+                                    Grid.RowSpan="2"
                                     Grid.Column="0"
                                     HorizontalOptions="Fill"
                                     VerticalOptions="Fill">
@@ -96,10 +102,15 @@
                                         <FontImageSource
                                             FontFamily="FontAwesomeSolid"
                                             Glyph="{x:Static style:FontAwesomeSolid.User}"
-                                            Size="32"
                                             Color="{StaticResource Primary}" />
                                     </Image.Source>
                                 </Image>
+                                <template:Stars
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    HorizontalOptions="CenterAndExpand"
+                                    NumStars="{Binding NumStars}"
+                                    StarSize="10" />
                             </Grid>
                             <Label
                                 Grid.Column="1"
@@ -126,10 +137,10 @@
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
-                            <template:Stars
+                            <Label
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                NumStars="{Binding NumStars}" />
+                                Text="{Binding WinsDisplay}" />
                             <StackLayout
                                 Grid.RowSpan="3"
                                 Grid.Column="3"
@@ -144,7 +155,7 @@
                                     </Switch.Behaviors>
                                 </Switch>
                                 <Frame
-                                    Margin="30,0,0,0"
+                                    Margin="20,0,0,0"
                                     Padding="10,0"
                                     BackgroundColor="Transparent"
                                     BorderColor="Transparent">

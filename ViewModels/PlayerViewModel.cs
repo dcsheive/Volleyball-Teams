@@ -11,7 +11,7 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class PlayersViewModel : ObservableObject
     {
-        readonly IDataStore<Player> dataStore;
+        readonly IPlayerStore<Player> dataStore;
         ILogger<PlayersViewModel> logger;
 
         public ObservableCollection<Player> Players { get; set; }
@@ -42,7 +42,7 @@ namespace Volleyball_Teams.ViewModels
 
         private bool DoNotRunHere;
         private bool DoNotRunAllHere;
-        public PlayersViewModel(IDataStore<Player> dataStore, ILogger<PlayersViewModel> logger)
+        public PlayersViewModel(IPlayerStore<Player> dataStore, ILogger<PlayersViewModel> logger)
         {
             this.dataStore = dataStore;
             this.logger = logger;
@@ -84,9 +84,21 @@ namespace Volleyball_Teams.ViewModels
             }
             else if (SortText == Constants.Settings.SortByRank)
             {
-                SortText = Constants.Settings.SortByDate;
-                SortByDate();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByDate);
+                SortText = Constants.Settings.SortByWins;
+                SortByWins();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByWins);
+            }
+            else if (SortText == Constants.Settings.SortByWins)
+            {
+                SortText = Constants.Settings.SortByRatio;
+                SortByRatio();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRatio);
+            }
+            else if (SortText == Constants.Settings.SortByRatio)
+            {
+                SortText = Constants.Settings.SortByLoss;
+                SortByLosses();
+                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByLoss);
             }
             else
             {
@@ -99,7 +111,13 @@ namespace Volleyball_Teams.ViewModels
 
         private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
         private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStars));
-        private void SortByDate() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Id));
+        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
+        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => {
+            if (p.NumLosses == 0) return p.NumWins;
+            else if (p.NumWins == 0) return -1 * p.NumLosses;
+            else return p.NumWins / p.NumLosses;
+        }));
+        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
 
         [RelayCommand]
         private async Task Here(object sender)
@@ -111,7 +129,7 @@ namespace Volleyball_Teams.ViewModels
                 logger.LogWarning("item is null.");
                 return;
             }
-            await dataStore.UpdateItemAsync(item);
+            await dataStore.UpdatePlayerAsync(item);
             logger.LogDebug($"item is {item.Name}, {item.IsHere}");
             UpdateHereCount();
         }
@@ -137,7 +155,7 @@ namespace Volleyball_Teams.ViewModels
             {
                 Players.Clear();
                 HereCount = 0;
-                var items = await dataStore.GetItemsAsync(true);
+                var items = await dataStore.GetPlayersAsync();
                 foreach (var item in items)
                 {
                     Players.Add(item);
@@ -145,7 +163,7 @@ namespace Volleyball_Teams.ViewModels
                 }
                 UpdateHereCount();
                 if (SortText == Constants.Settings.SortByName) SortByName();
-                else if (SortText == Constants.Settings.SortByDate) SortByDate();
+                else if (SortText == Constants.Settings.SortByWins) SortByWins();
                 else SortByRank();
             }
             catch (Exception ex)
@@ -181,7 +199,7 @@ namespace Volleyball_Teams.ViewModels
                 {
                     p.IsHere = IsAllHere;
                 }
-                await dataStore.UpdateItemsAsync(list);
+                await dataStore.UpdatePlayersAsync(list);
                 UpdateHereCount();
             }
             catch (Exception ex)

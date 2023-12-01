@@ -31,7 +31,7 @@ namespace Volleyball_Teams
 		builder.Logging.AddDebug();
 		builder.Logging.SetMinimumLevel(LogLevel.Debug);
 #endif
-            builder.Services.AddSingleton<IDataStore<Player>, MockDataStore>();
+            builder.Services.AddSingleton<IPlayerStore<Player>, PlayerStore>();
             builder.Services.AddScoped<PlayersViewModel>();
             builder.Services.AddScoped<PlayersPage>();
             builder.Services.AddScoped<TeamsViewModel>();

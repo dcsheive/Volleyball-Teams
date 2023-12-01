@@ -21,5 +21,6 @@
             </Switch>
         </FlexLayout>
         <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL PLAYERS" />
+        <Button Command="{Binding ZeroWinsCommand}" Text="RESET SCORES" />
     </VerticalStackLayout>
 </ContentPage>

@@ -9,7 +9,7 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        readonly IDataStore<Player>? dataStore;
+        readonly IPlayerStore<Player>? dataStore;
         ILogger<PlayersViewModel> logger;
 
         [ObservableProperty]
@@ -17,7 +17,7 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool useRank;
-        public SettingsViewModel(ILogger<PlayersViewModel> logger, IDataStore<Player> dataStore)
+        public SettingsViewModel(ILogger<PlayersViewModel> logger, IPlayerStore<Player> dataStore)
         {
             Title = "Settings";
             this.logger = logger;
@@ -35,7 +35,23 @@ namespace Volleyball_Teams.ViewModels
         {
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all player?", "Yes", "No");
             if (result)
-                await dataStore.DeleteAllItemsAsync();
+                await dataStore.DeleteAllPlayersAsync();
+        }
+
+        [RelayCommand]
+        private async Task ZeroWins()
+        {
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to reset all scores?", "Yes", "No");
+            if (result)
+            {
+                var items = await dataStore.GetPlayersAsync();
+                foreach(var item in items)
+                {
+                    item.NumWins = 0;
+                    item.NumLosses = 0;
+                }
+                await dataStore.UpdatePlayersAsync(items);
+            }
         }
 
         public async void OnAppearing()

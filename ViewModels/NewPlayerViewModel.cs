@@ -13,7 +13,7 @@ namespace Volleyball_Teams.ViewModels
     {
         public string ID { get; set; }
 
-        readonly IDataStore<Player>? dataStore;
+        readonly IPlayerStore<Player>? dataStore;
         ILogger<NewPlayerViewModel> logger;
         public ObservableCollection<string> Stars { get; set; }
         public string SelectedStar { get; set; }
@@ -25,17 +25,17 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool showDelete;
 
-        public NewPlayerViewModel(IDataStore<Player> dataStore, ILogger<NewPlayerViewModel> logger)
+        [ObservableProperty]
+        private int wins;
+
+        [ObservableProperty]
+        private int losses;
+        public NewPlayerViewModel(IPlayerStore<Player> dataStore, ILogger<NewPlayerViewModel> logger)
         {
             if (dataStore == null) { throw new ArgumentNullException(nameof(dataStore)); }
             this.dataStore = dataStore;
             this.logger = logger;
-            Stars = new ObservableCollection<string>();
-            Stars.Add("1");
-            Stars.Add("2");
-            Stars.Add("3");
-            Stars.Add("4");
-            Stars.Add("5");
+            Stars = new ObservableCollection<string>() { "1", "2", "3", "4", "5" };
         }
 
         [RelayCommand]
@@ -44,11 +44,36 @@ namespace Volleyball_Teams.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
+        [RelayCommand]
+        private void MinusWins()
+        {
+            if (Wins > 0)
+                Wins--;
+        }
+
+        [RelayCommand]
+        private void AddWins()
+        {   
+            Wins++;
+        }
+
+        [RelayCommand]
+        private void MinusLosses()
+        {
+            if (Losses > 0)
+                Losses--;
+        }
+
+        [RelayCommand]
+        private void AddLosses()
+        {
+            Losses++;
+        }
 
         [RelayCommand]
         private async Task Delete()
         {
-            await dataStore.DeleteItemAsync(MyPlayer);
+            await dataStore.DeletePlayerAsync(MyPlayer);
             await Shell.Current.GoToAsync("..");
         }
 
@@ -58,21 +83,25 @@ namespace Volleyball_Teams.ViewModels
             logger.LogDebug("Save: Name: {name}", Name);
             MyPlayer.Name = Name;
             MyPlayer.NumStars = SelectedStar;
-            if (await CheckDB())
-            {
-                await Application.Current.MainPage.DisplayAlert("Name Found", "This name has already been used.", "OK");
-                return;
-            }
+            MyPlayer.NumWins = Wins;
+            MyPlayer.NumLosses = Losses;
             if (string.IsNullOrEmpty(ID))
-                _ = await dataStore.AddItemAsync(MyPlayer);
+            {
+                if (await CheckDB())
+                {
+                    await Application.Current.MainPage.DisplayAlert("Name Found", "This name has already been used.", "OK");
+                    return;
+                }
+                _ = await dataStore.AddPlayerAsync(MyPlayer);
+            }
             else
-                await dataStore.UpdateItemAsync(MyPlayer);
+                await dataStore.UpdatePlayerAsync(MyPlayer);
             await Shell.Current.GoToAsync("..");
         }
 
         private async Task<bool> CheckDB()
         {
-            Player p = await dataStore.GetItemByNameAsync(Name);
+            Player p = await dataStore.GetPlayerByNameAsync(Name);
             if (p == null) return false;
             return true;
         }
@@ -86,9 +115,11 @@ namespace Volleyball_Teams.ViewModels
 
         private async Task GetPlayer()
         {
-            MyPlayer = await dataStore.GetItemAsync(int.Parse(ID));
+            MyPlayer = await dataStore.GetPlayerAsync(int.Parse(ID));
             Name = MyPlayer.Name;
             SelectedStar = MyPlayer.NumStars;
+            Wins = MyPlayer.NumWins;
+            Losses = MyPlayer.NumLosses;
         }
 
         async public void OnAppearing()
@@ -104,6 +135,8 @@ namespace Volleyball_Teams.ViewModels
                 MyPlayer = new Player();
                 Name = string.Empty;
                 SelectedStar = "3";
+                Wins = 0;
+                Losses = 0;
             }
         }
     }

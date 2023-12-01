@@ -8,7 +8,7 @@ using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.Services
 {
-    public class MockDataStore : IDataStore<Player>
+    public class PlayerStore : IPlayerStore<Player>
     {
         SQLiteAsyncConnection Database;
         async Task Init()
@@ -25,7 +25,7 @@ namespace Volleyball_Teams.Services
             return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
         }
 
-        public async Task<bool> AddItemAsync(Player item)
+        public async Task<bool> AddPlayerAsync(Player item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             await Init();
@@ -33,47 +33,47 @@ namespace Volleyball_Teams.Services
             return rows > 0;
         }
 
-        public async Task<bool> UpdateItemAsync(Player item)
+        public async Task<bool> UpdatePlayerAsync(Player item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             int rows = await Database.UpdateAsync(item);
             return rows > 0;
         }
 
-        public async Task<bool> UpdateItemsAsync(List<Player> item)
+        public async Task<bool> UpdatePlayersAsync(List<Player> item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             int rows = await Database.UpdateAllAsync(item);
             return rows > 0;
         }
 
-        public async Task<bool> DeleteItemAsync(Player item)
+        public async Task<bool> DeletePlayerAsync(Player item)
         {
             int rows = await Database.DeleteAsync(item);
             return rows > 0;
         }
 
-        public async Task DeleteAllItemsAsync()
+        public async Task DeleteAllPlayersAsync()
         {
             int rows = await Database.DeleteAllAsync<Player>();
         }
 
-        public async Task<Player?> GetItemAsync(int id)
+        public async Task<Player?> GetPlayerAsync(int id)
         {
             return await Database.Table<Player>().Where(s => s.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<Player?> GetItemByNameAsync(string name)
+        public async Task<Player?> GetPlayerByNameAsync(string name)
         {
             return await Database.Table<Player>().Where(s => s.Name == name).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Player>> GetItemsAsync(bool forceRefresh = false)
+        public async Task<List<Player>> GetPlayersAsync()
         {
             await Init();
             return await Database.Table<Player>().ToListAsync();
         }
-        public async Task<IEnumerable<Player>> GetItemsHereAsync(bool forceRefresh = false)
+        public async Task<List<Player>> GetPlayersHereAsync()
         {
             await Init();
             return await Database.Table<Player>().Where(i => i.IsHere).ToListAsync();
