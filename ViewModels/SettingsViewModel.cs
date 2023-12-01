@@ -17,6 +17,9 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool useRank;
+
+        [ObservableProperty]
+        private bool useScore;
         public SettingsViewModel(ILogger<PlayersViewModel> logger, IPlayerStore<Player> dataStore)
         {
             Title = "Settings";
@@ -25,9 +28,19 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        private async Task SaveRank()
+        private async Task SaveUseRank()
         {
             Preferences.Set(Constants.Settings.UseRank, UseRank);
+        }
+
+        [RelayCommand]
+        private async Task SaveUseScore()
+        {
+            Preferences.Set(Constants.Settings.UseScore, UseScore);
+            if (UseScore)
+            {
+                await dataStore.SetPlayerRanksByRatio();
+            }
         }
 
         [RelayCommand]
@@ -57,6 +70,7 @@ namespace Volleyball_Teams.ViewModels
         public async void OnAppearing()
         {
             UseRank = Preferences.Get(Constants.Settings.UseRank, false);
+            UseScore = Preferences.Get(Constants.Settings.UseScore, false);
         }
     }
 }

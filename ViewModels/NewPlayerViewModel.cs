@@ -96,6 +96,7 @@ namespace Volleyball_Teams.ViewModels
             }
             else
                 await dataStore.UpdatePlayerAsync(MyPlayer);
+            await dataStore.SetPlayerRanksByRatio();
             await Shell.Current.GoToAsync("..");
         }
 

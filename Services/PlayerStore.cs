@@ -78,5 +78,26 @@ namespace Volleyball_Teams.Services
             await Init();
             return await Database.Table<Player>().Where(i => i.IsHere).ToListAsync();
         }
+
+        public async Task SetPlayerRanksByRatio()
+        {
+            var players = await GetPlayersAsync();
+            players = players.OrderByDescending(p =>
+            {
+                if (p.NumLosses == 0) return p.NumWins;
+                else if (p.NumWins == 0) return -1 * p.NumLosses;
+                else return p.NumWins / p.NumLosses;
+            }).ToList();
+            for (int i = 0; i < players.Count; i++)
+            {
+                double p = (i + 1.0) / players.Count;
+                if (p <= .1) { players[i].NumStarsRatio = "5"; continue; }
+                if (p <= .25) { players[i].NumStarsRatio = "4"; continue; }
+                if (p <= .75) { players[i].NumStarsRatio = "3"; continue; }
+                if (p <= .9) { players[i].NumStarsRatio = "2"; continue; }
+                else players[i].NumStarsRatio = "1";
+            }
+            await UpdatePlayersAsync(players);
+        }
     }
 }

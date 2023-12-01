@@ -46,7 +46,7 @@
                                 FontFamily="FontAwesomeSolid"
                                 Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
                                 Size="30"
-                                Color="White" />
+                                Color="{StaticResource Primary}" />
                         </ImageButton.Source>
                     </ImageButton>
                     <ImageButton Command="{Binding MinusWinsCommand}">
@@ -55,7 +55,7 @@
                                 FontFamily="FontAwesomeSolid"
                                 Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
                                 Size="30"
-                                Color="White" />
+                                Color="{StaticResource Primary}" />
                         </ImageButton.Source>
                     </ImageButton>
                     <Entry
@@ -78,7 +78,7 @@
                                 FontFamily="FontAwesomeSolid"
                                 Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
                                 Size="30"
-                                Color="White" />
+                                Color="{StaticResource Primary}" />
                         </ImageButton.Source>
                     </ImageButton>
                     <ImageButton Command="{Binding MinusLossesCommand}">
@@ -87,7 +87,7 @@
                                 FontFamily="FontAwesomeSolid"
                                 Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
                                 Size="30"
-                                Color="White" />
+                                Color="{StaticResource Primary}" />
                         </ImageButton.Source>
                     </ImageButton>
                     <Entry

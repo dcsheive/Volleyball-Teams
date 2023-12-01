@@ -92,16 +92,19 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Image
                                     Grid.RowSpan="2"
                                     Grid.Column="0"
-                                    HorizontalOptions="Fill"
-                                    VerticalOptions="Fill">
+                                    HorizontalOptions="CenterAndExpand"
+                                    VerticalOptions="CenterAndExpand">
                                     <Image.Source>
                                         <FontImageSource
                                             FontFamily="FontAwesomeSolid"
                                             Glyph="{x:Static style:FontAwesomeSolid.User}"
+                                            Size="40"
                                             Color="{StaticResource Primary}" />
                                     </Image.Source>
                                 </Image>
@@ -109,7 +112,7 @@
                                     Grid.Row="2"
                                     Grid.Column="0"
                                     HorizontalOptions="CenterAndExpand"
-                                    NumStars="{Binding NumStars}"
+                                    NumStars="{Binding NumStarsDisplay}"
                                     StarSize="10" />
                             </Grid>
                             <Label

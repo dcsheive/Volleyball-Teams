@@ -16,11 +16,25 @@
                 VerticalTextAlignment="Center" />
             <Switch IsToggled="{Binding UseRank}">
                 <Switch.Behaviors>
-                    <toolkit:EventToCommandBehavior Command="{Binding SaveRankCommand}" EventName="Toggled" />
+                    <toolkit:EventToCommandBehavior Command="{Binding SaveUseRankCommand}" EventName="Toggled" />
                 </Switch.Behaviors>
             </Switch>
         </FlexLayout>
-        <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL PLAYERS" />
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Medium"
+                HorizontalOptions="Center"
+                Text="Use Score in Ranks?"
+                VerticalOptions="Center"
+                VerticalTextAlignment="Center" />
+            <Switch IsToggled="{Binding UseScore}">
+                <Switch.Behaviors>
+                    <toolkit:EventToCommandBehavior Command="{Binding SaveUseScoreCommand}" EventName="Toggled" />
+                </Switch.Behaviors>
+            </Switch>
+        </FlexLayout>
         <Button Command="{Binding ZeroWinsCommand}" Text="RESET SCORES" />
+        <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL PLAYERS" />
     </VerticalStackLayout>
 </ContentPage>

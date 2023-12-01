@@ -15,5 +15,6 @@ namespace Volleyball_Teams.Services
         Task<T?> GetPlayerByNameAsync(string name);
         Task<List<T>> GetPlayersAsync();
         Task<List<T>> GetPlayersHereAsync();
+        Task SetPlayerRanksByRatio();
     }
 }

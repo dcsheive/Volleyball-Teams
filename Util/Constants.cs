@@ -43,6 +43,7 @@ namespace Volleyball_Teams.Util
         public class Settings
         {
             public const string UseRank= "UseRank";
+            public const string UseScore = "UseScore";
             public const string NumTeams = "NumTeams";
             public const string SortBy = "SortBy";
             public const string SortByName = "Sort By: Name";

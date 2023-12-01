@@ -6,10 +6,20 @@
     xmlns:model="clr-namespace:Volleyball_Teams.Models"
     xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
     xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
     x:Name="BrowseTeamsPage"
     Title="{Binding Title}">
-
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding SortCommand}" Text="{Binding SortText}" />
+        <ToolbarItem
+            Command="{Binding LoadPlayersCommand}"
+            CommandParameter="true"
+            IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                        Color=White,
+                                        Glyph={x:Static style:FontAwesomeSolid.Reply}}"
+            Text="Refresh" />
+    </ContentPage.ToolbarItems>
     <Grid RowDefinitions="*,12*">
         <FlexLayout
             Grid.Row="0"
@@ -27,7 +37,7 @@
                     <Image.Source>
                         <FontImageSource
                             FontFamily="FontAwesomeSolid"
-                            Glyph="{x:Static style:FontAwesomeSolid.Minus}"
+                            Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
                             Size="32"
                             Color="{StaticResource Primary}" />
                     </Image.Source>
@@ -55,7 +65,7 @@
                     <Image.Source>
                         <FontImageSource
                             FontFamily="FontAwesomeSolid"
-                            Glyph="{x:Static style:FontAwesomeSolid.Plus}"
+                            Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
                             Size="32"
                             Color="{StaticResource Primary}" />
                     </Image.Source>
@@ -66,11 +76,9 @@
             </Frame>
 
         </FlexLayout>
-        <RefreshView
-            Grid.Row="1"
-            Command="{Binding LoadPlayersCommand}"
-            CommandParameter="False"
-            IsRefreshing="{Binding IsRefreshing}">
+
+        <StackLayout Grid.Row="1">
+
             <CollectionView
                 IsGrouped="True"
                 ItemsSource="{Binding Teams}"
@@ -111,26 +119,86 @@
                 </CollectionView.GroupHeaderTemplate>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <FlexLayout
-                            Margin="20,0"
-                            Direction="Row"
-                            JustifyContent="SpaceBetween">
+                        <Grid Margin="20,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="2*" />
+                            </Grid.ColumnDefinitions>
                             <Label
-                                Grid.Column="1"
+                                Grid.Column="0"
                                 FontSize="Small"
                                 LineBreakMode="NoWrap"
                                 MaxLines="1"
                                 Style="{DynamicResource ListItemTextStyle}"
                                 Text="{Binding Name}" />
+                            <Image Grid.Column="1">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Bars}"
+                                        Size="20"
+                                        Color="{StaticResource MidGray}" />
+                                </Image.Source>
+                            </Image>
                             <template:Stars
+                                Grid.Column="2"
+                                HorizontalOptions="EndAndExpand"
                                 IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
-                                NumStars="{Binding NumStars}"
+                                NumStars="{Binding NumStarsDisplay}"
                                 StarSize="12" />
-                        </FlexLayout>
+                            <Grid.GestureRecognizers>
+                                <DragGestureRecognizer
+                                    CanDrag="True"
+                                    DragStartingCommand="{Binding BindingContext.ItemDraggedCommand, Source={x:Reference BrowseTeamsPage}}"
+                                    DragStartingCommandParameter="{Binding}" />
+                                <DropGestureRecognizer
+                                    AllowDrop="True"
+                                    DragOverCommand="{Binding BindingContext.ItemDraggedOverCommand, Source={x:Reference BrowseTeamsPage}}"
+                                    DragOverCommandParameter="{Binding}"
+                                    DropCommand="{Binding BindingContext.ItemDroppedCommand, Source={x:Reference BrowseTeamsPage}}"
+                                    DropCommandParameter="{Binding}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </RefreshView>
+
+            <Grid Margin="0,10,0,0" VerticalOptions="EndAndExpand">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <StackLayout Grid.Column="0" Margin="10">
+                    <Label Text="Winners" />
+                    <Picker ItemsSource="{Binding WinTeams}" SelectedItem="{Binding WinningTeam}">
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                Command="{Binding SetOppositeTeamCommand}"
+                                CommandParameter="win"
+                                EventName="SelectedIndexChanged" />
+                        </Picker.Behaviors>
+                    </Picker>
+                </StackLayout>
+                <StackLayout Grid.Column="1" Margin="10">
+                    <Label Text="Losers" />
+                    <Picker ItemsSource="{Binding LoseTeams}" SelectedItem="{Binding LosingTeam}">
+                        <Picker.Behaviors>
+                            <toolkit:EventToCommandBehavior
+                                Command="{Binding SetOppositeTeamCommand}"
+                                CommandParameter="loss"
+                                EventName="SelectedIndexChanged" />
+                        </Picker.Behaviors>
+                    </Picker>
+                </StackLayout>
+                <Button
+                    Grid.Column="2"
+                    Margin="10"
+                    Command="{Binding ApplyCommand}"
+                    Text="Apply" />
+            </Grid>
+        </StackLayout>
     </Grid>
 
 </ContentPage>

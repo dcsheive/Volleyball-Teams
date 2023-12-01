@@ -8,14 +8,19 @@ namespace Volleyball_Teams.Models
 {
     public class Team : List<Player>
     {
-        public int Number { get; private set; }
-        public string NumberText { get; private set; }
+        public int Number { get; set; }
+        public string NumberText
+        {
+            get
+            {
+                return (Number + 1).ToString();
+            }
+        }
         public int Power { get; set; }
 
         public Team(int number, List<Player> players) : base(players)
         {
             Number = number;
-            NumberText = (number + 1).ToString();
         }
     }
 }

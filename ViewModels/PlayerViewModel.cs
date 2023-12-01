@@ -110,7 +110,7 @@ namespace Volleyball_Teams.ViewModels
         }
 
         private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
-        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStars));
+        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
         private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
         private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => {
             if (p.NumLosses == 0) return p.NumWins;
