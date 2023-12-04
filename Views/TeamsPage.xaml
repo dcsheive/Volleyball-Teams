@@ -164,7 +164,10 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Grid Margin="0,10,0,0" VerticalOptions="EndAndExpand">
+            <Grid
+                Margin="0,10,0,0"
+                IsVisible="{Binding AtLeast2Teams}"
+                VerticalOptions="EndAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="4*" />

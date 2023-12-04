@@ -10,6 +10,7 @@ using System.Windows.Input;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
+using Volleyball_Teams.Views;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -282,16 +283,27 @@ namespace Volleyball_Teams.ViewModels
 
         }
 
-        private void SortRandom()
+        private Team[] MakeTeams()
         {
             Teams.Clear();
             Constants.Shuffle(Players);
             if (NumTeams > Players.Count) NumTeams = Players.Count;
+            if (NumTeams == 0 && Players.Count > 0)
+            {
+                NumTeams++;
+                if (Players.Count > 1) NumTeams++;
+            }
             Team[] teams = new Team[NumTeams];
             for (int i = 0; i < teams.Length; i++)
             {
                 teams[i] = new Team(i, new List<Player>());
             }
+            return teams;
+        }
+
+        private void SortRandom()
+        {
+            Team[] teams = MakeTeams();
             int counter = 0;
             foreach (var player in Players.ToList())
             {
@@ -309,14 +321,7 @@ namespace Volleyball_Teams.ViewModels
 
         private void SortWithRank()
         {
-            Teams.Clear();
-            Constants.Shuffle(Players);
-            if (NumTeams > Players.Count) NumTeams = Players.Count;
-            Team[] teams = new Team[NumTeams];
-            for (int i = 0; i < teams.Length; i++)
-            {
-                teams[i] = new Team(i, new List<Player>());
-            }
+            Team[] teams = MakeTeams();
             foreach (var player in Players.ToList())
             {
                 Team smallest = teams[0];
