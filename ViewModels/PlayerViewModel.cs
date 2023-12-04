@@ -115,7 +115,8 @@ namespace Volleyball_Teams.ViewModels
         private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
         private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
         private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
-        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => {
+        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
+        {
             if (p.NumLosses == 0) return p.NumWins;
             else if (p.NumWins == 0) return -1 * p.NumLosses;
             else return p.NumWins / p.NumLosses;
@@ -165,9 +166,11 @@ namespace Volleyball_Teams.ViewModels
                     logger.LogDebug($"{item.Name}, {item.IsHere}");
                 }
                 UpdateHereCount();
-                if (SortText == Constants.Settings.SortByName) SortByName();
-                else if (SortText == Constants.Settings.SortByWins) SortByWins();
-                else SortByRank();
+                if (SortText == Constants.Settings.SortByName) { SortByName(); }
+                else if (SortText == Constants.Settings.SortByRank) { SortByRank(); }
+                else if (SortText == Constants.Settings.SortByWins) { SortByWins(); }
+                else if (SortText == Constants.Settings.SortByRatio) { SortByRatio(); }
+                else { SortByLosses(); }
             }
             catch (Exception ex)
             {
