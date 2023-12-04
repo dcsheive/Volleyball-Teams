@@ -1,20 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Volleyball_Teams.Models;
 
 namespace Volleyball_Teams.Services
 {
-    public interface IPlayerStore<T>
+    public interface IPlayerStore
     {
-        Task<bool> AddPlayerAsync(T item);
-        Task<bool> UpdatePlayerAsync(T item);
-        Task<bool> UpdatePlayersAsync(List<T> item);
-        Task<bool> DeletePlayerAsync(T item);
+        Task<bool> AddPlayerAsync(Player item);
+        Task<bool> UpdatePlayerAsync(Player item);
+        Task<bool> UpdatePlayersAsync(List<Player> item);
+        Task<bool> DeletePlayerAsync(Player item);
         Task DeleteAllPlayersAsync();
-        Task<T?> GetPlayerAsync(int id);
-        Task<T?> GetPlayerByNameAsync(string name);
-        Task<List<T>> GetPlayersAsync();
-        Task<List<T>> GetPlayersHereAsync();
+        Task<Player?> GetPlayerAsync(int id);
+        Task<Player?> GetPlayerByNameAsync(string name);
+        Task<List<Player>> GetPlayersAsync();
+        Task<List<Player>> GetPlayersHereAsync();
         Task SetPlayerRanksByRatio();
     }
 }
+

@@ -8,7 +8,7 @@ using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.Services
 {
-    public class PlayerStore : IPlayerStore<Player>
+    public class PlayerStore : IPlayerStore
     {
         SQLiteAsyncConnection Database;
         async Task Init()

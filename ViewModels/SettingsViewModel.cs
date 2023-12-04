@@ -9,8 +9,9 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        readonly IPlayerStore<Player>? dataStore;
-        ILogger<PlayersViewModel> logger;
+        readonly IPlayerStore playerStore;
+        readonly ITeamStore teamStore;
+        ILogger<SettingsViewModel> logger;
 
         [ObservableProperty]
         private string? title;
@@ -20,11 +21,12 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool useScore;
-        public SettingsViewModel(ILogger<PlayersViewModel> logger, IPlayerStore<Player> dataStore)
+        public SettingsViewModel(ILogger<SettingsViewModel> logger, IPlayerStore playerStore, ITeamStore teamStore)
         {
             Title = "Settings";
             this.logger = logger;
-            this.dataStore = dataStore;
+            this.playerStore = playerStore;
+            this.teamStore = teamStore;
         }
 
         [RelayCommand]
@@ -39,16 +41,31 @@ namespace Volleyball_Teams.ViewModels
             Preferences.Set(Constants.Settings.UseScore, UseScore);
             if (UseScore)
             {
-                await dataStore.SetPlayerRanksByRatio();
+                await playerStore.SetPlayerRanksByRatio();
             }
         }
 
         [RelayCommand]
         private async Task DeleteAll()
         {
-            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all player?", "Yes", "No");
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all players?", "Yes", "No");
             if (result)
-                await dataStore.DeleteAllPlayersAsync();
+            {
+                await teamStore.DeleteAllTeamsAsync();
+                await playerStore.DeleteAllPlayersAsync();
+            }
+
+        }
+
+        [RelayCommand]
+        private async Task DeleteAllTeams()
+        {
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all saved teams?", "Yes", "No");
+            if (result)
+            {
+                await teamStore.DeleteAllTeamsAsync();
+            }
+
         }
 
         [RelayCommand]
@@ -57,13 +74,13 @@ namespace Volleyball_Teams.ViewModels
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to reset all scores?", "Yes", "No");
             if (result)
             {
-                var items = await dataStore.GetPlayersAsync();
+                var items = await playerStore.GetPlayersAsync();
                 foreach(var item in items)
                 {
                     item.NumWins = 0;
                     item.NumLosses = 0;
                 }
-                await dataStore.UpdatePlayersAsync(items);
+                await playerStore.UpdatePlayersAsync(items);
             }
         }
 

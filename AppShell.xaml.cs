@@ -12,6 +12,7 @@ namespace Volleyball_Teams
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(NewPlayerPage), typeof(NewPlayerPage));
+            Routing.RegisterRoute(nameof(SavedTeamsPage), typeof(SavedTeamsPage));
             CurrentAppShell = this;
         }
 

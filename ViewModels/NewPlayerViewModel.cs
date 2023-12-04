@@ -13,7 +13,7 @@ namespace Volleyball_Teams.ViewModels
     {
         public string ID { get; set; }
 
-        readonly IPlayerStore<Player>? dataStore;
+        readonly IPlayerStore playerStore;
         ILogger<NewPlayerViewModel> logger;
         public ObservableCollection<string> Stars { get; set; }
         public string SelectedStar { get; set; }
@@ -30,10 +30,10 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private int losses;
-        public NewPlayerViewModel(IPlayerStore<Player> dataStore, ILogger<NewPlayerViewModel> logger)
+        public NewPlayerViewModel(IPlayerStore playerStore, ILogger<NewPlayerViewModel> logger)
         {
-            if (dataStore == null) { throw new ArgumentNullException(nameof(dataStore)); }
-            this.dataStore = dataStore;
+            if (playerStore == null) { throw new ArgumentNullException(nameof(playerStore)); }
+            this.playerStore = playerStore;
             this.logger = logger;
             Stars = new ObservableCollection<string>() { "1", "2", "3", "4", "5" };
         }
@@ -73,7 +73,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task Delete()
         {
-            await dataStore.DeletePlayerAsync(MyPlayer);
+            await playerStore.DeletePlayerAsync(MyPlayer);
             await Shell.Current.GoToAsync("..");
         }
 
@@ -89,20 +89,20 @@ namespace Volleyball_Teams.ViewModels
             {
                 if (await CheckDB())
                 {
-                    await Application.Current.MainPage.DisplayAlert("Name Found", "This name has already been used.", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Failed", "This name has already been used.", "OK");
                     return;
                 }
-                _ = await dataStore.AddPlayerAsync(MyPlayer);
+                _ = await playerStore.AddPlayerAsync(MyPlayer);
             }
             else
-                await dataStore.UpdatePlayerAsync(MyPlayer);
-            await dataStore.SetPlayerRanksByRatio();
+                await playerStore.UpdatePlayerAsync(MyPlayer);
+            await playerStore.SetPlayerRanksByRatio();
             await Shell.Current.GoToAsync("..");
         }
 
         private async Task<bool> CheckDB()
         {
-            Player p = await dataStore.GetPlayerByNameAsync(Name);
+            Player p = await playerStore.GetPlayerByNameAsync(Name);
             if (p == null) return false;
             return true;
         }
@@ -116,7 +116,7 @@ namespace Volleyball_Teams.ViewModels
 
         private async Task GetPlayer()
         {
-            MyPlayer = await dataStore.GetPlayerAsync(int.Parse(ID));
+            MyPlayer = await playerStore.GetPlayerAsync(int.Parse(ID));
             Name = MyPlayer.Name;
             SelectedStar = MyPlayer.NumStars;
             Wins = MyPlayer.NumWins;

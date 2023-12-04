@@ -11,7 +11,7 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class PlayersViewModel : ObservableObject
     {
-        readonly IPlayerStore<Player> dataStore;
+        readonly IPlayerStore playerStore;
         ILogger<PlayersViewModel> logger;
 
         public ObservableCollection<Player> Players { get; set; }
@@ -45,9 +45,9 @@ namespace Volleyball_Teams.ViewModels
 
         private bool DoNotRunHere;
         private bool DoNotRunAllHere;
-        public PlayersViewModel(IPlayerStore<Player> dataStore, ILogger<PlayersViewModel> logger)
+        public PlayersViewModel(IPlayerStore playerStore, ILogger<PlayersViewModel> logger)
         {
-            this.dataStore = dataStore;
+            this.playerStore = playerStore;
             this.logger = logger;
             Title = "Players";
             Players = new ObservableCollection<Player>();
@@ -132,7 +132,7 @@ namespace Volleyball_Teams.ViewModels
                 logger.LogWarning("item is null.");
                 return;
             }
-            await dataStore.UpdatePlayerAsync(item);
+            await playerStore.UpdatePlayerAsync(item);
             logger.LogDebug($"item is {item.Name}, {item.IsHere}");
             UpdateHereCount();
         }
@@ -158,7 +158,7 @@ namespace Volleyball_Teams.ViewModels
             {
                 Players.Clear();
                 HereCount = 0;
-                var items = await dataStore.GetPlayersAsync();
+                var items = await playerStore.GetPlayersAsync();
                 foreach (var item in items)
                 {
                     Players.Add(item);
@@ -202,7 +202,7 @@ namespace Volleyball_Teams.ViewModels
                 {
                     p.IsHere = IsAllHere;
                 }
-                await dataStore.UpdatePlayersAsync(list);
+                await playerStore.UpdatePlayersAsync(list);
                 UpdateHereCount();
             }
             catch (Exception ex)

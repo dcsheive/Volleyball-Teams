@@ -55,147 +55,145 @@
                 </Switch>
             </HorizontalStackLayout>
         </Grid>
-        <RefreshView
+        <CollectionView
             Grid.Row="1"
-            Command="{Binding LoadPlayersCommand}"
-            IsRefreshing="{Binding IsRefreshing}">
-            <CollectionView ItemsSource="{Binding Players}" SelectionMode="None">
-                <CollectionView.EmptyView>
-                    <ActivityIndicator
-                        HorizontalOptions="CenterAndExpand"
-                        IsRunning="True"
-                        IsVisible="{Binding DidNotFinishLoading}"
-                        VerticalOptions="CenterAndExpand"
-                        WidthRequest="50"
-                        Color="{StaticResource Primary}" />
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="10">
+            ItemsSource="{Binding Players}"
+            SelectionMode="None">
+            <CollectionView.EmptyView>
+                <ActivityIndicator
+                    HorizontalOptions="CenterAndExpand"
+                    IsRunning="True"
+                    IsVisible="{Binding DidNotFinishLoading}"
+                    VerticalOptions="CenterAndExpand"
+                    WidthRequest="50"
+                    Color="{StaticResource Primary}" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="24" />
+                            <RowDefinition Height="24" />
+                            <RowDefinition Height="24" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.RowSpan="3" Grid.Column="0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="24" />
-                                <RowDefinition Height="24" />
-                                <RowDefinition Height="24" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="80" />
                                 <ColumnDefinition Width="*" />
-
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.RowSpan="3" Grid.Column="0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image
-                                    Grid.RowSpan="2"
-                                    Grid.Column="0"
-                                    HorizontalOptions="CenterAndExpand"
-                                    VerticalOptions="CenterAndExpand">
-                                    <Image.Source>
-                                        <FontImageSource
-                                            FontFamily="FontAwesomeSolid"
-                                            Glyph="{x:Static style:FontAwesomeSolid.User}"
-                                            Size="40"
-                                            Color="{StaticResource Primary}" />
-                                    </Image.Source>
-                                </Image>
-                                <template:Stars
-                                    Grid.Row="2"
-                                    Grid.Column="0"
-                                    HorizontalOptions="CenterAndExpand"
-                                    IsVisible="{Binding Source={x:Reference BrowsePlayersPage}, Path=BindingContext.UseRank}}"
-                                    NumStars="{Binding NumStarsDisplay}"
-                                    StarSize="10" />
-                            </Grid>
-                            <Label
-                                Grid.Column="1"
-                                FontAttributes="Bold"
-                                FontSize="Small"
-                                LineBreakMode="NoWrap"
-                                MaxLines="1"
-                                Style="{DynamicResource ListItemTextStyle}"
-                                Text="{Binding Name}" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                FontSize="Small"
-                                LineBreakMode="TailTruncation"
-                                MaxLines="1"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                Text="Here">
-                                <Label.Triggers>
-                                    <DataTrigger
-                                        Binding="{Binding IsHere}"
-                                        TargetType="Label"
-                                        Value="False">
-                                        <Setter Property="Text" Value="Not Here" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
-                            <Label
+                            <Image
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                HorizontalOptions="CenterAndExpand"
+                                VerticalOptions="CenterAndExpand">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.User}"
+                                        Size="40"
+                                        Color="{StaticResource Primary}" />
+                                </Image.Source>
+                            </Image>
+                            <template:Stars
                                 Grid.Row="2"
-                                Grid.Column="1"
-                                Text="{Binding WinsDisplay}" />
-                            <StackLayout
-                                Grid.RowSpan="3"
-                                Grid.Column="3"
-                                HorizontalOptions="End"
-                                Orientation="Horizontal">
-                                <Switch IsToggled="{Binding IsHere}">
-                                    <Switch.Behaviors>
-                                        <toolkit:EventToCommandBehavior
-                                            Command="{Binding Path=BindingContext.HereCommand, Source={x:Reference BrowsePlayersPage}}"
-                                            CommandParameter="{Binding .}"
-                                            EventName="Toggled" />
-                                    </Switch.Behaviors>
-                                </Switch>
-                                <Frame
-                                    Margin="20,0,0,0"
-                                    Padding="10,0"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="Transparent">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BrowsePlayersPage}}" CommandParameter="{Binding .}" />
-                                    </Frame.GestureRecognizers>
-                                    <StackLayout
-                                        HorizontalOptions="CenterAndExpand"
-                                        Orientation="Vertical"
-                                        VerticalOptions="CenterAndExpand">
-                                        <Image HorizontalOptions="Fill" VerticalOptions="Fill">
-                                            <Image.Source>
-                                                <FontImageSource
-                                                    FontFamily="FontAwesomeSolid"
-                                                    Glyph="{x:Static style:FontAwesomeSolid.Edit}"
-                                                    Size="32"
-                                                    Color="{StaticResource Primary}" />
-                                            </Image.Source>
-                                        </Image>
-                                    </StackLayout>
-                                </Frame>
-                            </StackLayout>
-
-                            <Grid.Triggers>
+                                Grid.Column="0"
+                                HorizontalOptions="CenterAndExpand"
+                                IsVisible="{Binding Source={x:Reference BrowsePlayersPage}, Path=BindingContext.UseRank}"
+                                NumStars="{Binding NumStarsDisplay}"
+                                StarSize="10" />
+                        </Grid>
+                        <Label
+                            Grid.Column="1"
+                            FontAttributes="Bold"
+                            FontSize="Small"
+                            LineBreakMode="NoWrap"
+                            MaxLines="1"
+                            Style="{DynamicResource ListItemTextStyle}"
+                            Text="{Binding Name}" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            FontSize="Small"
+                            LineBreakMode="TailTruncation"
+                            MaxLines="1"
+                            Style="{DynamicResource ListItemDetailTextStyle}"
+                            Text="Here">
+                            <Label.Triggers>
                                 <DataTrigger
                                     Binding="{Binding IsHere}"
-                                    TargetType="Grid"
+                                    TargetType="Label"
                                     Value="False">
-                                    <Setter Property="BackgroundColor" Value="Gray" />
+                                    <Setter Property="Text" Value="Not Here" />
                                 </DataTrigger>
-                            </Grid.Triggers>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+                            </Label.Triggers>
+                        </Label>
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Text="{Binding WinsDisplay}" />
+                        <StackLayout
+                            Grid.RowSpan="3"
+                            Grid.Column="3"
+                            HorizontalOptions="End"
+                            Orientation="Horizontal">
+                            <Switch IsToggled="{Binding IsHere}">
+                                <Switch.Behaviors>
+                                    <toolkit:EventToCommandBehavior
+                                        Command="{Binding Path=BindingContext.HereCommand, Source={x:Reference BrowsePlayersPage}}"
+                                        CommandParameter="{Binding .}"
+                                        EventName="Toggled" />
+                                </Switch.Behaviors>
+                            </Switch>
+                            <Frame
+                                Margin="20,0,0,0"
+                                Padding="10,0"
+                                BackgroundColor="Transparent"
+                                BorderColor="Transparent">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BrowsePlayersPage}}" CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                <StackLayout
+                                    HorizontalOptions="CenterAndExpand"
+                                    Orientation="Vertical"
+                                    VerticalOptions="CenterAndExpand">
+                                    <Image HorizontalOptions="Fill" VerticalOptions="Fill">
+                                        <Image.Source>
+                                            <FontImageSource
+                                                FontFamily="FontAwesomeSolid"
+                                                Glyph="{x:Static style:FontAwesomeSolid.Edit}"
+                                                Size="32"
+                                                Color="{StaticResource Primary}" />
+                                        </Image.Source>
+                                    </Image>
+                                </StackLayout>
+                            </Frame>
+                        </StackLayout>
+
+                        <Grid.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsHere}"
+                                TargetType="Grid"
+                                Value="False">
+                                <Setter Property="BackgroundColor" Value="Gray" />
+                            </DataTrigger>
+                        </Grid.Triggers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 
 </ContentPage>

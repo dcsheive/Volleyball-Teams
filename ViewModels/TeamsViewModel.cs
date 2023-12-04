@@ -16,9 +16,10 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class TeamsViewModel : ObservableObject
     {
-
-        readonly IPlayerStore<Player> dataStore;
-        ILogger<PlayersViewModel> logger;
+        readonly IPlayerStore playerStore;
+        readonly ITeamStore teamStore;
+        readonly IGlobalVariables globalVariables;
+        ILogger<TeamsViewModel> logger;
 
         public ObservableCollection<Team> Teams { get; private set; }
         public ObservableCollection<string> WinTeams { get; private set; }
@@ -59,10 +60,17 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
-        public TeamsViewModel(IPlayerStore<Player> dataStore, ILogger<PlayersViewModel> logger)
+        [ObservableProperty]
+        private bool isLoading;
+
+        [ObservableProperty]
+        private string loadText = "Loading Saved Teams...";
+        public TeamsViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<TeamsViewModel> logger, IGlobalVariables globalVariables)
         {
-            this.dataStore = dataStore;
+            this.playerStore = playerStore;
+            this.teamStore = teamStore;
             this.logger = logger;
+            this.globalVariables = globalVariables;
             Title = "Teams";
             Teams = new ObservableCollection<Team>();
             Players = new List<Player>();
@@ -213,7 +221,7 @@ namespace Volleyball_Teams.ViewModels
                 if (isPageLoad)
                 {
                     Players.Clear();
-                    var items = await dataStore.GetPlayersHereAsync();
+                    var items = await playerStore.GetPlayersHereAsync();
                     foreach (var item in items)
                     {
                         Players.Add(item);
@@ -238,6 +246,40 @@ namespace Volleyball_Teams.ViewModels
                 IsRefreshing = false;
                 logger.LogDebug("Set IsBusy to false");
             }
+        }
+
+        [RelayCommand]
+        private async Task OpenSavedTeams(object obj)
+        {
+            IsLoading = true;
+            await Shell.Current.GoToAsync($"{nameof(SavedTeamsPage)}");
+            IsLoading = false;
+        }
+
+        [RelayCommand]
+        private async Task SaveTeams()
+        {
+            StringBuilder sb = new StringBuilder();
+            StringBuilder idstr = new StringBuilder();
+            foreach (var team in Teams)
+            {
+                idstr.Append("$");
+                sb.Append($"Team {team.NumberText}\n");
+                sb.Append(string.Join("\n", team.Select(e => "\t" + e.Name).ToList()));
+                idstr.Append(string.Join(",", team.Select(x => x.Id).ToList()));
+                sb.Append("\n");
+            }
+            TeamDB teamDB = new TeamDB();
+            teamDB.IDStr = idstr.ToString();
+            if (await teamStore.CheckIfExists(teamDB.IDStr))
+            {
+                await Application.Current.MainPage.DisplayAlert("Failed", "This team configuration already exists.", "OK");
+                return;
+            }
+            await teamStore.AddTeamAsync(teamDB);
+            string endStr = sb.ToString();
+            Debug.Print(endStr);
+            await Application.Current.MainPage.DisplayAlert("Confirmation", endStr, "OK");
         }
 
         private async void ResetWinLoseTeams()
@@ -275,7 +317,7 @@ namespace Volleyball_Teams.ViewModels
                     sb.AppendLine($"\t{player.Name}");
                     player.NumLosses++;
                 }
-                await dataStore.UpdatePlayersAsync(Players);
+                await playerStore.UpdatePlayersAsync(Players);
                 string endStr = sb.ToString();
                 Debug.Print(endStr);
                 await Application.Current.MainPage.DisplayAlert("Confirmation", endStr, "OK");
@@ -313,10 +355,7 @@ namespace Volleyball_Teams.ViewModels
                 player.Team = team;
                 counter++;
             }
-            foreach (var team in teams)
-            {
-                Teams.Add(team);
-            }
+            Teams = new ObservableCollection<Team>(teams);
         }
 
         private void SortWithRank()
@@ -334,18 +373,59 @@ namespace Volleyball_Teams.ViewModels
                 player.Team = smallest;
                 smallest.Power += int.Parse(player.NumStars);
             }
-            foreach (var team in teams)
+            Teams = new ObservableCollection<Team>(teams);
+        }
+
+        private void LoadTeams()
+        {
+            Task.Run(async () => await DoLoadTeams());
+        }
+
+        private async Task DoLoadTeams()
+        {
+            Teams.Clear();
+            Players = await playerStore.GetPlayersAsync();
+            TeamDB teamdb = await teamStore.GetTeamAsync(globalVariables.TeamID);
+            globalVariables.TeamID = 0;
+            string[] teamsStr = teamdb.IDStr.Split('$');
+            List<Team> teamsArr = new();
+            int count = 0;
+            for (int i = 0; i < teamsStr.Length; i++)
             {
-                Teams.Add(team);
+                if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
+                teamsArr.Add(new Team(count++, GetPlayerListFromStr(teamsStr[i])));
             }
+            NumTeams = teamsArr.Count;
+            Teams = new ObservableCollection<Team>(teamsArr);
+            CalcPowers();
+        }
+
+        private List<Player> GetPlayerListFromStr(string playerStr)
+        {
+            List<Player> players = new List<Player>();
+            string[] playerArr = playerStr.Split(",");
+            foreach (string id in playerArr)
+            {
+                int idInt = int.Parse(id);
+                players.Add(Players.Where(player => player.Id == idInt).First());
+            }
+            return players;
         }
 
         async public void OnAppearing()
         {
+            IsLoading = false;
             DidNotFinishLoading = true;
             UseRank = Preferences.Get(Constants.Settings.UseRank, true);
-            if (Players.Count == 0)
-                LoadPlayers("True");
+            if (globalVariables.TeamID == 0)
+            {
+                if (Players.Count == 0)
+                    LoadPlayers("True");
+            }
+            else
+            {
+                LoadTeams();
+            }
         }
     }
 }

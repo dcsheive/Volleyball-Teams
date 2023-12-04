@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Maui.Controls;
+﻿using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 using System;
 using System.ComponentModel;
@@ -7,11 +6,11 @@ using Volleyball_Teams.ViewModels;
 
 namespace Volleyball_Teams.Views
 {
-    public partial class TeamsPage : ContentPage
+    public partial class SavedTeamsPage : ContentPage
     {
-        TeamsViewModel _viewModel;
+        SavedTeamsViewModel _viewModel;
 
-        public TeamsPage(TeamsViewModel viewModel)
+        public SavedTeamsPage(SavedTeamsViewModel viewModel)
         {
             InitializeComponent();
 

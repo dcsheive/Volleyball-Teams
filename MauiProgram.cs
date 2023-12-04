@@ -31,11 +31,15 @@ namespace Volleyball_Teams
 		builder.Logging.AddDebug();
 		builder.Logging.SetMinimumLevel(LogLevel.Debug);
 #endif
-            builder.Services.AddSingleton<IPlayerStore<Player>, PlayerStore>();
+            builder.Services.AddSingleton<IPlayerStore, PlayerStore>();
+            builder.Services.AddSingleton<ITeamStore, TeamStore>();
+            builder.Services.AddSingleton<IGlobalVariables, GlobalVariables>();
             builder.Services.AddScoped<PlayersViewModel>();
             builder.Services.AddScoped<PlayersPage>();
             builder.Services.AddScoped<TeamsViewModel>();
             builder.Services.AddScoped<TeamsPage>();
+            builder.Services.AddScoped<SavedTeamsViewModel>();
+            builder.Services.AddScoped<SavedTeamsPage>();
             builder.Services.AddScoped<NewPlayerViewModel>();
             builder.Services.AddScoped<NewPlayerPage>();
             builder.Services.AddScoped<SettingsViewModel>();

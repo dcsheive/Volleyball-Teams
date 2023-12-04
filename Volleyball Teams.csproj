@@ -149,6 +149,9 @@
 	  <Compile Update="Views\PlayersPage.xaml.cs">
 	    <DependentUpon>PlayersPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\SavedTeamsPage.xaml.cs">
+	    <DependentUpon>SavedTeamsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\TeamsPage.xaml.cs">
 	    <DependentUpon>TeamsPage.xaml</DependentUpon>
 	  </Compile>
@@ -159,6 +162,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Views\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SavedTeamsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Templates\Stars.xaml">
