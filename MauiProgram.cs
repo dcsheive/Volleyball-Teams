@@ -1,9 +1,13 @@
 ﻿using CommunityToolkit.Maui;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter;
 using Microsoft.Extensions.Logging;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.ViewModels;
 using Volleyball_Teams.Views;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Volleyball_Teams
 {
@@ -44,7 +48,11 @@ namespace Volleyball_Teams
             builder.Services.AddScoped<NewPlayerPage>();
             builder.Services.AddScoped<SettingsViewModel>();
             builder.Services.AddScoped<SettingsPage>();
-
+            AppCenter.Start("android=6099ddb4-fc7d-44ba-aa25-329316ae8dee;" +
+                  "uwp={Your UWP App secret here};" +
+                  "ios={Your iOS App secret here};" +
+                  "macos={Your macOS App secret here};",
+                  typeof(Analytics), typeof(Crashes));
             return builder.Build();
         }
     }
