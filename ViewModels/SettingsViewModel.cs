@@ -21,30 +21,78 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool useScore;
+
+        [ObservableProperty]
+        private bool isLight;
+
+        [ObservableProperty]
+        private bool isDefault;
+
+        [ObservableProperty]
+        private bool isDark;
         public SettingsViewModel(ILogger<SettingsViewModel> logger, IPlayerStore playerStore, ITeamStore teamStore)
         {
             Title = Constants.Title.Settings;
             this.logger = logger;
             this.playerStore = playerStore;
             this.teamStore = teamStore;
+            IsDefault = true;
         }
 
         public void OnAppearing()
         {
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
-            UseScore = Preferences.Get(Constants.Settings.UseScore, false);
+            UseRank = Settings.UseRank;
+            UseScore = Settings.UseScore;
+            switch (Settings.Theme)
+            {
+                case 0:
+                    IsDefault = true;
+                    IsLight = false;
+                    IsDark = false;
+                    break;
+                case 1:
+                    IsDefault = false;
+                    IsLight = true;
+                    IsDark = false;
+                    break;
+                case 2:
+                    IsDefault = false;
+                    IsLight = false;
+                    IsDark = true;
+                    break;
+            }
+        }
+
+        public void SetTheme(RadioButton r)
+        {
+            switch (r.Value)
+            {
+                case "System":
+                    if (r.IsChecked) Settings.Theme = 0;
+                    IsDefault = r.IsChecked;
+                    break;
+                case "Light":
+                    if (r.IsChecked) Settings.Theme = 1;
+                    IsLight = r.IsChecked;
+                    break;
+                case "Dark":
+                    if (r.IsChecked) Settings.Theme = 2;
+                    IsDark = r.IsChecked;
+                    break;
+            }
+            TheTheme.SetTheme();
         }
 
         [RelayCommand]
         private async Task SaveUseRank()
         {
-            Preferences.Set(Constants.Settings.UseRank, UseRank);
+            Settings.UseRank = UseRank;
         }
 
         [RelayCommand]
         private async Task SaveUseScore()
         {
-            Preferences.Set(Constants.Settings.UseScore, UseScore);
+            Settings.UseScore = UseScore;
             if (UseScore)
             {
                 await playerStore.SetPlayerRanksByRatio();

@@ -18,7 +18,7 @@ namespace Volleyball_Teams.Models
         {
             get
             {
-                return Preferences.Get(Constants.Settings.UseScore, false) ? NumStarsRatio : NumStars;
+                return Settings.UseScore ? NumStarsRatio : NumStars;
             }
         }
         public int NumWins { get; set; } = 0;

@@ -17,11 +17,20 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Button
+            <Frame
                 Grid.Row="0"
-                Command="{Binding CloseTeamsCommand}"
-                CornerRadius="0"
-                Text="Close" />
+                Margin="-1"
+                BackgroundColor="{StaticResource Primary}"
+                BorderColor="Transparent"
+                CornerRadius="0">
+                <Label
+                    HorizontalTextAlignment="Center"
+                    Text="Close"
+                    TextColor="White" />
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CloseTeamsCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
             <CollectionView
                 Grid.Row="1"
                 ItemsSource="{Binding SavedTeams}"

@@ -70,7 +70,7 @@ namespace Volleyball_Teams.ViewModels
             Title = Constants.Title.Teams;
             Teams = new ObservableCollection<Team>();
             Players = new List<Player>();
-            NumTeams = Preferences.Get(Constants.Settings.NumTeams, 2);
+            NumTeams = Settings.NumTeams;
             OnPropertyChanged(nameof(AtLeast2Teams));
         }
 
@@ -78,7 +78,7 @@ namespace Volleyball_Teams.ViewModels
         {
             IsLoading = false;
             DidNotFinishLoading = true;
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            UseRank = Settings.UseRank;
             if (globalVariables.TeamID == 0)
             {
                 if (Players.Count == 0) LoadPlayers();
@@ -99,7 +99,7 @@ namespace Volleyball_Teams.ViewModels
             if (NumTeams >= Players.Count) return;
             if (IsBusy) return;
             NumTeams++;
-            Preferences.Set(Constants.Settings.NumTeams, NumTeams);
+            Settings.NumTeams = NumTeams;
             LoadPlayers();
         }
 
@@ -113,7 +113,7 @@ namespace Volleyball_Teams.ViewModels
             if (NumTeams <= 1) return;
             if (IsBusy) return;
             NumTeams--;
-            Preferences.Set(Constants.Settings.NumTeams, NumTeams);
+            Settings.NumTeams = NumTeams;
             LoadPlayers();
         }
 

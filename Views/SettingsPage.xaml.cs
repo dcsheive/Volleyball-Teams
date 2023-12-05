@@ -16,5 +16,11 @@ namespace Volleyball_Teams.Views
             base.OnAppearing();
             _viewModel.OnAppearing();
         }
+
+        private void RadioButton_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            RadioButton r = (RadioButton)sender;
+            _viewModel.SetTheme(r);
+        }
     }
 }

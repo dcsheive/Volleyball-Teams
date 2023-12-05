@@ -50,17 +50,16 @@ namespace Volleyball_Teams.ViewModels
             DidNotFinishLoading = true;
             Players = new ObservableCollection<Player>();
             HereText = Constants.Settings.AllHere;
-            SortText = Preferences.Get(Constants.Settings.SortBy, Constants.Settings.SortByName);
+            SortText = Settings.SortBy;
             if (string.IsNullOrEmpty(SortText))
             {
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
                 SortText = Constants.Settings.SortByName;
             }
         }
 
         public void OnAppearing()
         {
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            UseRank = Settings.UseRank;
             DidNotFinishLoading = true;
             LoadPlayers();
         }
@@ -88,35 +87,35 @@ namespace Volleyball_Teams.ViewModels
                     SortText = Constants.Settings.SortByRank;
                     logger.LogDebug($"Sort = {SortText}");
                     SortByRank();
-                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRank);
+                    Settings.SortBy = Constants.Settings.SortByRank;
                 }
                 else if (SortText == Constants.Settings.SortByRank)
                 {
                     SortText = Constants.Settings.SortByWins;
                     logger.LogDebug($"Sort = {SortText}");
                     SortByWins();
-                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByWins);
+                    Settings.SortBy = Constants.Settings.SortByWins;
                 }
                 else if (SortText == Constants.Settings.SortByWins)
                 {
                     SortText = Constants.Settings.SortByRatio;
                     logger.LogDebug($"Sort = {SortText}");
                     SortByRatio();
-                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRatio);
+                    Settings.SortBy = Constants.Settings.SortByRatio;
                 }
                 else if (SortText == Constants.Settings.SortByRatio)
                 {
                     SortText = Constants.Settings.SortByLoss;
                     logger.LogDebug($"Sort = {SortText}");
                     SortByLosses();
-                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByLoss);
+                    Settings.SortBy = Constants.Settings.SortByLoss;
                 }
                 else
                 {
                     SortText = Constants.Settings.SortByName;
                     logger.LogDebug($"Sort = {SortText}");
                     SortByName();
-                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
+                    Settings.SortBy = Constants.Settings.SortByName;
                 }
             }
             catch (Exception ex)

@@ -66,7 +66,7 @@ namespace Volleyball_Teams.ViewModels
         {
             IsLoading = false;
             DidNotFinishLoading = true;
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            UseRank = Settings.UseRank;
             LoadTeams();
         }
 

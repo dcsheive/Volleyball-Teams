@@ -3,9 +3,149 @@
     x:Class="Volleyball_Teams.Views.SettingsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     Title="{Binding Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ControlTemplate x:Key="ThemeRadioTemplate">
+                <Border
+                    Padding="0"
+                    BackgroundColor="{AppThemeBinding Dark={StaticResource Black},
+                                                      Light={StaticResource White}}"
+                    HeightRequest="80"
+                    HorizontalOptions="Start"
+                    Stroke="{AppThemeBinding Dark={StaticResource White},
+                                             Light={StaticResource Black}}"
+                    VerticalOptions="Start"
+                    WidthRequest="90">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="5" />
+                    </Border.StrokeShape>
+                    <Grid Margin="4" WidthRequest="80">
+                        <Grid
+                            HeightRequest="20"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            WidthRequest="22">
+                            <Ellipse
+                                Fill="White"
+                                HeightRequest="18"
+                                HorizontalOptions="Center"
+                                Stroke="Black"
+                                StrokeThickness="1"
+                                VerticalOptions="Center"
+                                WidthRequest="18" />
+                            <Ellipse
+                                x:Name="Check"
+                                BackgroundColor="Transparent"
+                                Fill="{StaticResource Primary}"
+                                HeightRequest="12"
+                                HorizontalOptions="Center"
+                                Stroke="{StaticResource Primary}"
+                                StrokeThickness="0"
+                                VerticalOptions="Center"
+                                WidthRequest="12" />
+                        </Grid>
+                        <ContentPresenter />
+                    </Grid>
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CheckedStates">
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="{StaticResource Primary}" />
+                                        <Setter TargetName="Check" Property="Opacity" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}" />
+                                        <Setter TargetName="Check" Property="Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </VisualStateManager.VisualStateGroups>
+                </Border>
+            </ControlTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <VerticalStackLayout Margin="10" Spacing="10">
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
+            <RadioButton
+                CheckedChanged="RadioButton_CheckedChanged"
+                ControlTemplate="{StaticResource ThemeRadioTemplate}"
+                GroupName="Theme"
+                IsChecked="{Binding IsDefault}"
+                Value="System">
+                <RadioButton.Content>
+                    <StackLayout>
+                        <Image Margin="0,10">
+                            <Image.Source>
+                                <FontImageSource
+                                    FontFamily="FontAwesomeSolid"
+                                    Glyph="{x:Static style:FontAwesomeSolid.Phone}"
+                                    Size="32"
+                                    Color="{StaticResource Primary}" />
+                            </Image.Source>
+                        </Image>
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Text="System"
+                            VerticalTextAlignment="End" />
+                    </StackLayout>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                CheckedChanged="RadioButton_CheckedChanged"
+                ControlTemplate="{StaticResource ThemeRadioTemplate}"
+                GroupName="Theme"
+                IsChecked="{Binding IsLight}"
+                Value="Light">
+                <RadioButton.Content>
+                    <StackLayout>
+                        <Image Margin="0,10">
+                            <Image.Source>
+                                <FontImageSource
+                                    FontFamily="FontAwesomeSolid"
+                                    Glyph="{x:Static style:FontAwesomeSolid.Sun}"
+                                    Size="32"
+                                    Color="{StaticResource Primary}" />
+                            </Image.Source>
+                        </Image>
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Text="Light"
+                            VerticalTextAlignment="End" />
+                    </StackLayout>
+                </RadioButton.Content>
+            </RadioButton>
+            <RadioButton
+                CheckedChanged="RadioButton_CheckedChanged"
+                ControlTemplate="{StaticResource ThemeRadioTemplate}"
+                GroupName="Theme"
+                IsChecked="{Binding IsDark}"
+                Value="Dark">
+                <RadioButton.Content>
+                    <StackLayout>
+                        <Image Margin="0,10">
+                            <Image.Source>
+                                <FontImageSource
+                                    FontFamily="FontAwesomeSolid"
+                                    Glyph="{x:Static style:FontAwesomeSolid.Moon}"
+                                    Size="32"
+                                    Color="{StaticResource Primary}" />
+                            </Image.Source>
+                        </Image>
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            Text="Dark"
+                            VerticalTextAlignment="End" />
+                    </StackLayout>
+                </RadioButton.Content>
+            </RadioButton>
+        </FlexLayout>
         <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
             <Label
                 FontAttributes="Bold"
