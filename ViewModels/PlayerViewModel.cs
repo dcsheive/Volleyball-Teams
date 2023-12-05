@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Sentry;
 using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
 using Volleyball_Teams.Views;
+using Constants = Volleyball_Teams.Util.Constants;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -61,6 +63,7 @@ namespace Volleyball_Teams.ViewModels
 
         public void OnAppearing()
         {
+            SentrySdk.CaptureMessage("Players Appearing");
             UseRank = Settings.UseRank;
             DidNotFinishLoading = true;
             LoadPlayers();

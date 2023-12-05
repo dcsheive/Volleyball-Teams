@@ -18,6 +18,22 @@ namespace Volleyball_Teams
 #if ANDROID
 			    .ConfigureMauiHandlers(handlers => handlers.AddHandler<Microsoft.Maui.Controls.Entry, Volleyball_Teams.Handlers.EntryHandler>())
 #endif
+                .UseSentry(options =>
+                {
+                    // The DSN is the only required setting.
+                    options.Dsn = "https://6e1b57ec572513180fee1e7caf32a1f8@o4506345415245824.ingest.sentry.io/4506345416884224";
+
+                    // Use debug mode if you want to see what the SDK is doing.
+                    // Debug messages are written to stdout with Console.Writeline,
+                    // and are viewable in your IDE's debug console or with 'adb logcat', etc.
+                    // This option is not recommended when deploying your application.
+                    options.Debug = true;
+
+                    // Set TracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+                    // We recommend adjusting this value in production.
+                    options.TracesSampleRate = 1.0;
+                    options.Release = AppInfo.PackageName + AppInfo.Current.Version;
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("fa-regular-400.ttf", "FontAwesomeRegular");
@@ -26,6 +42,7 @@ namespace Volleyball_Teams
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-SemiBold.ttf", "OpenSansSemiBold");
                 });
+
 
 #if DEBUG
 		builder.Logging.AddDebug();
