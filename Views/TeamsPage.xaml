@@ -9,7 +9,8 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
     x:Name="MakeTeamsPage"
-    Title="{Binding Title}">
+    Title="{Binding Title}"
+    x:DataType="vm:TeamsViewModel">
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
@@ -113,7 +114,7 @@
                             Color="{StaticResource Primary}" />
                     </CollectionView.EmptyView>
                     <CollectionView.GroupHeaderTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="model:Team">
                             <FlexLayout
                                 Margin="10,5"
                                 Direction="Row"
@@ -138,7 +139,7 @@
                         </DataTemplate>
                     </CollectionView.GroupHeaderTemplate>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="model:Player">
                             <Grid Margin="20,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" />

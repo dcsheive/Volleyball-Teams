@@ -17,9 +17,15 @@ namespace Volleyball_Teams.ViewModels
         readonly ITeamStore teamStore;
         readonly IGlobalVariables globalVariables;
 
-        public ObservableCollection<Team> Teams { get; private set; }
-        public ObservableCollection<string> WinTeams { get; private set; }
-        public ObservableCollection<string> LoseTeams { get; private set; }
+        [ObservableProperty]
+        private ObservableCollection<Team> teams;
+
+        [ObservableProperty]
+        private ObservableCollection<string> winTeams;
+
+        [ObservableProperty]
+        private ObservableCollection<string> loseTeams;
+
         public bool AtLeast2Teams
         {
             get

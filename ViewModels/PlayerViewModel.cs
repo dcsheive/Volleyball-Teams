@@ -13,7 +13,9 @@ namespace Volleyball_Teams.ViewModels
     {
         ILogger<PlayersViewModel> logger;
         readonly IPlayerStore playerStore;
-        public ObservableCollection<Player> Players { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<Player> players;
 
         [ObservableProperty]
         private string? title;

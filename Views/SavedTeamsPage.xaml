@@ -10,6 +10,7 @@
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
     x:Name="BrowseTeamsPage"
     Title="{Binding Title}"
+    x:DataType="vm:SavedTeamsViewModel"
     Shell.PresentationMode="ModalAnimated">
     <AbsoluteLayout>
         <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
@@ -45,7 +46,7 @@
                         Color="{StaticResource Primary}" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate x:DataType="model:TeamList">
                         <Frame
                             Margin="10"
                             Padding="10"
@@ -62,7 +63,7 @@
                                     ItemsSource="{Binding}"
                                     SelectionMode="None">
                                     <CollectionView.GroupHeaderTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="model:Team">
                                             <FlexLayout
                                                 Margin="10,5"
                                                 Direction="Row"
@@ -87,7 +88,7 @@
                                         </DataTemplate>
                                     </CollectionView.GroupHeaderTemplate>
                                     <CollectionView.ItemTemplate>
-                                        <DataTemplate>
+                                        <DataTemplate x:DataType="model:Player">
                                             <FlexLayout
                                                 Margin="10,2"
                                                 Direction="Row"

@@ -15,7 +15,9 @@ namespace Volleyball_Teams.ViewModels
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
         readonly IGlobalVariables globalVariables;
-        public ObservableCollection<TeamList> SavedTeams { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<TeamList> savedTeams;
 
         [ObservableProperty]
         private string losingTeam;

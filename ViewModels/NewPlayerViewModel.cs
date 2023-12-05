@@ -15,9 +15,15 @@ namespace Volleyball_Teams.ViewModels
 
         ILogger<NewPlayerViewModel> logger;
         readonly IPlayerStore playerStore;
-        public ObservableCollection<string> Stars { get; set; }
-        public Player MyPlayer { get; set; }
-        public string SelectedStar { get; set; }
+
+        [ObservableProperty]
+        private ObservableCollection<string> stars;
+
+        [ObservableProperty]
+        private Player myPlayer;
+
+        [ObservableProperty]
+        private string selectedStar;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]

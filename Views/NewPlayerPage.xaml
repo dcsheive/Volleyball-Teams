@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
     Title="New Item"
+    x:DataType="vm:NewPlayerViewModel"
     Shell.PresentationMode="ModalAnimated">
     <ContentPage.Content>
         <StackLayout Padding="15" Spacing="3">
