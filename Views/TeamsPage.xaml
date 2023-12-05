@@ -25,7 +25,6 @@
             Text="Teams" />
         <ToolbarItem
             Command="{Binding LoadPlayersCommand}"
-            CommandParameter="true"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
                                         Glyph={x:Static style:FontAwesomeSolid.Reply}}"
@@ -98,6 +97,15 @@
                     IsGrouped="True"
                     ItemsSource="{Binding Teams}"
                     SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <ActivityIndicator
+                            HorizontalOptions="CenterAndExpand"
+                            IsRunning="True"
+                            IsVisible="{Binding DidNotFinishLoading}"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="50"
+                            Color="{StaticResource Primary}" />
+                    </CollectionView.EmptyView>
                     <CollectionView.GroupHeaderTemplate>
                         <DataTemplate>
                             <FlexLayout
@@ -209,27 +217,10 @@
                 </Grid>
             </StackLayout>
         </Grid>
-        <ContentView
+        <template:LoadingControl
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            BackgroundColor="#333"
-            IsVisible="{Binding IsLoading}"
-            Opacity="0.5" />
-        <StackLayout
-            AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
-            IsVisible="{Binding IsLoading}">
-            <ActivityIndicator
-                IsRunning="{Binding IsLoading}"
-                IsVisible="{Binding IsLoading}"
-                Color="{StaticResource Primary}" />
-            <Label
-                FontSize="20"
-                HorizontalOptions="CenterAndExpand"
-                HorizontalTextAlignment="Center"
-                Text="{Binding LoadText}"
-                TextColor="White"
-                VerticalOptions="CenterAndExpand" />
-        </StackLayout>
+            IsLoading="{Binding IsLoading}"
+            LoadText="{Binding LoadText}" />
     </AbsoluteLayout>
 </ContentPage>

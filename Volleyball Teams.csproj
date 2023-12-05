@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net7.0-ios;net7.0-maccatalyst;net7.0-android34.0</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net8.0-ios;net8.0-android</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net7.0-tizen</TargetFrameworks> -->
-    <OutputType Condition="'$(TargetFramework)'!='net7.0'">Exe</OutputType>
+    <OutputType Condition="'$(TargetFramework)'!='net8.0'">Exe</OutputType>
 		<RootNamespace>Volleyball_Teams</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
@@ -33,38 +32,38 @@
 		<AssemblyName>Volleyball_Teams</AssemblyName>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-ios|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -85,32 +84,36 @@
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows10.0.19041.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android34.0|AnyCPU'">
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-android33.0|AnyCPU'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android34.0|AnyCPU'">
 	  <ApplicationId>com.davissheive.volleyballteams</ApplicationId>
 	  <ApplicationTitle>Teams</ApplicationTitle>
 	  <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 	  <ApplicationVersion>1</ApplicationVersion>
+	</PropertyGroup>
+
+	<PropertyGroup>
+	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -132,15 +135,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="7.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Fody" Version="6.8.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
-		<PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.7" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -166,6 +170,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SavedTeamsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Templates\LoadingControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Templates\Stars.xaml">

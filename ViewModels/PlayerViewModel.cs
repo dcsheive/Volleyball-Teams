@@ -11,9 +11,8 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class PlayersViewModel : ObservableObject
     {
-        readonly IPlayerStore playerStore;
         ILogger<PlayersViewModel> logger;
-
+        readonly IPlayerStore playerStore;
         public ObservableCollection<Player> Players { get; set; }
 
         [ObservableProperty]
@@ -23,16 +22,10 @@ namespace Volleyball_Teams.ViewModels
         private string sortText;
 
         [ObservableProperty]
-        private bool isBusy;
-
-        [ObservableProperty]
         private bool isAllHere;
 
         [ObservableProperty]
         private string hereText;
-
-        [ObservableProperty]
-        private bool isRefreshing;
 
         [ObservableProperty]
         private bool useRank;
@@ -43,18 +36,19 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool didNotFinishLoading;
 
+        private bool IsBusy;
         private bool DoNotRunHere;
         private bool DoNotRunAllHere;
         public PlayersViewModel(IPlayerStore playerStore, ILogger<PlayersViewModel> logger)
         {
             this.playerStore = playerStore;
             this.logger = logger;
-            Title = "Players";
-            Players = new ObservableCollection<Player>();
+            Title = Constants.Title.Players;
             IsBusy = false;
-            DidNotFinishLoading = true;
             IsAllHere = true;
             DoNotRunHere = false;
+            DidNotFinishLoading = true;
+            Players = new ObservableCollection<Player>();
             HereText = Constants.Settings.AllHere;
             SortText = Preferences.Get(Constants.Settings.SortBy, Constants.Settings.SortByName);
             if (string.IsNullOrEmpty(SortText))
@@ -62,6 +56,13 @@ namespace Volleyball_Teams.ViewModels
                 Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
                 SortText = Constants.Settings.SortByName;
             }
+        }
+
+        public void OnAppearing()
+        {
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            DidNotFinishLoading = true;
+            LoadPlayers();
         }
 
         [RelayCommand]
@@ -79,69 +80,83 @@ namespace Volleyball_Teams.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            if (SortText == Constants.Settings.SortByName)
+            logger.LogDebug($"IsBusy={IsBusy}");
+            try
             {
-                SortText = Constants.Settings.SortByRank;
-                SortByRank();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRank);
+                if (SortText == Constants.Settings.SortByName)
+                {
+                    SortText = Constants.Settings.SortByRank;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByRank();
+                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRank);
+                }
+                else if (SortText == Constants.Settings.SortByRank)
+                {
+                    SortText = Constants.Settings.SortByWins;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByWins();
+                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByWins);
+                }
+                else if (SortText == Constants.Settings.SortByWins)
+                {
+                    SortText = Constants.Settings.SortByRatio;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByRatio();
+                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRatio);
+                }
+                else if (SortText == Constants.Settings.SortByRatio)
+                {
+                    SortText = Constants.Settings.SortByLoss;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByLosses();
+                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByLoss);
+                }
+                else
+                {
+                    SortText = Constants.Settings.SortByName;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByName();
+                    Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
+                }
             }
-            else if (SortText == Constants.Settings.SortByRank)
+            catch (Exception ex)
             {
-                SortText = Constants.Settings.SortByWins;
-                SortByWins();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByWins);
+                logger.LogError("{ex}", ex);
             }
-            else if (SortText == Constants.Settings.SortByWins)
+            finally
             {
-                SortText = Constants.Settings.SortByRatio;
-                SortByRatio();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByRatio);
+                IsBusy = false;
+                logger.LogDebug($"IsBusy = {IsBusy}");
             }
-            else if (SortText == Constants.Settings.SortByRatio)
-            {
-                SortText = Constants.Settings.SortByLoss;
-                SortByLosses();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByLoss);
-            }
-            else
-            {
-                SortText = Constants.Settings.SortByName;
-                SortByName();
-                Preferences.Set(Constants.Settings.SortBy, Constants.Settings.SortByName);
-            }
-            IsBusy = false;
         }
-
-        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
-        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
-        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
-        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
-        {
-            if (p.NumLosses == 0) return p.NumWins;
-            else if (p.NumWins == 0) return -1 * p.NumLosses;
-            else return p.NumWins / p.NumLosses;
-        }));
-        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
 
         [RelayCommand]
         private async Task Here(object sender)
         {
             if (DoNotRunHere) return;
-            Player? item = sender as Player;
-            if (item == null)
+            try
             {
-                logger.LogWarning("item is null.");
-                return;
+                Player? player = sender as Player;
+                if (player == null)
+                {
+                    logger.LogWarning("player is null.");
+                    return;
+                }
+                await playerStore.UpdatePlayerAsync(player);
+                logger.LogDebug($"player is {player.Name}, IsHere = {player.IsHere}");
+                UpdateHereCount();
             }
-            await playerStore.UpdatePlayerAsync(item);
-            logger.LogDebug($"item is {item.Name}, {item.IsHere}");
-            UpdateHereCount();
+            catch (Exception ex)
+            {
+                logger.LogError("{ex}", ex);
+            }
         }
 
         [RelayCommand]
         private async Task EditItem(object obj)
         {
             Player p = (Player)obj;
+            logger.LogDebug($"edit player is {p.Name}");
             await Shell.Current.GoToAsync($"{nameof(NewPlayerPage)}?ID={p.Id}");
         }
 
@@ -154,7 +169,8 @@ namespace Volleyball_Teams.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            logger.LogDebug($"IsBusy={IsBusy}");
+            logger.LogDebug($"IsBusy = {IsBusy}");
+            logger.LogDebug($"Run DoLoadPlayers");
             try
             {
                 Players.Clear();
@@ -166,6 +182,7 @@ namespace Volleyball_Teams.ViewModels
                     logger.LogDebug($"{item.Name}, {item.IsHere}");
                 }
                 UpdateHereCount();
+                logger.LogDebug($"Sort = {SortText}");
                 if (SortText == Constants.Settings.SortByName) { SortByName(); }
                 else if (SortText == Constants.Settings.SortByRank) { SortByRank(); }
                 else if (SortText == Constants.Settings.SortByWins) { SortByWins(); }
@@ -180,8 +197,7 @@ namespace Volleyball_Teams.ViewModels
             {
                 DidNotFinishLoading = false;
                 IsBusy = false;
-                IsRefreshing = false;
-                logger.LogDebug("Set IsBusy to false");
+                logger.LogDebug($"IsBusy = {IsBusy}");
             }
         }
 
@@ -196,11 +212,14 @@ namespace Volleyball_Teams.ViewModels
             if (IsBusy) return;
             IsBusy = true;
             DoNotRunHere = true;
-            List<Player> list = Players.ToList();
-            if (IsAllHere) HereText = Constants.Settings.AllHere;
-            else HereText = Constants.Settings.NoneHere;
+            logger.LogDebug($"Run DoHereAll()");
+            logger.LogDebug($"IsBusy = {IsBusy}");
+            logger.LogDebug($"DoNotRunHere = {DoNotRunHere}");
             try
             {
+                List<Player> list = Players.ToList();
+                if (IsAllHere) HereText = Constants.Settings.AllHere;
+                else HereText = Constants.Settings.NoneHere;
                 foreach (Player p in list)
                 {
                     p.IsHere = IsAllHere;
@@ -216,16 +235,25 @@ namespace Volleyball_Teams.ViewModels
             {
                 IsBusy = false;
                 DoNotRunHere = false;
+                logger.LogDebug($"IsBusy = {IsBusy}");
+                logger.LogDebug($"DoNotRunHere = {DoNotRunHere}");
             }
-
         }
 
-        async public void OnAppearing()
+        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
+
+        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
+
+        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
+
+        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
         {
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
-            DidNotFinishLoading = true;
-            LoadPlayers();
-        }
+            if (p.NumLosses == 0) return p.NumWins;
+            else if (p.NumWins == 0) return -1 * p.NumLosses;
+            else return p.NumWins / p.NumLosses;
+        }));
+
+        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
 
         void UpdateHereCount()
         {

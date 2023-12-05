@@ -1,31 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Microsoft.Maui.Controls;
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Text;
-using System.Windows.Input;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
-using Volleyball_Teams.Views;
 
 namespace Volleyball_Teams.ViewModels
 {
     public partial class SavedTeamsViewModel : ObservableObject
     {
 
+        ILogger<SavedTeamsViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
         readonly IGlobalVariables globalVariables;
-        ILogger<SavedTeamsViewModel> logger;
-
-        private List<Player> Players;
+        public ObservableCollection<TeamList> SavedTeams { get; set; }
 
         [ObservableProperty]
         private string losingTeam;
+
         [ObservableProperty]
         private string winningTeam;
 
@@ -38,8 +32,6 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool isBusy;
 
-        private bool disableSelect;
-
         [ObservableProperty]
         private bool isRefreshing;
 
@@ -49,7 +41,13 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private bool didNotFinishLoading;
 
-        public ObservableCollection<TeamList> SavedTeams { get; set; }
+        [ObservableProperty]
+        private bool isLoading;
+
+        [ObservableProperty]
+        private string loadText = Constants.Loading.SelectTeam;
+
+        private List<Player> Players;
 
         public SavedTeamsViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<SavedTeamsViewModel> logger, IGlobalVariables globalVariables)
         {
@@ -57,25 +55,40 @@ namespace Volleyball_Teams.ViewModels
             this.teamStore = teamStore;
             this.logger = logger;
             this.globalVariables = globalVariables;
-            Title = "Saved Teams";
-            SavedTeams = new();
-            Players = new List<Player>();
+            Title = Constants.Title.SavedTeams;
             IsBusy = false;
             DidNotFinishLoading = true;
+            Players = new List<Player>();
+            SavedTeams = new ObservableCollection<TeamList>();
+        }
+
+        public void OnAppearing()
+        {
+            IsLoading = false;
+            DidNotFinishLoading = true;
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            LoadTeams();
         }
 
         [RelayCommand]
         private async Task SelectTeam(TeamList tl)
         {
+            IsLoading = true;
+            LoadText = Constants.Loading.SelectTeam;
             globalVariables.TeamID = tl.Id;
+            logger.LogDebug($"Select Team ID = {tl.Id}");
             await Shell.Current.GoToAsync($"..");
+            IsLoading = false;
         }
 
         [RelayCommand]
         private async Task DeleteTeam(TeamList tl)
         {
+            IsLoading = true;
+            LoadText = Constants.Loading.DeleteTeam;
             SavedTeams.Remove(tl);
             await teamStore.DeleteTeamByIdAsync(tl.Id);
+            IsLoading = false;
         }
 
         [RelayCommand]
@@ -84,49 +97,47 @@ namespace Volleyball_Teams.ViewModels
             await Shell.Current.GoToAsync($"..");
         }
 
-        async public void OnAppearing()
-        {
-            DidNotFinishLoading = true;
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
-            LoadTeams();
-        }
-
-        public void CalcPowers(List<Team> teams)
-        {
-            foreach (Team t in teams)
-            {
-                int pow = 0;
-                foreach (Player p in t)
-                    pow += int.Parse(p.NumStars);
-                t.Power = pow;
-            }
-        }
-
+        [RelayCommand]
         public void LoadTeams()
         {
             Task.Run(async () => await DoLoadTeams());
         }
-
         private async Task DoLoadTeams()
         {
-            Players = await playerStore.GetPlayersAsync();
-            List<TeamDB> teamsdb = await teamStore.GetTeamsAsync();
-            List<TeamList> tll = new();
-            SavedTeams.Clear();
-            foreach (var teamdb in teamsdb)
+            if (IsBusy) return;
+            IsBusy = true;
+            logger.LogDebug($"IsBusy = {IsBusy}");
+            try
             {
-                string[] teamsStr = teamdb.IDStr.Split('$');
-                List<Team> teamsArr = new();
-                int count = 0;
-                for (int i = 0; i < teamsStr.Length; i++)
+                Players = await playerStore.GetPlayersAsync();
+                List<TeamDB> teamsdb = await teamStore.GetTeamsAsync();
+                List<TeamList> tll = new();
+                SavedTeams.Clear();
+                foreach (var teamdb in teamsdb)
                 {
-                    if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
-                    teamsArr.Add(new Team(count++, GetPlayerListFromStr(teamsStr[i])));
+                    string[] teamsStr = teamdb.IDStr.Split('$');
+                    List<Team> teamsArr = new();
+                    int count = 0;
+                    for (int i = 0; i < teamsStr.Length; i++)
+                    {
+                        if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
+                        teamsArr.Add(new Team(count++, GetPlayerListFromStr(teamsStr[i])));
+                    }
+                    CalcPowers(teamsArr);
+                    tll.Add(new TeamList(teamdb.Id, teamsArr));
                 }
-                CalcPowers(teamsArr);
-                tll.Add(new TeamList(teamdb.Id, teamsArr));
+                SavedTeams = new ObservableCollection<TeamList>(tll);
             }
-            SavedTeams = new ObservableCollection<TeamList>(tll);
+            catch (Exception ex)
+            {
+                logger.LogError("{ex}", ex);
+            }
+            finally
+            {
+                DidNotFinishLoading = false;
+                IsBusy = false;
+                logger.LogDebug($"IsBusy = {IsBusy}");
+            }
         }
 
         private List<Player> GetPlayerListFromStr(string playerStr)
@@ -139,6 +150,17 @@ namespace Volleyball_Teams.ViewModels
                 players.Add(Players.Where(player => player.Id == idInt).First());
             }
             return players;
+        }
+
+        public void CalcPowers(List<Team> teams)
+        {
+            foreach (Team t in teams)
+            {
+                int pow = 0;
+                foreach (Player p in t)
+                    pow += int.Parse(p.NumStars);
+                t.Power = pow;
+            }
         }
     }
 }

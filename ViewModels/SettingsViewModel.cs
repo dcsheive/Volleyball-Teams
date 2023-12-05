@@ -9,9 +9,9 @@ namespace Volleyball_Teams.ViewModels
 {
     public partial class SettingsViewModel : ObservableObject
     {
+        ILogger<SettingsViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
-        ILogger<SettingsViewModel> logger;
 
         [ObservableProperty]
         private string? title;
@@ -23,10 +23,16 @@ namespace Volleyball_Teams.ViewModels
         private bool useScore;
         public SettingsViewModel(ILogger<SettingsViewModel> logger, IPlayerStore playerStore, ITeamStore teamStore)
         {
-            Title = "Settings";
+            Title = Constants.Title.Settings;
             this.logger = logger;
             this.playerStore = playerStore;
             this.teamStore = teamStore;
+        }
+
+        public void OnAppearing()
+        {
+            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
+            UseScore = Preferences.Get(Constants.Settings.UseScore, false);
         }
 
         [RelayCommand]
@@ -75,19 +81,13 @@ namespace Volleyball_Teams.ViewModels
             if (result)
             {
                 var items = await playerStore.GetPlayersAsync();
-                foreach(var item in items)
+                foreach(Player item in items)
                 {
                     item.NumWins = 0;
                     item.NumLosses = 0;
                 }
                 await playerStore.UpdatePlayersAsync(items);
             }
-        }
-
-        public async void OnAppearing()
-        {
-            UseRank = Preferences.Get(Constants.Settings.UseRank, true);
-            UseScore = Preferences.Get(Constants.Settings.UseScore, false);
         }
     }
 }

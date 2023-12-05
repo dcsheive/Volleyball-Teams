@@ -39,7 +39,21 @@ namespace Volleyball_Teams.Util
                 list[n] = value;
             }
         }
+        public class Title
+        {
+            public const string NewPlayer = "New Player";
+            public const string Players = "Players";
+            public const string Teams = "Teams";
+            public const string SavedTeams = "Saved Teams";
+            public const string Settings = "Settings";
+        }
 
+        public class Loading
+        {
+            public const string DeleteTeam = "Deleting Team...";
+            public const string SelectTeam = "Selecting Team...";
+            public const string LoadingTeams = "Loading Saved Teams...";
+        }
         public class Settings
         {
             public const string UseRank= "UseRank";

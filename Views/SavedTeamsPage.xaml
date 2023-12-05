@@ -11,134 +11,148 @@
     x:Name="BrowseTeamsPage"
     Title="{Binding Title}"
     Shell.PresentationMode="ModalAnimated">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Button
-            Grid.Row="0"
-            Command="{Binding CloseTeamsCommand}"
-            CornerRadius="0"
-            Text="Close" />
-        <CollectionView
-            Grid.Row="1"
-            ItemsSource="{Binding SavedTeams}"
-            SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame
-                        Margin="10"
-                        Padding="10"
-                        BackgroundColor="Transparent"
-                        BorderColor="{StaticResource MidGray}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="3*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <CollectionView
-                                Grid.Column="0"
-                                IsGrouped="True"
-                                ItemsSource="{Binding}"
-                                SelectionMode="None">
-                                <CollectionView.GroupHeaderTemplate>
-                                    <DataTemplate>
-                                        <FlexLayout
-                                            Margin="10,5"
-                                            Direction="Row"
-                                            JustifyContent="SpaceBetween">
-                                            <Label FontAttributes="Bold" FontSize="Large">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Team " />
-                                                        <Span Text="{Binding NumberText}" />
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                            <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}" VerticalTextAlignment="Center">
-                                                <Label.FormattedText>
-                                                    <FormattedString>
-                                                        <Span Text="Power: " />
-                                                        <Span Text="{Binding Power}" />
-                                                    </FormattedString>
-                                                </Label.FormattedText>
-                                            </Label>
-                                        </FlexLayout>
-                                    </DataTemplate>
-                                </CollectionView.GroupHeaderTemplate>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <FlexLayout
-                                            Margin="10,2"
-                                            Direction="Row"
-                                            JustifyContent="SpaceBetween">
-                                            <Label
-                                                FontSize="Small"
-                                                LineBreakMode="NoWrap"
-                                                MaxLines="1"
-                                                Style="{DynamicResource ListItemTextStyle}"
-                                                Text="{Binding Name}" />
-                                            <template:Stars
-                                                HorizontalOptions="EndAndExpand"
-                                                IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
-                                                NumStars="{Binding NumStarsDisplay}"
-                                                StarSize="12" />
-                                        </FlexLayout>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                            <FlexLayout
-                                Grid.Column="1"
-                                Direction="Column"
-                                JustifyContent="SpaceBetween">
-                                <Frame
-                                    Padding="5"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="Transparent">
-                                    <Image
-                                        Grid.Column="0"
-                                        HorizontalOptions="Fill"
-                                        VerticalOptions="Fill">
-                                        <Image.Source>
-                                            <FontImageSource
-                                                FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.ArrowAltCircleRight}"
-                                                Size="40"
-                                                Color="{StaticResource Primary}" />
-                                        </Image.Source>
-                                    </Image>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.SelectTeamCommand}" CommandParameter="{Binding}" />
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-                                <Frame
-                                    Padding="5"
-                                    BackgroundColor="Transparent"
-                                    BorderColor="Transparent">
-                                    <Image
-                                        Grid.Column="0"
-                                        HorizontalOptions="Fill"
-                                        VerticalOptions="Fill">
-                                        <Image.Source>
-                                            <FontImageSource
-                                                FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.Trash}"
-                                                Size="32"
-                                                Color="{StaticResource Primary}" />
-                                        </Image.Source>
-                                    </Image>
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.DeleteTeamCommand}" CommandParameter="{Binding}" />
-                                    </Frame.GestureRecognizers>
-                                </Frame>
-                            </FlexLayout>
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-    </Grid>
-
+    <AbsoluteLayout>
+        <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Row="0"
+                Command="{Binding CloseTeamsCommand}"
+                CornerRadius="0"
+                Text="Close" />
+            <CollectionView
+                Grid.Row="1"
+                ItemsSource="{Binding SavedTeams}"
+                SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <ActivityIndicator
+                        HorizontalOptions="CenterAndExpand"
+                        IsRunning="True"
+                        IsVisible="{Binding DidNotFinishLoading}"
+                        VerticalOptions="CenterAndExpand"
+                        WidthRequest="50"
+                        Color="{StaticResource Primary}" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame
+                            Margin="10"
+                            Padding="10"
+                            BackgroundColor="Transparent"
+                            BorderColor="{StaticResource MidGray}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <CollectionView
+                                    Grid.Column="0"
+                                    IsGrouped="True"
+                                    ItemsSource="{Binding}"
+                                    SelectionMode="None">
+                                    <CollectionView.GroupHeaderTemplate>
+                                        <DataTemplate>
+                                            <FlexLayout
+                                                Margin="10,5"
+                                                Direction="Row"
+                                                JustifyContent="SpaceBetween">
+                                                <Label FontAttributes="Bold" FontSize="Large">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Team " />
+                                                            <Span Text="{Binding NumberText}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                                <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}" VerticalTextAlignment="Center">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="Power: " />
+                                                            <Span Text="{Binding Power}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </FlexLayout>
+                                        </DataTemplate>
+                                    </CollectionView.GroupHeaderTemplate>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <FlexLayout
+                                                Margin="10,2"
+                                                Direction="Row"
+                                                JustifyContent="SpaceBetween">
+                                                <Label
+                                                    FontSize="Small"
+                                                    LineBreakMode="NoWrap"
+                                                    MaxLines="1"
+                                                    Style="{DynamicResource ListItemTextStyle}"
+                                                    Text="{Binding Name}" />
+                                                <template:Stars
+                                                    HorizontalOptions="EndAndExpand"
+                                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
+                                                    NumStars="{Binding NumStarsDisplay}"
+                                                    StarSize="12" />
+                                            </FlexLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                                <FlexLayout
+                                    Grid.Column="1"
+                                    Direction="Column"
+                                    JustifyContent="SpaceBetween">
+                                    <Frame
+                                        Padding="5"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="Transparent">
+                                        <Image
+                                            Grid.Column="0"
+                                            HorizontalOptions="Fill"
+                                            VerticalOptions="Fill">
+                                            <Image.Source>
+                                                <FontImageSource
+                                                    FontFamily="FontAwesomeSolid"
+                                                    Glyph="{x:Static style:FontAwesomeSolid.ArrowAltCircleRight}"
+                                                    Size="40"
+                                                    Color="{StaticResource Primary}" />
+                                            </Image.Source>
+                                        </Image>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.SelectTeamCommand}" CommandParameter="{Binding}" />
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                    <Frame
+                                        Padding="5"
+                                        BackgroundColor="Transparent"
+                                        BorderColor="Transparent">
+                                        <Image
+                                            Grid.Column="0"
+                                            HorizontalOptions="Fill"
+                                            VerticalOptions="Fill">
+                                            <Image.Source>
+                                                <FontImageSource
+                                                    FontFamily="FontAwesomeSolid"
+                                                    Glyph="{x:Static style:FontAwesomeSolid.Trash}"
+                                                    Size="32"
+                                                    Color="{StaticResource Primary}" />
+                                            </Image.Source>
+                                        </Image>
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.DeleteTeamCommand}" CommandParameter="{Binding}" />
+                                        </Frame.GestureRecognizers>
+                                    </Frame>
+                                </FlexLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+        <template:LoadingControl
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsLoading="{Binding IsLoading}"
+            LoadText="{Binding LoadText}" />
+    </AbsoluteLayout>
 </ContentPage>

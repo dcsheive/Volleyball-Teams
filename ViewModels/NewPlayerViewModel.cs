@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
+using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -13,14 +13,18 @@ namespace Volleyball_Teams.ViewModels
     {
         public string ID { get; set; }
 
-        readonly IPlayerStore playerStore;
         ILogger<NewPlayerViewModel> logger;
+        readonly IPlayerStore playerStore;
         public ObservableCollection<string> Stars { get; set; }
-        public string SelectedStar { get; set; }
         public Player MyPlayer { get; set; }
+        public string SelectedStar { get; set; }
+
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         private string? name;
+
+        [ObservableProperty]
+        private string? title;
 
         [ObservableProperty]
         private bool showDelete;
@@ -32,10 +36,27 @@ namespace Volleyball_Teams.ViewModels
         private int losses;
         public NewPlayerViewModel(IPlayerStore playerStore, ILogger<NewPlayerViewModel> logger)
         {
-            if (playerStore == null) { throw new ArgumentNullException(nameof(playerStore)); }
             this.playerStore = playerStore;
             this.logger = logger;
+            Title = Constants.Title.NewPlayer;
             Stars = new ObservableCollection<string>() { "1", "2", "3", "4", "5" };
+        }
+        async public void OnAppearing()
+        {
+            if (!string.IsNullOrEmpty(ID))
+            {
+                ShowDelete = true;
+                await GetPlayer();
+            }
+            else
+            {
+                ShowDelete = false;
+                MyPlayer = new Player();
+                Name = string.Empty;
+                SelectedStar = "3";
+                Wins = 0;
+                Losses = 0;
+            }
         }
 
         [RelayCommand]
@@ -121,24 +142,6 @@ namespace Volleyball_Teams.ViewModels
             SelectedStar = MyPlayer.NumStars;
             Wins = MyPlayer.NumWins;
             Losses = MyPlayer.NumLosses;
-        }
-
-        async public void OnAppearing()
-        {
-            if (!string.IsNullOrEmpty(ID))
-            {
-                ShowDelete = true;
-                await GetPlayer();
-            }
-            else
-            {
-                ShowDelete = false;
-                MyPlayer = new Player();
-                Name = string.Empty;
-                SelectedStar = "3";
-                Wins = 0;
-                Losses = 0;
-            }
         }
     }
 }

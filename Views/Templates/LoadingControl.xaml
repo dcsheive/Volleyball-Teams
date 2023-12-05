@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="Volleyball_Teams.Views.Templates.LoadingControl"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
+    x:Name="myLoadingControl">
+    <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <ContentView
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="#333"
+            Opacity="0.5" />
+        <StackLayout AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}" />
+            <Label
+                x:Name="myLabel"
+                FontSize="20"
+                HorizontalOptions="CenterAndExpand"
+                HorizontalTextAlignment="Center"
+                TextColor="White"
+                VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+    </AbsoluteLayout>
+</ContentView>
