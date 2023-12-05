@@ -9,8 +9,6 @@
             control.LoadText = newValue as string;
             control.myLabel.Text = control.LoadText;
         });
-
-
         public string LoadText
         {
             get => GetValue(LoadTextProperty) as string;
@@ -23,8 +21,6 @@
             control.IsLoading = newValue as string;
             control.myLoadingControl.IsVisible = bool.Parse(control.IsLoading);
         });
-
-
         public string IsLoading
         {
             get => GetValue(IsLoadingProperty) as string;

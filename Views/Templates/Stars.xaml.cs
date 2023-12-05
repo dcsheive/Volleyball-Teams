@@ -38,8 +38,6 @@ namespace Volleyball_Teams.Views.Templates
                 control.Star5.IsVisible = true;
             }
         });
-
-
         public string NumStars
         {
             get => GetValue(NumStarsProperty) as string;
@@ -57,7 +55,6 @@ namespace Volleyball_Teams.Views.Templates
             control.Star4Source.Size = stars;
             control.Star5Source.Size = stars;
         });
-
         public string StarSize
         {
             get => GetValue(StarSizeProperty) as string;
