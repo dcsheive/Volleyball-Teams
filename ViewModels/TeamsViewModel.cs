@@ -248,11 +248,15 @@ namespace Volleyball_Teams.ViewModels
                 for (int i = 0; i < teamsStr.Length; i++)
                 {
                     if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
-                    teamsArr.Add(new Team(count++, GetPlayerListFromStr(teamsStr[i])));
+                    var currTeam = new Team(0, new List<Player>());
+                    currTeam.Number = count++;
+                    currTeam.AddRange(GetPlayerListFromStr(teamsStr[i], currTeam));
+                    teamsArr.Add(currTeam);
                 }
                 NumTeams = teamsArr.Count;
                 Teams = new ObservableCollection<Team>(teamsArr);
                 CalcPowers();
+                ResetWinLoseTeams();
             }
             catch (Exception ex)
             {
@@ -413,14 +417,16 @@ namespace Volleyball_Teams.ViewModels
             Teams = new ObservableCollection<Team>(teams);
         }
 
-        private List<Player> GetPlayerListFromStr(string playerStr)
+        private List<Player> GetPlayerListFromStr(string playerStr, Team team)
         {
             List<Player> players = new List<Player>();
             string[] playerArr = playerStr.Split(",");
             foreach (string id in playerArr)
             {
                 int idInt = int.Parse(id);
-                players.Add(Players.Where(player => player.Id == idInt).First());
+                Player curr = Players.Where(player => player.Id == idInt).First();
+                curr.Team = team;
+                players.Add(curr);
             }
             return players;
         }
