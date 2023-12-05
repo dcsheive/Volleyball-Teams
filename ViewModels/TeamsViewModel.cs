@@ -283,7 +283,7 @@ namespace Volleyball_Teams.ViewModels
             {
                 idstr.Append("$");
                 sb.Append($"Team {team.NumberText}\n");
-                sb.Append(string.Join("\n", team.Select(e => "\t" + e.Name).ToList()));
+                sb.Append(string.Join("\n", team.Select(e => "\t-" + e.Name).ToList()));
                 idstr.Append(string.Join(",", team.Select(x => x.Id).ToList()));
                 sb.Append("\n");
             }
@@ -311,13 +311,13 @@ namespace Volleyball_Teams.ViewModels
                 sb.AppendLine("Winners");
                 foreach (var player in Teams[int.Parse(WinningTeam) - 1])
                 {
-                    sb.AppendLine($"\t{player.Name}");
+                    sb.AppendLine($"\t-{player.Name}");
                     player.NumWins++;
                 }
                 sb.AppendLine("Losers");
                 foreach (var player in Teams[int.Parse(LosingTeam) - 1])
                 {
-                    sb.AppendLine($"\t{player.Name}");
+                    sb.AppendLine($"\t-{player.Name}");
                     player.NumLosses++;
                 }
                 await playerStore.UpdatePlayersAsync(Players);
