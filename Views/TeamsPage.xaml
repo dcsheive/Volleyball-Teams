@@ -10,24 +10,30 @@
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
     x:Name="MakeTeamsPage"
     Title="{Binding Title}">
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem
             Command="{Binding SaveTeamsCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
                                         Glyph={x:Static style:FontAwesomeSolid.Save}}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
             Text="Save" />
         <ToolbarItem
             Command="{Binding OpenSavedTeamsCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
                                         Glyph={x:Static style:FontAwesomeSolid.Bars}}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
             Text="Teams" />
         <ToolbarItem
             Command="{Binding LoadPlayersCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
                                         Glyph={x:Static style:FontAwesomeSolid.Reply}}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
             Text="Refresh" />
     </ContentPage.ToolbarItems>
     <AbsoluteLayout>
