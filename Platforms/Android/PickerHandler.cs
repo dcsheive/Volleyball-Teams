@@ -31,7 +31,7 @@ namespace Volleyball_Teams.Handlers
 
         private void PlatformView_FocusChange(object sender, Android.Views.View.FocusChangeEventArgs args)
         {
-            var platformView = (AppCompatEditText)sender;
+            var platformView = (MauiPicker)sender;
             if (args.HasFocus)
             {
                 platformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Color.FromRgb(0x51, 0x2B, 0xD4).ToAndroid());
