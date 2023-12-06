@@ -289,12 +289,6 @@
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
-                    <VisualState x:Name="Disabled">
-                        <VisualState.Setters>
-                            <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource LightGray}, Dark={StaticResource DarkGray}}" />
-                            <Setter Property="ThumbColor" Value="{AppThemeBinding Light={StaticResource LightGray}, Dark={StaticResource DarkGray}}" />
-                        </VisualState.Setters>
-                    </VisualState>
                     <VisualState x:Name="On">
                         <VisualState.Setters>
                             <Setter Property="OnColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource LightGray}}" />
@@ -303,7 +297,7 @@
                     </VisualState>
                     <VisualState x:Name="Off">
                         <VisualState.Setters>
-                            <Setter Property="ThumbColor" Value="{AppThemeBinding Light={StaticResource LightGray}, Dark={StaticResource DarkGray}}" />
+                            <Setter Property="ThumbColor" Value="{AppThemeBinding Light={StaticResource MidLightGray}, Dark={StaticResource DarkGray}}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

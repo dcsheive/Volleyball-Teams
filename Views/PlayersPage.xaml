@@ -177,7 +177,7 @@
                                 Binding="{Binding IsHere}"
                                 TargetType="Grid"
                                 Value="False">
-                                <Setter Property="BackgroundColor" Value="Gray" />
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightGray}, Dark={StaticResource DarkerGray}}" />
                             </DataTrigger>
                         </Grid.Triggers>
                     </Grid>
