@@ -17,6 +17,7 @@ namespace Volleyball_Teams
                 .UseMauiCommunityToolkit()
 #if ANDROID
 			    .ConfigureMauiHandlers(handlers => handlers.AddHandler<Microsoft.Maui.Controls.Entry, Volleyball_Teams.Handlers.EntryHandler>())
+			    .ConfigureMauiHandlers(handlers => handlers.AddHandler<Microsoft.Maui.Controls.Picker, Volleyball_Teams.Handlers.PickerHandler>())
 #endif
                 .UseSentry(options =>
                 {
