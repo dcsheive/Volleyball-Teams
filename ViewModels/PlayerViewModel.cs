@@ -63,7 +63,6 @@ namespace Volleyball_Teams.ViewModels
 
         public void OnAppearing()
         {
-            SentrySdk.CaptureMessage("Players Appearing");
             UseRank = Settings.UseRank;
             DidNotFinishLoading = true;
             LoadPlayers();
