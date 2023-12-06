@@ -47,26 +47,15 @@
                 Margin="10,0"
                 Direction="Row"
                 JustifyContent="SpaceEvenly">
-                <Frame
-                    Padding="5"
-                    BackgroundColor="Transparent"
-                    BorderColor="Transparent">
-                    <Image
-                        Grid.Column="0"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill">
-                        <Image.Source>
-                            <FontImageSource
-                                FontFamily="FontAwesomeSolid"
-                                Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
-                                Size="32"
-                                Color="{StaticResource Primary}" />
-                        </Image.Source>
-                    </Image>
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RemoveTeamCommand}" />
-                    </Frame.GestureRecognizers>
-                </Frame>
+                <ImageButton Command="{Binding RemoveTeamCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
                 <Label VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
@@ -75,27 +64,15 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Frame
-                    Padding="5"
-                    BackgroundColor="Transparent"
-                    BorderColor="Transparent">
-                    <Image
-                        Grid.Column="0"
-                        HorizontalOptions="Fill"
-                        VerticalOptions="Fill">
-                        <Image.Source>
-                            <FontImageSource
-                                FontFamily="FontAwesomeSolid"
-                                Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
-                                Size="32"
-                                Color="{StaticResource Primary}" />
-                        </Image.Source>
-                    </Image>
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddTeamCommand}" />
-                    </Frame.GestureRecognizers>
-                </Frame>
-
+                <ImageButton Command="{Binding AddTeamCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
             </FlexLayout>
 
             <StackLayout Grid.Row="1">

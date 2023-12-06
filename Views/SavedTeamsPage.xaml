@@ -18,20 +18,20 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Frame
+            <Border
                 Grid.Row="0"
                 Margin="-1"
+                Padding="10"
                 BackgroundColor="{StaticResource Primary}"
-                BorderColor="Transparent"
-                CornerRadius="0">
+                Stroke="{StaticResource Primary}">
                 <Label
                     HorizontalTextAlignment="Center"
                     Text="Close"
                     TextColor="White" />
-                <Frame.GestureRecognizers>
+                <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding CloseTeamsCommand}" />
-                </Frame.GestureRecognizers>
-            </Frame>
+                </Border.GestureRecognizers>
+            </Border>
             <CollectionView
                 Grid.Row="1"
                 ItemsSource="{Binding SavedTeams}"
@@ -47,11 +47,11 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:TeamList">
-                        <Frame
+                        <Border
                             Margin="10"
                             Padding="10"
                             BackgroundColor="Transparent"
-                            BorderColor="{StaticResource MidGray}">
+                            Stroke="{StaticResource MidGray}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*" />
@@ -112,49 +112,33 @@
                                     Grid.Column="1"
                                     Direction="Column"
                                     JustifyContent="SpaceBetween">
-                                    <Frame
-                                        Padding="5"
-                                        BackgroundColor="Transparent"
-                                        BorderColor="Transparent">
-                                        <Image
-                                            Grid.Column="0"
-                                            HorizontalOptions="Fill"
-                                            VerticalOptions="Fill">
-                                            <Image.Source>
-                                                <FontImageSource
-                                                    FontFamily="FontAwesomeSolid"
-                                                    Glyph="{x:Static style:FontAwesomeSolid.ArrowAltCircleRight}"
-                                                    Size="40"
-                                                    Color="{StaticResource Primary}" />
-                                            </Image.Source>
-                                        </Image>
-                                        <Frame.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.SelectTeamCommand}" CommandParameter="{Binding}" />
-                                        </Frame.GestureRecognizers>
-                                    </Frame>
-                                    <Frame
-                                        Padding="5"
-                                        BackgroundColor="Transparent"
-                                        BorderColor="Transparent">
-                                        <Image
-                                            Grid.Column="0"
-                                            HorizontalOptions="Fill"
-                                            VerticalOptions="Fill">
-                                            <Image.Source>
-                                                <FontImageSource
-                                                    FontFamily="FontAwesomeSolid"
-                                                    Glyph="{x:Static style:FontAwesomeSolid.Trash}"
-                                                    Size="32"
-                                                    Color="{StaticResource Primary}" />
-                                            </Image.Source>
-                                        </Image>
-                                        <Frame.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.DeleteTeamCommand}" CommandParameter="{Binding}" />
-                                        </Frame.GestureRecognizers>
-                                    </Frame>
+                                    <ImageButton
+                                        Margin="10"
+                                        Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.SelectTeamCommand}"
+                                        CommandParameter="{Binding}">
+                                        <ImageButton.Source>
+                                            <FontImageSource
+                                                FontFamily="FontAwesomeSolid"
+                                                Glyph="{x:Static style:FontAwesomeSolid.ArrowAltCircleRight}"
+                                                Size="40"
+                                                Color="{StaticResource Primary}" />
+                                        </ImageButton.Source>
+                                    </ImageButton>
+                                    <ImageButton
+                                        Margin="10"
+                                        Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.DeleteTeamCommand}"
+                                        CommandParameter="{Binding}">
+                                        <ImageButton.Source>
+                                            <FontImageSource
+                                                FontFamily="FontAwesomeSolid"
+                                                Glyph="{x:Static style:FontAwesomeSolid.Trash}"
+                                                Size="32"
+                                                Color="{StaticResource Primary}" />
+                                        </ImageButton.Source>
+                                    </ImageButton>
                                 </FlexLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

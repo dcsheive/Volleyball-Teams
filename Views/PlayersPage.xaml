@@ -158,29 +158,18 @@
                                         EventName="Toggled" />
                                 </Switch.Behaviors>
                             </Switch>
-                            <Frame
-                                Margin="20,0,0,0"
-                                Padding="10,0"
-                                BackgroundColor="Transparent"
-                                BorderColor="Transparent">
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BrowsePlayersPage}}" CommandParameter="{Binding .}" />
-                                </Frame.GestureRecognizers>
-                                <StackLayout
-                                    HorizontalOptions="CenterAndExpand"
-                                    Orientation="Vertical"
-                                    VerticalOptions="CenterAndExpand">
-                                    <Image HorizontalOptions="Fill" VerticalOptions="Fill">
-                                        <Image.Source>
-                                            <FontImageSource
-                                                FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.Edit}"
-                                                Size="32"
-                                                Color="{StaticResource Primary}" />
-                                        </Image.Source>
-                                    </Image>
-                                </StackLayout>
-                            </Frame>
+                            <ImageButton
+                                Margin="40,20,20,20"
+                                Command="{Binding Path=BindingContext.EditItemCommand, Source={x:Reference BrowsePlayersPage}}"
+                                CommandParameter="{Binding .}">
+                                <ImageButton.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Edit}"
+                                        Size="32"
+                                        Color="{StaticResource Primary}" />
+                                </ImageButton.Source>
+                            </ImageButton>
                         </StackLayout>
 
                         <Grid.Triggers>
