@@ -29,20 +29,23 @@
                     FontSize="Medium"
                     Text="Rank"
                     VerticalTextAlignment="Center" />
-                <Picker
-                    FontSize="Medium"
-                    HorizontalTextAlignment="Center"
-                    ItemsSource="{Binding Stars}"
-                    SelectedItem="{Binding SelectedStar}"
-                    WidthRequest="30" />
-            </FlexLayout>
-            <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
-                <Label
-                    FontSize="Medium"
-                    Text="Wins"
-                    VerticalTextAlignment="Center" />
                 <StackLayout Orientation="Horizontal" Spacing="10">
-                    <ImageButton Command="{Binding AddWinsCommand}">
+                    <ImageButton Command="{Binding MinusRankCommand}">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="FontAwesomeSolid"
+                                Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
+                                Size="30"
+                                Color="{StaticResource Primary}" />
+                        </ImageButton.Source>
+                    </ImageButton>
+                    <Picker
+                        FontSize="Medium"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{Binding Stars}"
+                        SelectedItem="{Binding SelectedStar}"
+                        WidthRequest="50" />
+                    <ImageButton Command="{Binding AddRankCommand}">
                         <ImageButton.Source>
                             <FontImageSource
                                 FontFamily="FontAwesomeSolid"
@@ -51,6 +54,14 @@
                                 Color="{StaticResource Primary}" />
                         </ImageButton.Source>
                     </ImageButton>
+                </StackLayout>
+            </FlexLayout>
+            <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
+                <Label
+                    FontSize="Medium"
+                    Text="Wins"
+                    VerticalTextAlignment="Center" />
+                <StackLayout Orientation="Horizontal" Spacing="10">
                     <ImageButton Command="{Binding MinusWinsCommand}">
                         <ImageButton.Source>
                             <FontImageSource
@@ -62,9 +73,18 @@
                     </ImageButton>
                     <Entry
                         FontSize="Medium"
-                        HorizontalTextAlignment="End"
+                        HorizontalTextAlignment="Center"
                         Text="{Binding Wins}"
                         WidthRequest="50" />
+                    <ImageButton Command="{Binding AddWinsCommand}">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="FontAwesomeSolid"
+                                Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
+                                Size="30"
+                                Color="{StaticResource Primary}" />
+                        </ImageButton.Source>
+                    </ImageButton>
                 </StackLayout>
             </FlexLayout>
 
@@ -74,15 +94,6 @@
                     Text="Losses"
                     VerticalTextAlignment="Center" />
                 <StackLayout Orientation="Horizontal" Spacing="10">
-                    <ImageButton Command="{Binding AddLossesCommand}">
-                        <ImageButton.Source>
-                            <FontImageSource
-                                FontFamily="FontAwesomeSolid"
-                                Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
-                                Size="30"
-                                Color="{StaticResource Primary}" />
-                        </ImageButton.Source>
-                    </ImageButton>
                     <ImageButton Command="{Binding MinusLossesCommand}">
                         <ImageButton.Source>
                             <FontImageSource
@@ -94,9 +105,18 @@
                     </ImageButton>
                     <Entry
                         FontSize="Medium"
-                        HorizontalTextAlignment="End"
+                        HorizontalTextAlignment="Center"
                         Text="{Binding Losses}"
                         WidthRequest="50" />
+                    <ImageButton Command="{Binding AddLossesCommand}">
+                        <ImageButton.Source>
+                            <FontImageSource
+                                FontFamily="FontAwesomeSolid"
+                                Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
+                                Size="30"
+                                Color="{StaticResource Primary}" />
+                        </ImageButton.Source>
+                    </ImageButton>
                 </StackLayout>
             </FlexLayout>
 

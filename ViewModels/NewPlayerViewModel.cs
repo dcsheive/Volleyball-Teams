@@ -80,8 +80,24 @@ namespace Volleyball_Teams.ViewModels
 
         [RelayCommand]
         private void AddWins()
-        {   
+        {
             Wins++;
+        }
+
+        [RelayCommand]
+        private void MinusRank()
+        {
+            int index = Stars.IndexOf(SelectedStar);
+            if (index == 0) return;
+            SelectedStar = Stars[index - 1];
+        }
+
+        [RelayCommand]
+        private void AddRank()
+        {
+            int index = Stars.IndexOf(SelectedStar);
+            if (index == Stars.Count - 1) return;
+            SelectedStar = Stars[index + 1];
         }
 
         [RelayCommand]
