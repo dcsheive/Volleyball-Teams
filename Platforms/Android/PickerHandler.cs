@@ -18,7 +18,7 @@ namespace Volleyball_Teams.Handlers
         protected override void ConnectHandler(MauiPicker platformView)
         {
             base.ConnectHandler(platformView);
-            platformView.FocusChange += PickerPlatformView_FocusChange;
+            platformView.FocusChange += PlatformView_FocusChange;
             platformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Gray.ToAndroid());
 
         }
@@ -26,10 +26,10 @@ namespace Volleyball_Teams.Handlers
         protected override void DisconnectHandler(MauiPicker platformView)
         {
             base.DisconnectHandler(platformView);
-            platformView.FocusChange -= PickerPlatformView_FocusChange;
+            platformView.FocusChange -= PlatformView_FocusChange;
         }
 
-        private void PickerPlatformView_FocusChange(object sender, Android.Views.View.FocusChangeEventArgs args)
+        private void PlatformView_FocusChange(object sender, Android.Views.View.FocusChangeEventArgs args)
         {
             var platformView = (AppCompatEditText)sender;
             if (args.HasFocus)
