@@ -36,7 +36,6 @@ namespace Volleyball_Teams.ViewModels
             this.logger = logger;
             this.playerStore = playerStore;
             this.teamStore = teamStore;
-            IsDefault = true;
         }
 
         public void OnAppearing()

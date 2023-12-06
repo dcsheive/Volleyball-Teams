@@ -87,7 +87,7 @@
                             <Image.Source>
                                 <FontImageSource
                                     FontFamily="FontAwesomeSolid"
-                                    Glyph="{x:Static style:FontAwesomeSolid.Phone}"
+                                    Glyph="{x:Static style:FontAwesomeSolid.Gear}"
                                     Size="32"
                                     Color="{StaticResource Primary}" />
                             </Image.Source>
