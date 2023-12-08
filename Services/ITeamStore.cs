@@ -7,6 +7,7 @@ namespace Volleyball_Teams.Services
 {
     public interface ITeamStore
     {
+        Task Init();
         Task<bool> AddTeamAsync(TeamDB item);
         Task<bool> UpdateTeamAsync(TeamDB item);
         Task<bool> UpdateTeamsAsync(List<TeamDB> item);
@@ -15,7 +16,8 @@ namespace Volleyball_Teams.Services
         Task DeleteAllTeamsAsync();
         Task<List<TeamDB>> GetTeamsAsync();
         Task<TeamDB> GetTeamAsync(int id);
-        Task<bool> CheckIfExists(string idstr);
+        Task<int> GetTeamsCountAsync();
+        Task<TeamDB?> GetTeamByNameAsync(string name);
 
     }
 }

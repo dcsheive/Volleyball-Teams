@@ -14,6 +14,11 @@ namespace Volleyball_Teams.Models
         public bool IsHere { get; set; } = true;
         public string NumStars { get; set; } = "1";
         public string NumStarsRatio { get; set; } = "1";
+        public int NumWins { get; set; } = 0;
+        public int NumLosses { get; set; } = 0;
+        [Ignore]
+        public bool IsChecked { get; set; } = false;
+        [Ignore]
         public string NumStarsDisplay
         {
             get
@@ -21,8 +26,7 @@ namespace Volleyball_Teams.Models
                 return Settings.UseScore ? NumStarsRatio : NumStars;
             }
         }
-        public int NumWins { get; set; } = 0;
-        public int NumLosses { get; set; } = 0;
+        [Ignore]
         public string WinsDisplay
         {
             get

@@ -8,16 +8,16 @@ using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.ViewModels
 {
-    public partial class SavedTeamsViewModel : ObservableObject
+    public partial class HistoryViewModel : ObservableObject
     {
 
-        ILogger<SavedTeamsViewModel> logger;
+        ILogger<HistoryViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
-        private ObservableCollection<TeamList> savedTeams;
+        private ObservableCollection<Game> games;
 
         [ObservableProperty]
         private string losingTeam;
@@ -51,17 +51,17 @@ namespace Volleyball_Teams.ViewModels
 
         private List<Player> Players;
 
-        public SavedTeamsViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<SavedTeamsViewModel> logger, IGlobalVariables globalVariables)
+        public HistoryViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<HistoryViewModel> logger, IGlobalVariables globalVariables)
         {
             this.playerStore = playerStore;
             this.teamStore = teamStore;
             this.logger = logger;
             this.globalVariables = globalVariables;
-            Title = Constants.Title.SavedTeams;
+            Title = Constants.Title.History;
             IsBusy = false;
             DidNotFinishLoading = true;
             Players = new List<Player>();
-            SavedTeams = new ObservableCollection<TeamList>();
+            Games = new ObservableCollection<Game>();
         }
 
         public void OnAppearing()
@@ -73,22 +73,21 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        private async Task SelectTeam(TeamList tl)
+        private async Task SelectTeam(Game tl)
         {
             IsLoading = true;
             LoadText = Constants.Loading.SelectTeam;
-            globalVariables.TeamID = tl.Id;
             logger.LogDebug($"Select Team ID = {tl.Id}");
             await Shell.Current.GoToAsync($"..");
             IsLoading = false;
         }
 
         [RelayCommand]
-        private async Task DeleteTeam(TeamList tl)
+        private async Task DeleteTeam(Game tl)
         {
             IsLoading = true;
-            LoadText = Constants.Loading.DeleteTeam;
-            SavedTeams.Remove(tl);
+            LoadText = Constants.Loading.DeleteGame;
+            Games.Remove(tl);
             await teamStore.DeleteTeamByIdAsync(tl.Id);
             IsLoading = false;
         }
@@ -112,23 +111,24 @@ namespace Volleyball_Teams.ViewModels
             try
             {
                 Players = await playerStore.GetPlayersAsync();
-                List<TeamDB> teamsdb = await teamStore.GetTeamsAsync();
-                List<TeamList> tll = new();
-                SavedTeams.Clear();
-                foreach (var teamdb in teamsdb)
-                {
-                    string[] teamsStr = teamdb.IDStr.Split('$');
-                    List<Team> teamsArr = new();
-                    int count = 0;
-                    for (int i = 0; i < teamsStr.Length; i++)
-                    {
-                        if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
-                        teamsArr.Add(new Team(count++, GetPlayerListFromStr(teamsStr[i])));
-                    }
-                    CalcPowers(teamsArr);
-                    tll.Add(new TeamList(teamdb.Id, teamsArr));
-                }
-                SavedTeams = new ObservableCollection<TeamList>(tll);
+                //List<TeamDB> teamsdb = await teamStore.GetTeamsAsync();
+                //List<Game> tll = new();
+                //SavedTeams.Clear();
+                //foreach (var teamdb in teamsdb)
+                //{
+                //    string[] teamsStr = teamdb.IDStr.Split('$');
+                //    List<Team> teamsArr = new();
+                //    string name = teamdb.Name;
+                //    int count = 0;
+                //    for (int i = 0; i < teamsStr.Length; i++)
+                //    {
+                //        if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
+                //        teamsArr.Add(new Team(count++, name, GetPlayerListFromStr(teamsStr[i])));
+                //    }
+                //    CalcPowers(teamsArr);
+                //    tll.Add(new Game(teamdb.Id, teamsArr));
+                //}
+                //SavedTeams = new ObservableCollection<Game>(tll);
             }
             catch (Exception ex)
             {

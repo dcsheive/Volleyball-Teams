@@ -15,6 +15,8 @@ namespace Volleyball_Teams.ViewModels
     {
         ILogger<PlayersViewModel> logger;
         readonly IPlayerStore playerStore;
+        readonly IGameStore gameStore;
+        readonly ITeamStore teamStore;
 
         [ObservableProperty]
         private ObservableCollection<Player> players;
@@ -43,10 +45,15 @@ namespace Volleyball_Teams.ViewModels
         private bool IsBusy;
         private bool DoNotRunHere;
         private bool DoNotRunAllHere;
-        public PlayersViewModel(IPlayerStore playerStore, ILogger<PlayersViewModel> logger)
+        public PlayersViewModel(IPlayerStore playerStore, ITeamStore teamStore, IGameStore gameStore, ILogger<PlayersViewModel> logger)
         {
             this.playerStore = playerStore;
+            this.gameStore = gameStore;
+            this.teamStore = teamStore;
             this.logger = logger;
+            playerStore.Init();
+            teamStore.Init();
+            gameStore.Init();
             Title = Constants.Title.Players;
             IsBusy = false;
             IsAllHere = true;
@@ -178,11 +185,11 @@ namespace Volleyball_Teams.ViewModels
             {
                 Players.Clear();
                 HereCount = 0;
-                var items = await playerStore.GetPlayersAsync();
-                foreach (var item in items)
+                var players = await playerStore.GetPlayersAsync();
+                foreach (var player in players)
                 {
-                    Players.Add(item);
-                    logger.LogDebug($"{item.Name}, {item.IsHere}");
+                    Players.Add(player);
+                    logger.LogDebug($"{player.Name}, {player.IsHere}");
                 }
                 UpdateHereCount();
                 logger.LogDebug($"Sort = {SortText}");

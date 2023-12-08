@@ -150,17 +150,26 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\NewTeamPage.xaml.cs">
+	    <DependentUpon>NewTeamPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\NewPlayerPage.xaml.cs">
 	    <DependentUpon>NewPlayerPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TeamsPage.xaml.cs">
+	    <DependentUpon>TeamsPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\PlayersPage.xaml.cs">
 	    <DependentUpon>PlayersPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\SavedTeamsPage.xaml.cs">
-	    <DependentUpon>SavedTeamsPage.xaml</DependentUpon>
+	  <Compile Update="Views\HistoryPage.xaml.cs">
+	    <DependentUpon>HistoryPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Views\TeamsPage.xaml.cs">
-	    <DependentUpon>TeamsPage.xaml</DependentUpon>
+	  <Compile Update="Views\GamePage.xaml.cs">
+	    <DependentUpon>GamePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\RandomTeamsPage.xaml.cs">
+	    <DependentUpon>RandomTeamsPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\Templates\Stars.xaml.cs">
 	    <DependentUpon>Stars.xaml</DependentUpon>
@@ -168,10 +177,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\NewTeamPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TeamsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\SavedTeamsPage.xaml">
+	  <MauiXaml Update="Views\HistoryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\GamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Templates\LoadingControl.xaml">

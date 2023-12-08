@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Volleyball_Teams.Models
 {
-    public class TeamDB
+    public class GameDB
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public string PlayerIdStr { get; set; } = "";
-        public int Power { get; set; }
-        public string Name { get; set; } = "";
-        public int NumWins { get; set; } = 0;
-        public int NumLosses { get; set; } = 0;
+        public int Team1 { get; set; }
+        public int Team2 { get; set; }
+        public int Winner { get; set; }
+        public int Team1Score { get; set; }
+        public int Team2Score { get; set; }
 
     }
 }

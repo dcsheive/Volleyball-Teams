@@ -1,25 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="Volleyball_Teams.Views.TeamsPage"
+    x:Class="Volleyball_Teams.Views.RandomTeamsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Volleyball_Teams.ViewModels"
     xmlns:model="clr-namespace:Volleyball_Teams.Models"
     xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
     xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    x:Name="BrowseTeamsPage"
+    xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
+    x:Name="MakeRandomTeamsPage"
     Title="{Binding Title}"
-    x:DataType="local:TeamsViewModel"
-    NavigationPage.HasBackButton="False">
+    x:DataType="vm:RandomTeamsViewModel">
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
-        <ToolbarItem Command="{Binding SortCommand}" Text="{Binding SortText}" />
         <ToolbarItem
-            Command="{Binding AddItemCommand}"
+            Command="{Binding LoadPlayersCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
-                                        Glyph={x:Static style:FontAwesomeSolid.PlusCircle}}"
-            Text="Add" />
+                                        Glyph={x:Static style:FontAwesomeSolid.Dice}}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+            Text="Refresh" />
     </ContentPage.ToolbarItems>
     <AbsoluteLayout>
         <Grid
@@ -31,6 +33,15 @@
                 Margin="10,0"
                 Direction="Row"
                 JustifyContent="SpaceEvenly">
+                <ImageButton Command="{Binding RemoveTeamCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
                 <Label VerticalTextAlignment="Center">
                     <Label.FormattedText>
                         <FormattedString>
@@ -39,6 +50,15 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
+                <ImageButton Command="{Binding AddTeamCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
+                            Size="32"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
             </FlexLayout>
 
             <StackLayout Grid.Row="1">
@@ -58,37 +78,15 @@
                     </CollectionView.EmptyView>
                     <CollectionView.GroupHeaderTemplate>
                         <DataTemplate x:DataType="model:Team">
-                            <Grid Margin="10,5">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="1*" />
-                                    <ColumnDefinition Width="1*" />
-                                </Grid.ColumnDefinitions>
-                                <StackLayout Grid.Column="0" Orientation="Horizontal">
+                            <FlexLayout
+                                Margin="10,5"
+                                Direction="Row"
+                                JustifyContent="SpaceBetween">
+                                <StackLayout Orientation="Horizontal">
                                     <Label FontSize="Large" Text="{Binding NameDisplay}" />
-                                    <ImageButton
-                                        Margin="10,0,0,0"
-                                        Command="{Binding Path=BindingContext.EditCommand, Source={x:Reference BrowseTeamsPage}}"
-                                        CommandParameter="{Binding}">
-                                        <ImageButton.Source>
-                                            <FontImageSource
-                                                FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.PencilAlt}"
-                                                Size="20"
-                                                Color="{StaticResource Primary}" />
-                                        </ImageButton.Source>
-                                    </ImageButton>
+
                                 </StackLayout>
-                                <Label
-                                    Grid.Column="1"
-                                    HorizontalTextAlignment="Center"
-                                    Text="{Binding WinsDisplay}"
-                                    VerticalTextAlignment="Center" />
-                                <Label
-                                    Grid.Column="2"
-                                    HorizontalTextAlignment="End"
-                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
-                                    VerticalTextAlignment="Center">
+                                <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference MakeRandomTeamsPage}}" VerticalTextAlignment="Center">
                                     <Label.FormattedText>
                                         <FormattedString>
                                             <Span Text="Power: " />
@@ -96,7 +94,7 @@
                                         </FormattedString>
                                     </Label.FormattedText>
                                 </Label>
-                            </Grid>
+                            </FlexLayout>
                         </DataTemplate>
                     </CollectionView.GroupHeaderTemplate>
                     <CollectionView.ItemTemplate>
@@ -114,12 +112,33 @@
                                     MaxLines="1"
                                     Style="{DynamicResource ListItemTextStyle}"
                                     Text="{Binding Name}" />
+                                <Image Grid.Column="1">
+                                    <Image.Source>
+                                        <FontImageSource
+                                            FontFamily="FontAwesomeSolid"
+                                            Glyph="{x:Static style:FontAwesomeSolid.Bars}"
+                                            Size="20"
+                                            Color="{StaticResource MidGray}" />
+                                    </Image.Source>
+                                </Image>
                                 <template:Stars
                                     Grid.Column="2"
                                     HorizontalOptions="EndAndExpand"
-                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
+                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference MakeRandomTeamsPage}}"
                                     NumStars="{Binding NumStarsDisplay}"
                                     StarSize="12" />
+                                <Grid.GestureRecognizers>
+                                    <DragGestureRecognizer
+                                        CanDrag="True"
+                                        DragStartingCommand="{Binding BindingContext.ItemDraggedCommand, Source={x:Reference MakeRandomTeamsPage}}"
+                                        DragStartingCommandParameter="{Binding}" />
+                                    <DropGestureRecognizer
+                                        AllowDrop="True"
+                                        DragOverCommand="{Binding BindingContext.ItemDraggedOverCommand, Source={x:Reference MakeRandomTeamsPage}}"
+                                        DragOverCommandParameter="{Binding}"
+                                        DropCommand="{Binding BindingContext.ItemDroppedCommand, Source={x:Reference MakeRandomTeamsPage}}"
+                                        DropCommandParameter="{Binding}" />
+                                </Grid.GestureRecognizers>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

@@ -42,29 +42,29 @@ namespace Volleyball_Teams.Util
         public class Title
         {
             public const string NewPlayer = "New Player";
+            public const string NewTeam = "New Team";
             public const string Players = "Players";
+            public const string RandomTeams = "Random Teams";
             public const string Teams = "Teams";
-            public const string SavedTeams = "Saved Teams";
+            public const string Game = "Game";
+            public const string History = "History";
             public const string Settings = "Settings";
         }
 
         public class Loading
         {
-            public const string DeleteTeam = "Deleting Team...";
-            public const string SelectTeam = "Selecting Team...";
-            public const string LoadingTeams = "Loading Saved Teams...";
+            public const string SelectTeam = "Replaying...";
+            public const string LoadingTeams = "Loading History...";
+            public const string DeleteGame = "Deleting...";
         }
         public class Settings
         {
-            public const string UseRank= "UseRank";
-            public const string UseScore = "UseScore";
-            public const string NumTeams = "NumTeams";
-            public const string SortBy = "SortBy";
             public const string SortByName = "Sort By: Name";
             public const string SortByRank = "Sort By: Rank";
             public const string SortByWins = "Sort By: Wins";
             public const string SortByRatio = "Sort By: Ratio";
-            public const string SortByLoss = "Sort By: Loss";
+            public const string SortByLoss = "Sort By: Losses";
+            public const string SortByPower = "Sort By: Power";
             public const string AllHere = "All Here";
             public const string NoneHere = "None Here";
         }

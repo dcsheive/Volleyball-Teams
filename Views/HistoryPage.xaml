@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="Volleyball_Teams.Views.SavedTeamsPage"
+    x:Class="Volleyball_Teams.Views.HistoryPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:model="clr-namespace:Volleyball_Teams.Models"
@@ -8,9 +8,9 @@
     xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
-    x:Name="BrowseTeamsPage"
+    x:Name="BrowseHistoryPage"
     Title="{Binding Title}"
-    x:DataType="vm:SavedTeamsViewModel"
+    x:DataType="vm:HistoryViewModel"
     Shell.PresentationMode="ModalAnimated">
     <AbsoluteLayout>
         <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
@@ -34,7 +34,7 @@
             </Border>
             <CollectionView
                 Grid.Row="1"
-                ItemsSource="{Binding SavedTeams}"
+                ItemsSource="{Binding Games}"
                 SelectionMode="None">
                 <CollectionView.EmptyView>
                     <ActivityIndicator
@@ -46,7 +46,7 @@
                         Color="{StaticResource Primary}" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:TeamList">
+                    <DataTemplate x:DataType="model:Game">
                         <Border
                             Margin="10"
                             Padding="10"
@@ -68,15 +68,8 @@
                                                 Margin="10,5"
                                                 Direction="Row"
                                                 JustifyContent="SpaceBetween">
-                                                <Label FontAttributes="Bold" FontSize="Large">
-                                                    <Label.FormattedText>
-                                                        <FormattedString>
-                                                            <Span Text="Team " />
-                                                            <Span Text="{Binding NumberText}" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
-                                                <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}" VerticalTextAlignment="Center">
+                                                <Label FontSize="Large" Text="{Binding NameDisplay}" />
+                                                <Label IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseHistoryPage}}" VerticalTextAlignment="Center">
                                                     <Label.FormattedText>
                                                         <FormattedString>
                                                             <Span Text="Power: " />
@@ -101,7 +94,7 @@
                                                     Text="{Binding Name}" />
                                                 <template:Stars
                                                     HorizontalOptions="EndAndExpand"
-                                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseTeamsPage}}"
+                                                    IsVisible="{Binding Path=BindingContext.UseRank, Source={x:Reference BrowseHistoryPage}}"
                                                     NumStars="{Binding NumStarsDisplay}"
                                                     StarSize="12" />
                                             </FlexLayout>
@@ -114,25 +107,13 @@
                                     JustifyContent="SpaceBetween">
                                     <ImageButton
                                         Margin="10"
-                                        Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.SelectTeamCommand}"
+                                        Command="{Binding Source={x:Reference BrowseHistoryPage}, Path=BindingContext.SelectTeamCommand}"
                                         CommandParameter="{Binding}">
                                         <ImageButton.Source>
                                             <FontImageSource
                                                 FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.ArrowAltCircleRight}"
+                                                Glyph="{x:Static style:FontAwesomeSolid.Reply}"
                                                 Size="40"
-                                                Color="{StaticResource Primary}" />
-                                        </ImageButton.Source>
-                                    </ImageButton>
-                                    <ImageButton
-                                        Margin="10"
-                                        Command="{Binding Source={x:Reference BrowseTeamsPage}, Path=BindingContext.DeleteTeamCommand}"
-                                        CommandParameter="{Binding}">
-                                        <ImageButton.Source>
-                                            <FontImageSource
-                                                FontFamily="FontAwesomeSolid"
-                                                Glyph="{x:Static style:FontAwesomeSolid.Trash}"
-                                                Size="32"
                                                 Color="{StaticResource Primary}" />
                                         </ImageButton.Source>
                                     </ImageButton>

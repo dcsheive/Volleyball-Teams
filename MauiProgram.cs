@@ -23,11 +23,7 @@ namespace Volleyball_Teams
                 .UseSentry(options =>
                 {
                     options.Dsn = "https://6e1b57ec572513180fee1e7caf32a1f8@o4506345415245824.ingest.sentry.io/4506345416884224";
-#if DEBUG
-                    options.Debug = true;
-#else
                     options.Debug = false;
-#endif 
                     options.TracesSampleRate = 1.0;
                     options.Release = AppInfo.PackageName + AppInfo.Current.VersionString;
                 })
@@ -47,15 +43,22 @@ namespace Volleyball_Teams
 #endif
             builder.Services.AddSingleton<IPlayerStore, PlayerStore>();
             builder.Services.AddSingleton<ITeamStore, TeamStore>();
+            builder.Services.AddSingleton<IGameStore, GameStore>();
             builder.Services.AddSingleton<IGlobalVariables, GlobalVariables>();
             builder.Services.AddScoped<PlayersViewModel>();
             builder.Services.AddScoped<PlayersPage>();
+            builder.Services.AddScoped<GameViewModel>();
+            builder.Services.AddScoped<GamePage>();
+            builder.Services.AddScoped<RandomTeamsViewModel>();
+            builder.Services.AddScoped<RandomTeamsPage>();
             builder.Services.AddScoped<TeamsViewModel>();
             builder.Services.AddScoped<TeamsPage>();
-            builder.Services.AddScoped<SavedTeamsViewModel>();
-            builder.Services.AddScoped<SavedTeamsPage>();
+            builder.Services.AddScoped<HistoryViewModel>();
+            builder.Services.AddScoped<HistoryPage>();
             builder.Services.AddScoped<NewPlayerViewModel>();
-            builder.Services.AddScoped<NewPlayerPage>();
+            builder.Services.AddScoped<NewPlayerPage>(); 
+            builder.Services.AddScoped<NewTeamViewModel>();
+            builder.Services.AddScoped<NewTeamPage>();
             builder.Services.AddScoped<SettingsViewModel>();
             builder.Services.AddScoped<SettingsPage>();
 

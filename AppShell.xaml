@@ -20,8 +20,14 @@
             ContentTemplate="{DataTemplate local:TeamsPage}"
             Icon="{FontImage FontFamily=FontAwesomeSolid,
                              Color=Black,
-                             Glyph={x:Static style:FontAwesomeSolid.VolleyballBall}}"
+                             Glyph={x:Static style:FontAwesomeSolid.List}}"
             Route="TeamsPage" />
+        <ShellContent
+            ContentTemplate="{DataTemplate local:RandomTeamsPage}"
+            Icon="{FontImage FontFamily=FontAwesomeSolid,
+                             Color=Black,
+                             Glyph={x:Static style:FontAwesomeSolid.Dice}}"
+            Route="RandomTeamsPage" />
         <ShellContent
             ContentTemplate="{DataTemplate local:SettingsPage}"
             Icon="{FontImage FontFamily=FontAwesomeSolid,

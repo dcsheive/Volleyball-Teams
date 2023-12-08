@@ -176,8 +176,7 @@
                 </Switch.Behaviors>
             </Switch>
         </FlexLayout>
-        <Button Command="{Binding ZeroWinsCommand}" Text="RESET SCORES" />
-        <Button Command="{Binding DeleteAllTeamsCommand}" Text="DELETE ALL SAVED TEAMS" />
-        <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL PLAYERS" />
+        <Button Command="{Binding ZeroScoresCommand}" Text="RESET SCORES" />
+        <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL RECORDS" />
     </VerticalStackLayout>
 </ContentPage>

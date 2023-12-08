@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <ContentPage
-    x:Class="Volleyball_Teams.Views.NewPlayerPage"
+    x:Class="Volleyball_Teams.Views.NewTeamPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:Volleyball_Teams.Models"
     xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
-    Title="New Player"
-    x:DataType="vm:NewPlayerViewModel"
+    x:Name="MakeNewTeamPage"
+    Title="New Team"
+    x:DataType="vm:NewTeamViewModel"
     Shell.PresentationMode="ModalAnimated">
     <ContentPage.Content>
         <StackLayout Padding="15" Spacing="3">
@@ -14,7 +18,6 @@
             <Entry
                 x:Name="NameEntry"
                 FontSize="Medium"
-                ReturnCommand="{Binding SaveCommand}"
                 Text="{Binding Name, Mode=TwoWay}">
                 <Entry.Keyboard>
                     <Keyboard x:FactoryMethod="Create">
@@ -24,38 +27,6 @@
                     </Keyboard>
                 </Entry.Keyboard>
             </Entry>
-            <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
-                <Label
-                    FontSize="Medium"
-                    Text="Rank"
-                    VerticalTextAlignment="Center" />
-                <StackLayout Orientation="Horizontal" Spacing="10">
-                    <ImageButton Command="{Binding MinusRankCommand}">
-                        <ImageButton.Source>
-                            <FontImageSource
-                                FontFamily="FontAwesomeSolid"
-                                Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
-                                Size="30"
-                                Color="{StaticResource Primary}" />
-                        </ImageButton.Source>
-                    </ImageButton>
-                    <Picker
-                        FontSize="Medium"
-                        HorizontalTextAlignment="Center"
-                        ItemsSource="{Binding Stars}"
-                        SelectedItem="{Binding SelectedStar}"
-                        WidthRequest="50" />
-                    <ImageButton Command="{Binding AddRankCommand}">
-                        <ImageButton.Source>
-                            <FontImageSource
-                                FontFamily="FontAwesomeSolid"
-                                Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
-                                Size="30"
-                                Color="{StaticResource Primary}" />
-                        </ImageButton.Source>
-                    </ImageButton>
-                </StackLayout>
-            </FlexLayout>
             <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
                 <Label
                     FontSize="Medium"
@@ -119,6 +90,59 @@
                     </ImageButton>
                 </StackLayout>
             </FlexLayout>
+            <Label
+                Margin="5"
+                FontSize="Large"
+                HorizontalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Power: " />
+                        <Span Text="{Binding Power}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <CollectionView
+                Grid.Row="1"
+                ItemsSource="{Binding Players}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Player">
+                        <Grid Padding="10">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+
+                            </Grid.ColumnDefinitions>
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked}">
+                                <CheckBox.Behaviors>
+                                    <toolkit:EventToCommandBehavior Command="{Binding Source={x:Reference MakeNewTeamPage}, Path=BindingContext.CalcPowerCommand}" EventName="CheckedChanged" />
+                                </CheckBox.Behaviors>
+                            </CheckBox>
+                            <Label
+                                Grid.Column="1"
+                                FontAttributes="Bold"
+                                FontSize="Small"
+                                LineBreakMode="NoWrap"
+                                MaxLines="1"
+                                Style="{DynamicResource ListItemTextStyle}"
+                                Text="{Binding Name}" />
+                            <Label Grid.Column="2" Text="{Binding WinsDisplay}" />
+                            <template:Stars
+                                Grid.Column="3"
+                                HorizontalOptions="CenterAndExpand"
+                                IsVisible="{Binding Source={x:Reference MakeNewTeamPage}, Path=BindingContext.UseRank}"
+                                NumStars="{Binding NumStarsDisplay}"
+                                StarSize="10" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
             <StackLayout VerticalOptions="End">
                 <StackLayout
                     Margin="0,10"

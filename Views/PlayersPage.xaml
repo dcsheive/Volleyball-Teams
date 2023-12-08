@@ -11,6 +11,9 @@
     x:Name="BrowsePlayersPage"
     Title="{Binding Title}"
     x:DataType="local:PlayersViewModel"
+    IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                Color=White,
+                                Glyph={x:Static style:FontAwesomeSolid.User}}"
     NavigationPage.HasBackButton="False">
     <ContentPage.ToolbarItems>
         <ToolbarItem Command="{Binding SortCommand}" Text="{Binding SortText}" />

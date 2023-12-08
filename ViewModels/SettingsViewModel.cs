@@ -12,6 +12,7 @@ namespace Volleyball_Teams.ViewModels
         ILogger<SettingsViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
+        readonly IGameStore gameStore;
 
         [ObservableProperty]
         private string? title;
@@ -30,12 +31,13 @@ namespace Volleyball_Teams.ViewModels
 
         [ObservableProperty]
         private bool isDark;
-        public SettingsViewModel(ILogger<SettingsViewModel> logger, IPlayerStore playerStore, ITeamStore teamStore)
+        public SettingsViewModel(ILogger<SettingsViewModel> logger, IPlayerStore playerStore, ITeamStore teamStore, IGameStore gameStore)
         {
             Title = Constants.Title.Settings;
             this.logger = logger;
             this.playerStore = playerStore;
             this.teamStore = teamStore;
+            this.gameStore = gameStore;
         }
 
         public void OnAppearing()
@@ -101,39 +103,35 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task DeleteAll()
         {
-            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all players?", "Yes", "No");
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all records?", "Yes", "No");
             if (result)
             {
+                await gameStore.DeleteAllGamesAsync();
                 await teamStore.DeleteAllTeamsAsync();
                 await playerStore.DeleteAllPlayersAsync();
             }
-
         }
 
         [RelayCommand]
-        private async Task DeleteAllTeams()
-        {
-            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete all saved teams?", "Yes", "No");
-            if (result)
-            {
-                await teamStore.DeleteAllTeamsAsync();
-            }
-
-        }
-
-        [RelayCommand]
-        private async Task ZeroWins()
+        private async Task ZeroScores()
         {
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to reset all scores?", "Yes", "No");
             if (result)
             {
-                var items = await playerStore.GetPlayersAsync();
-                foreach(Player item in items)
+                List<Player> players = await playerStore.GetPlayersAsync();
+                foreach (Player player in players)
                 {
-                    item.NumWins = 0;
-                    item.NumLosses = 0;
+                    player.NumWins = 0;
+                    player.NumLosses = 0;
                 }
-                await playerStore.UpdatePlayersAsync(items);
+                await playerStore.UpdatePlayersAsync(players);
+                List<TeamDB> teams = await teamStore.GetTeamsAsync();
+                foreach (TeamDB team in teams)
+                {
+                    team.NumWins = 0;
+                    team.NumLosses = 0;
+                }
+                await teamStore.UpdateTeamsAsync(teams);
             }
         }
     }

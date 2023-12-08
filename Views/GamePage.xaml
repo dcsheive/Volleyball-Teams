@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Volleyball_Teams.Views.GamePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:model="clr-namespace:Volleyball_Teams.Models"
+    xmlns:style="clr-namespace:Volleyball_Teams.Resources.Styles"
+    xmlns:template="clr-namespace:Volleyball_Teams.Views.Templates"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:Volleyball_Teams.ViewModels"
+    x:Name="PlayGamePage"
+    Title="{Binding Title}"
+    x:DataType="vm:GameViewModel">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="{FontImage FontFamily=FontAwesomeSolid, Color=White, Glyph={x:Static style:FontAwesomeSolid.Backspace}}" />
+    </Shell.BackButtonBehavior>
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Command="{Binding OpenHistoryCommand}"
+            IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                        Color=White,
+                                        Glyph={x:Static style:FontAwesomeSolid.List}}"
+            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+            Text="History" />
+    </ContentPage.ToolbarItems>
+    <AbsoluteLayout>
+        <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="1" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackLayout Grid.Column="0">
+                <Border
+                    Margin="10,10,10,100"
+                    Padding="10"
+                    BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 100,100,100,100">
+                    <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                        <Label
+                            FontSize="50"
+                            Text="{Binding LeftScore}"
+                            TextColor="White"
+                            WidthRequest="60" />
+                        <FlexLayout
+                            Margin="20,0,0,0"
+                            Direction="Column"
+                            JustifyContent="SpaceBetween">
+                            <ImageButton Command="{Binding AddLeftScoreCommand}">
+                                <ImageButton.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Plus}"
+                                        Size="30"
+                                        Color="{StaticResource White}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                            <ImageButton Command="{Binding MinusLeftScoreCommand}" VerticalOptions="End">
+                                <ImageButton.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Minus}"
+                                        Size="20"
+                                        Color="{StaticResource White}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                        </FlexLayout>
+                    </StackLayout>
+                </Border>
+                <Border
+                    Margin="5,0,0,0"
+                    Padding="5"
+                    BackgroundColor="{StaticResource Primary}"
+                    HeightRequest="250">
+                    <CollectionView ItemsSource="{Binding LeftTeam}">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="2" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:Player">
+
+                                <Border
+                                    Margin="5"
+                                    Padding="0,20"
+                                    BackgroundColor="White">
+                                    <Border.StrokeShape>
+                                        <Ellipse />
+                                    </Border.StrokeShape>
+                                    <Label
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="NoWrap"
+                                        MaxLines="1"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        Text="{Binding Name}"
+                                        TextColor="{StaticResource Primary}" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+            </StackLayout>
+            <BoxView
+                Grid.Column="1"
+                BackgroundColor="Black"
+                WidthRequest="1" />
+            <StackLayout Grid.Column="2">
+                <Border
+                    Margin="10,10,10,100"
+                    Padding="10"
+                    BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 100,100,100,100">
+                    <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+                        <Label
+                            FontSize="50"
+                            Text="{Binding RightScore}"
+                            TextColor="White"
+                            WidthRequest="60" />
+                        <FlexLayout
+                            Margin="20,0,0,0"
+                            Direction="Column"
+                            JustifyContent="SpaceBetween">
+                            <ImageButton Command="{Binding AddRightScoreCommand}">
+                                <ImageButton.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Plus}"
+                                        Size="30"
+                                        Color="{StaticResource White}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                            <ImageButton Command="{Binding MinusRightScoreCommand}" VerticalOptions="End">
+                                <ImageButton.Source>
+                                    <FontImageSource
+                                        FontFamily="FontAwesomeSolid"
+                                        Glyph="{x:Static style:FontAwesomeSolid.Minus}"
+                                        Size="20"
+                                        Color="{StaticResource White}" />
+                                </ImageButton.Source>
+                            </ImageButton>
+                        </FlexLayout>
+                    </StackLayout>
+                </Border>
+                <Border
+                    Margin="0,0,5,0"
+                    Padding="5"
+                    BackgroundColor="{StaticResource Primary}"
+                    HeightRequest="250">
+
+                    <CollectionView ItemsSource="{Binding RightTeam}">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="2" />
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:Player">
+                                <Border Padding="5" BackgroundColor="White">
+                                    <Border.StrokeShape>
+                                        <Ellipse />
+                                    </Border.StrokeShape>
+                                    <Label
+                                        FontSize="Small"
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="NoWrap"
+                                        MaxLines="1"
+                                        Style="{DynamicResource ListItemTextStyle}"
+                                        Text="{Binding Name}"
+                                        TextColor="{StaticResource Primary}" />
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+            </StackLayout>
+        </Grid>
+        <template:LoadingControl
+            AbsoluteLayout.LayoutBounds="0,0,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsLoading="{Binding IsLoading}"
+            LoadText="{Binding LoadText}" />
+    </AbsoluteLayout>
+</ContentPage>
