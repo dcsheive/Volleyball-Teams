@@ -11,9 +11,6 @@
     x:Name="PlayGamePage"
     Title="{Binding Title}"
     x:DataType="vm:GameViewModel">
-    <Shell.BackButtonBehavior>
-        <BackButtonBehavior IconOverride="{FontImage FontFamily=FontAwesomeSolid, Color=White, Glyph={x:Static style:FontAwesomeSolid.Backspace}}" />
-    </Shell.BackButtonBehavior>
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
     </ContentPage.Resources>
@@ -74,14 +71,14 @@
                     Margin="5,0,0,0"
                     Padding="5"
                     BackgroundColor="{StaticResource Primary}"
-                    HeightRequest="250">
-                    <CollectionView ItemsSource="{Binding LeftTeam}">
+                    HeightRequest="250"
+                    StrokeShape="RoundRectangle 10,0,10,0">
+                    <CollectionView ItemsSource="{Binding LeftTeam}" SelectionMode="None">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="2" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Player">
-
                                 <Border
                                     Margin="5"
                                     Padding="0,20"
@@ -147,20 +144,22 @@
                     Margin="0,0,5,0"
                     Padding="5"
                     BackgroundColor="{StaticResource Primary}"
-                    HeightRequest="250">
-
-                    <CollectionView ItemsSource="{Binding RightTeam}">
+                    HeightRequest="250"
+                    StrokeShape="RoundRectangle 0,10,0,10">
+                    <CollectionView ItemsSource="{Binding RightTeam}" SelectionMode="None">
                         <CollectionView.ItemsLayout>
                             <GridItemsLayout Orientation="Vertical" Span="2" />
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="model:Player">
-                                <Border Padding="5" BackgroundColor="White">
+                                <Border
+                                    Margin="5"
+                                    Padding="0,20"
+                                    BackgroundColor="White">
                                     <Border.StrokeShape>
                                         <Ellipse />
                                     </Border.StrokeShape>
                                     <Label
-                                        FontSize="Small"
                                         HorizontalTextAlignment="Center"
                                         LineBreakMode="NoWrap"
                                         MaxLines="1"
@@ -174,10 +173,26 @@
                 </Border>
             </StackLayout>
         </Grid>
-        <template:LoadingControl
+        <ContentView
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            IsLoading="{Binding IsLoading}"
-            LoadText="{Binding LoadText}" />
+            BackgroundColor="#333"
+            IsVisible="{Binding IsLoading}"
+            Opacity="0.5" />
+        <StackLayout
+            AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            IsVisible="{Binding IsLoading}">
+            <Label
+                x:Name="myLabel"
+                FontSize="Large"
+                HorizontalOptions="CenterAndExpand"
+                HorizontalTextAlignment="Center"
+                IsVisible="{Binding IsLoading}"
+                LineBreakMode="WordWrap"
+                Text="{Binding LoadText}"
+                TextColor="White"
+                VerticalOptions="CenterAndExpand" />
+        </StackLayout>
     </AbsoluteLayout>
 </ContentPage>

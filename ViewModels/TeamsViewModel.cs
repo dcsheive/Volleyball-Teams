@@ -118,12 +118,25 @@ namespace Volleyball_Teams.ViewModels
         private async Task Play()
         {
             if (LeftTeam == null || RightTeam == null) return;
+            HashSet<Player> players = new HashSet<Player>();
+            foreach (Player player in LeftTeam)
+            {
+                players.Add(player);
+            }
+            foreach (Player player in RightTeam)
+            {
+                if (players.Contains(player))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Failed", $"The teams selected have 1 or more mutual players.", "OK");
+                    return;
+                }
+            }
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"{LeftTeam.NameDisplay}\n\tVS\n{RightTeam.NameDisplay}", "OK", "Cancel");
             if (result)
             {
                 globalVariables.LeftTeam = LeftTeam;
                 globalVariables.RightTeam = RightTeam;
-                await Shell.Current.GoToAsync(nameof(GamePage));
+                await Shell.Current.GoToAsync($"///{nameof(GamePage)}");
             }
         }
 

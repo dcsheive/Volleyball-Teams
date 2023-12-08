@@ -56,7 +56,9 @@ namespace Volleyball_Teams.Util
             public const string SelectTeam = "Replaying...";
             public const string LoadingTeams = "Loading History...";
             public const string DeleteGame = "Deleting...";
+            public const string GameMessage = "No teams are selected.\nSelect teams or \nreplay a game from history.";
         }
+
         public class Settings
         {
             public const string SortByName = "Sort By: Name";

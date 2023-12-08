@@ -34,6 +34,7 @@ namespace Volleyball_Teams.Models
                 return NumWins + " - " + NumLosses;
             }
         }
+        public bool IsServing { get; set; }
         public event PropertyChangedEventHandler? PropertyChanged;
         public Team(List<Player> players) : base(players)
         {

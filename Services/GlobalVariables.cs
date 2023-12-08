@@ -9,7 +9,7 @@ namespace Volleyball_Teams.Services
 {
     public class GlobalVariables : IGlobalVariables
     {
-        public Team LeftTeam { get; set; }
-        public Team RightTeam { get; set; }
+        public Team? LeftTeam { get; set; } = null;
+        public Team? RightTeam { get; set; } = null;
     }
 }

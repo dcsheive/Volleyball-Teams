@@ -47,6 +47,7 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private string loadText = Constants.Loading.LoadingTeams;
 
+        private bool IsGameOver;
         public GameViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<GameViewModel> logger, IGlobalVariables globalVariables)
         {
             this.playerStore = playerStore;
@@ -58,8 +59,6 @@ namespace Volleyball_Teams.ViewModels
             Title = Constants.Title.Game;
             LeftScore = 0;
             RightScore = 0;
-            LeftTeam = globalVariables.LeftTeam;
-            RightTeam = globalVariables.RightTeam;
         }
 
         public void OnAppearing()
@@ -67,21 +66,43 @@ namespace Volleyball_Teams.ViewModels
             IsLoading = false;
             DidNotFinishLoading = true;
             UseRank = Settings.UseRank;
+            LeftTeam = globalVariables.LeftTeam;
+            RightTeam = globalVariables.RightTeam;
+            IsGameOver = false;
+            if (LeftTeam == null || RightTeam == null)
+            {
+                IsLoading = true;
+                LoadText = Constants.Loading.GameMessage;
+            }
+            else
+            {
+                IsLoading = false;
+                LeftTeam = globalVariables.LeftTeam;
+                RightTeam = globalVariables.RightTeam;
+            }
         }
 
         [RelayCommand]
         private void MinusLeftScore()
         {
+            if (IsGameOver) return;
             if (LeftScore > 0)
                 LeftScore--;
         }
 
         [RelayCommand]
-        private void AddLeftScore()
+        private async Task AddLeftScore()
         {
+            if (IsGameOver) return;
             if (LeftScore == 20)
             {
-                WinGame();
+                bool confirmed = await ConfirmWin(true);
+                if (confirmed)
+                {
+                    LeftScore++;
+                    await EndGame(true);
+                }
+                return;
             }
             LeftScore++;
         }
@@ -89,23 +110,27 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private void MinusRightScore()
         {
+            if (IsGameOver) return;
             if (RightScore > 0)
                 RightScore--;
         }
 
         [RelayCommand]
-        private void AddRightScore()
+        private async Task AddRightScore()
         {
+            if (IsGameOver) return;
             if (RightScore == 20)
             {
-                WinGame();
+                bool confirmed = await ConfirmWin(false);
+                if (confirmed)
+                {
+                    RightScore++;
+                    await EndGame(false);
+                }
+                return;
+
             }
             RightScore++;
-        }
-
-        private void WinGame()
-        {
-
         }
 
         [RelayCommand]
@@ -118,8 +143,21 @@ namespace Volleyball_Teams.ViewModels
 
         [RelayCommand]
         private async Task SaveTeams()
-        {            
+        {
             await Application.Current.MainPage.DisplayAlert("Confirmation", "", "OK");
+        }
+
+        private async Task<bool> ConfirmWin(bool leftWins)
+        {
+            Team winner;
+            if (leftWins) winner = LeftTeam; else winner = RightTeam;
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"{winner.NameDisplay} will win the game.", "OK", "Cancel");
+            return result;
+        }
+
+        private async Task EndGame(bool leftWins)
+        {
+            
         }
     }
 }

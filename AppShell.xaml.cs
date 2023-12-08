@@ -14,7 +14,6 @@ namespace Volleyball_Teams
             Routing.RegisterRoute(nameof(NewPlayerPage), typeof(NewPlayerPage));
             Routing.RegisterRoute(nameof(NewTeamPage), typeof(NewTeamPage));
             Routing.RegisterRoute(nameof(HistoryPage), typeof(HistoryPage));
-            Routing.RegisterRoute(nameof(GamePage), typeof(GamePage));
             CurrentAppShell = this;
         }
 
