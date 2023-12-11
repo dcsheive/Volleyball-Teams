@@ -8,7 +8,7 @@ using Volleyball_Teams.Util;
 
 namespace Volleyball_Teams.Services
 {
-    public class TeamStore : ITeamStore
+    public class GameStore : IGameStore
     {
         SQLiteAsyncConnection Database;
         public async Task Init()
@@ -17,7 +17,7 @@ namespace Volleyball_Teams.Services
                 return;
 
             Database = GetConnection();
-            var result = await Database.CreateTableAsync<TeamDB>();
+            var result = await Database.CreateTableAsync<GameDB>();
         }
 
         private SQLiteAsyncConnection GetConnection()
@@ -25,60 +25,50 @@ namespace Volleyball_Teams.Services
             return new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
         }
 
-        public async Task<bool> AddTeamAsync(TeamDB item)
+        public async Task<bool> AddGameAsync(GameDB item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             int rows = await Database.InsertAsync(item);
             return rows > 0;
         }
 
-        public async Task<bool> UpdateTeamAsync(TeamDB item)
+        public async Task<bool> UpdateGameAsync(GameDB item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             int rows = await Database.UpdateAsync(item);
             return rows > 0;
         }
 
-        public async Task<bool> UpdateTeamsAsync(List<TeamDB> item)
+        public async Task<bool> UpdateGamesAsync(List<GameDB> item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
             int rows = await Database.UpdateAllAsync(item);
             return rows > 0;
         }
 
-        public async Task<bool> DeleteTeamAsync(TeamDB item)
+        public async Task<bool> DeleteGameAsync(GameDB item)
         {
             int rows = await Database.DeleteAsync(item);
             return rows > 0;
         }
 
-        public async Task DeleteAllTeamsAsync()
+        public async Task DeleteAllGamesAsync()
         {
-            await Database.DeleteAllAsync<TeamDB>();
+            await Database.DeleteAllAsync<GameDB>();
         }
 
-        public async Task<List<TeamDB>> GetTeamsAsync()
+        public async Task<List<GameDB>> GetGamesAsync()
         {
-            return await Database.Table<TeamDB>().ToListAsync();
+            return await Database.Table<GameDB>().ToListAsync();
         }
-        public async Task<TeamDB?> GetTeamAsync(int id)
+        public async Task<GameDB?> GetGameAsync(int id)
         {
-            return await Database.Table<TeamDB>().Where(s => s.Id == id).FirstOrDefaultAsync();
-        }
-
-        public async Task DeleteTeamByIdAsync(int id)
-        {
-            await Database.DeleteAsync(await GetTeamAsync(id));
+            return await Database.Table<GameDB>().Where(s => s.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<int> GetTeamsCountAsync()
+        public async Task DeleteGameByIdAsync(int id)
         {
-            return await Database.Table<TeamDB>().CountAsync();
-        }
-
-        public async Task<TeamDB?> GetTeamByNameAsync(string name)
-        {
-            return await Database.Table<TeamDB>().Where(s => s.Name == name).FirstOrDefaultAsync();
+            await Database.DeleteAsync(await GetGameAsync(id));
         }
     }
 }

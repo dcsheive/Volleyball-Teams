@@ -7,6 +7,7 @@ namespace Volleyball_Teams.Services
 {
     public interface IPlayerStore
     {
+        Task Init();
         Task<bool> AddPlayerAsync(Player item);
         Task<bool> UpdatePlayerAsync(Player item);
         Task<bool> UpdatePlayersAsync(List<Player> item);

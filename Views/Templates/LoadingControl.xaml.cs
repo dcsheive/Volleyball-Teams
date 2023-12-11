@@ -27,6 +27,18 @@
             set => SetValue(IsLoadingProperty, value);
         }
 
+        public static readonly BindableProperty ShowLoaderProperty = BindableProperty.Create(nameof(ShowLoader), typeof(string), typeof(LoadingControl), "false", propertyChanged: (bindable, oldValue, newValue) =>
+        {
+            var control = (LoadingControl)bindable;
+            control.ShowLoader = newValue as string;
+            control.myLoader.IsVisible = bool.Parse(control.ShowLoader);
+        });
+        public string ShowLoader
+        {
+            get => GetValue(ShowLoaderProperty) as string;
+            set => SetValue(ShowLoaderProperty, value);
+        }
+
         public LoadingControl()
         {
             InitializeComponent();

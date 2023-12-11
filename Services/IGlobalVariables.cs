@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volleyball_Teams.Models;
 
 namespace Volleyball_Teams.Services
 {
     public interface IGlobalVariables
     {
-        int TeamID { get; set; }
+        Team LeftTeam { get; set; }
+        Team RightTeam { get; set; }
+        int LeftScore { get; set; }
+        int RightScore { get; set; }
+        bool NewGame { get; set; }
     }
 }

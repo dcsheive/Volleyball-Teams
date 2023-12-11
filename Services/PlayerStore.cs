@@ -11,7 +11,7 @@ namespace Volleyball_Teams.Services
     public class PlayerStore : IPlayerStore
     {
         SQLiteAsyncConnection Database;
-        async Task Init()
+        public async Task Init()
         {
             if (Database is not null)
                 return;
@@ -28,7 +28,6 @@ namespace Volleyball_Teams.Services
         public async Task<bool> AddPlayerAsync(Player item)
         {
             if (item == null) { throw new ArgumentNullException(nameof(item)); }
-            await Init();
             int rows = await Database.InsertAsync(item);
             return rows > 0;
         }
@@ -70,12 +69,10 @@ namespace Volleyball_Teams.Services
 
         public async Task<List<Player>> GetPlayersAsync()
         {
-            await Init();
             return await Database.Table<Player>().ToListAsync();
         }
         public async Task<List<Player>> GetPlayersHereAsync()
         {
-            await Init();
             return await Database.Table<Player>().Where(i => i.IsHere).ToListAsync();
         }
 
