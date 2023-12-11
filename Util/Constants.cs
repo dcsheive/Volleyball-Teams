@@ -53,6 +53,7 @@ namespace Volleyball_Teams.Util
 
         public class Loading
         {
+            public const string GameOverMessage = "\n\nReplay or select new teams.";
             public const string SelectGame = "Replaying...";
             public const string LoadingHistory = "Loading History...";
             public const string LoadingTeams = "Loading Teams...";

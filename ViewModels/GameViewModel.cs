@@ -54,6 +54,7 @@ namespace Volleyball_Teams.ViewModels
         private string loadText = Constants.Loading.GameMessage;
 
         private bool IsGameOver;
+        private string GameOverMessage;
         public GameViewModel(IPlayerStore playerStore, ITeamStore teamStore, IGameStore gameStore, ILogger<GameViewModel> logger, IGlobalVariables globalVariables)
         {
             this.playerStore = playerStore;
@@ -75,6 +76,9 @@ namespace Volleyball_Teams.ViewModels
             {
                 if (!globalVariables.NewGame)
                 {
+                    IsLoading = true;
+                    ShowLoader = false;
+                    LoadText = GameOverMessage;
                     return;
                 }
                 else
@@ -218,6 +222,7 @@ namespace Volleyball_Teams.ViewModels
             db.NumWins = team.NumWins;
             db.NumLosses = team.NumLosses;
             db.Power = team.Power;
+            db.IsRandom = true;
             StringBuilder idstr = new StringBuilder();
             foreach (Player player in team)
             {
@@ -230,16 +235,55 @@ namespace Volleyball_Teams.ViewModels
         private async Task EndGame(bool leftWins, bool hasWinner = true)
         {
             IsGameOver = true;
+            if (LeftTeam.Id == 0)
+            {
+                TeamDB left = MakeTeamDB(LeftTeam);
+                left.Name = "Team " + Guid.NewGuid().ToString().Substring(0, 6);
+                await teamStore.AddTeamAsync(left);
+                left = await teamStore.GetTeamByNameAsync(left.Name);
+                LeftTeam.Id = left.Id;
+                TeamDB right = MakeTeamDB(RightTeam);
+                right.Name = "Team " + Guid.NewGuid().ToString().Substring(0, 6);
+                await teamStore.AddTeamAsync(right);
+                right = await teamStore.GetTeamByNameAsync(right.Name);
+                RightTeam.Id = right.Id;
+            }
+            if (hasWinner) await UpdateScores(leftWins);
             await EnterGameIntoDB(leftWins, hasWinner);
             string loadstr = Constants.Loading.GameOver;
             if (hasWinner)
             {
-                if (leftWins) loadstr += "\n" + LeftTeam.NameDisplay + " Wins!";
-                else loadstr += "\n" + RightTeam.NameDisplay + " Wins!";
+                if (leftWins) loadstr += "\n" + LeftTeam.NameDisplay + " Wins!" + Constants.Loading.GameOverMessage;
+                else loadstr += "\n" + RightTeam.NameDisplay + " Wins!" + Constants.Loading.GameOverMessage;
             }
+            GameOverMessage = loadstr;
             LoadText = loadstr;
             ShowLoader = false;
             IsLoading = true;
+        }
+
+        private async Task UpdateScores(bool leftWins)
+        {
+            Team winner;
+            Team loser;
+            if (leftWins) { winner = LeftTeam; loser = RightTeam; }
+            else { winner = RightTeam; loser = LeftTeam; }
+            foreach (Player p in winner)
+            {
+                p.NumWins++;
+            }
+            foreach (Player p in loser)
+            {
+                p.NumLosses++;
+            }
+            TeamDB winnerDB = await teamStore.GetTeamAsync(winner.Id);
+            TeamDB loserDB = await teamStore.GetTeamAsync(loser.Id);
+            winnerDB.NumWins += 1;
+            loserDB.NumLosses += 1;
+            List<TeamDB> teams = new List<TeamDB> { winnerDB, loserDB };
+            await teamStore.UpdateTeamsAsync(teams);
+            await playerStore.UpdatePlayersAsync(winner);
+            await playerStore.UpdatePlayersAsync(loser);
         }
 
         private async Task EnterGameIntoDB(bool leftWins, bool hasWinner)

@@ -17,6 +17,7 @@ namespace Volleyball_Teams.Models
         public string Name { get; set; } = "";
         public int NumWins { get; set; } = 0;
         public int NumLosses { get; set; } = 0;
+        public bool IsRandom { get; set; } = false;
 
     }
 }

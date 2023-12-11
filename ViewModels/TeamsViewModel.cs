@@ -230,6 +230,7 @@ namespace Volleyball_Teams.ViewModels
                 int count = 0;
                 foreach (var teamdb in teamdbs)
                 {
+                    if (teamdb.IsRandom) continue;
                     string[] playerids = teamdb.PlayerIdStr.Split(",");
                     List<Player> teamplayers = new List<Player>();
                     foreach (var playerid in playerids)
