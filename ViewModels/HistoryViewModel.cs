@@ -14,28 +14,17 @@ namespace Volleyball_Teams.ViewModels
         ILogger<HistoryViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
+        readonly IGameStore gameStore;
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
         private ObservableCollection<Game> games;
 
         [ObservableProperty]
-        private string losingTeam;
-
-        [ObservableProperty]
-        private string winningTeam;
-
-        [ObservableProperty]
         private string? title;
 
         [ObservableProperty]
-        private int numTeams;
-
-        [ObservableProperty]
         private bool isBusy;
-
-        [ObservableProperty]
-        private bool isRefreshing;
 
         [ObservableProperty]
         private bool useRank;
@@ -47,20 +36,23 @@ namespace Volleyball_Teams.ViewModels
         private bool isLoading;
 
         [ObservableProperty]
-        private string loadText = Constants.Loading.SelectTeam;
+        private string loadText = Constants.Loading.SelectGame;
 
         private List<Player> Players;
+        private List<Team> Teams;
 
-        public HistoryViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<HistoryViewModel> logger, IGlobalVariables globalVariables)
+        public HistoryViewModel(IPlayerStore playerStore, ITeamStore teamStore, IGameStore gameStore, ILogger<HistoryViewModel> logger, IGlobalVariables globalVariables)
         {
             this.playerStore = playerStore;
             this.teamStore = teamStore;
+            this.gameStore = gameStore;
             this.logger = logger;
             this.globalVariables = globalVariables;
             Title = Constants.Title.History;
             IsBusy = false;
             DidNotFinishLoading = true;
             Players = new List<Player>();
+            Teams = new List<Team>();
             Games = new ObservableCollection<Game>();
         }
 
@@ -69,26 +61,39 @@ namespace Volleyball_Teams.ViewModels
             IsLoading = false;
             DidNotFinishLoading = true;
             UseRank = Settings.UseRank;
-            LoadTeams();
+            LoadGames();
         }
 
         [RelayCommand]
-        private async Task SelectTeam(Game tl)
+        private async Task SelectGame(Game tl)
         {
             IsLoading = true;
-            LoadText = Constants.Loading.SelectTeam;
-            logger.LogDebug($"Select Team ID = {tl.Id}");
+            LoadText = Constants.Loading.SelectGame;
+            globalVariables.LeftTeam = tl.LeftTeam;
+            globalVariables.RightTeam = tl.RightTeam;
+            globalVariables.NewGame = true;
+            if (!tl.HasWinner)
+            {
+                globalVariables.LeftScore = tl.LeftTeamScore;
+                globalVariables.RightScore = tl.RightTeamScore;
+            }
+            else
+            {
+                globalVariables.LeftScore = 0;
+                globalVariables.RightScore = 0;
+            }
+            logger.LogDebug($"Select Game ID = {tl.Id}");
             await Shell.Current.GoToAsync($"..");
             IsLoading = false;
         }
 
         [RelayCommand]
-        private async Task DeleteTeam(Game tl)
+        private async Task DeleteGame(Game tl)
         {
             IsLoading = true;
             LoadText = Constants.Loading.DeleteGame;
             Games.Remove(tl);
-            await teamStore.DeleteTeamByIdAsync(tl.Id);
+            await gameStore.DeleteGameByIdAsync(tl.Id);
             IsLoading = false;
         }
 
@@ -99,36 +104,60 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
-        public void LoadTeams()
+        public void LoadGames()
         {
-            Task.Run(async () => await DoLoadTeams());
+            Task.Run(async () => await DoLoadGames());
         }
-        private async Task DoLoadTeams()
+        private async Task DoLoadGames()
         {
             if (IsBusy) return;
             IsBusy = true;
             logger.LogDebug($"IsBusy = {IsBusy}");
             try
             {
+                Players.Clear();
+                Teams.Clear();
+                Games.Clear();
                 Players = await playerStore.GetPlayersAsync();
-                //List<TeamDB> teamsdb = await teamStore.GetTeamsAsync();
-                //List<Game> tll = new();
-                //SavedTeams.Clear();
-                //foreach (var teamdb in teamsdb)
-                //{
-                //    string[] teamsStr = teamdb.IDStr.Split('$');
-                //    List<Team> teamsArr = new();
-                //    string name = teamdb.Name;
-                //    int count = 0;
-                //    for (int i = 0; i < teamsStr.Length; i++)
-                //    {
-                //        if (string.IsNullOrEmpty(teamsStr[i])) { continue; }
-                //        teamsArr.Add(new Team(count++, name, GetPlayerListFromStr(teamsStr[i])));
-                //    }
-                //    CalcPowers(teamsArr);
-                //    tll.Add(new Game(teamdb.Id, teamsArr));
-                //}
-                //SavedTeams = new ObservableCollection<Game>(tll);
+                List<TeamDB> teamdbs = await teamStore.GetTeamsAsync();
+                int count = 0;
+                foreach (var teamdb in teamdbs)
+                {
+                    string[] playerids = teamdb.PlayerIdStr.Split(",");
+                    List<Player> teamplayers = new List<Player>();
+                    foreach (var playerid in playerids)
+                    {
+                        Player player = Players.Where(p => p.Id == int.Parse(playerid)).FirstOrDefault();
+                        if (player != null) teamplayers.Add(player);
+                    }
+                    Team team = new Team(count++, teamplayers);
+                    team.NumLosses = teamdb.NumLosses;
+                    team.NumWins = teamdb.NumWins;
+                    team.Name = teamdb.Name;
+                    team.Power = teamdb.Power;
+                    team.Id = teamdb.Id;
+                    Teams.Add(team);
+                }
+                List<GameDB> gamedbs = await gameStore.GetGamesAsync();
+                gamedbs.Reverse();
+                foreach (var gamedb in gamedbs)
+                {
+                    Game game = new Game();
+                    game.Id = gamedb.Id;
+                    game.LeftTeam = Teams.Where(t => t.Id == gamedb.LeftTeamId).FirstOrDefault();
+                    game.RightTeam = Teams.Where(t => t.Id == gamedb.RightTeamId).FirstOrDefault();
+                    game.LeftTeamScore = gamedb.LeftTeamScore;
+                    game.RightTeamScore = gamedb.RightTeamScore;
+                    game.LeftWins = gamedb.LeftWins;
+                    game.HasWinner = gamedb.HasWinner;
+                    if (game.HasWinner)
+                    {
+                        if (game.LeftWins) game.Winner = game.LeftTeam.NameDisplay;
+                        else game.Winner = game.RightTeam.NameDisplay;
+                    }
+                    Games.Add(game);
+                }
+
             }
             catch (Exception ex)
             {

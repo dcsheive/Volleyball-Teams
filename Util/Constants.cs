@@ -53,9 +53,11 @@ namespace Volleyball_Teams.Util
 
         public class Loading
         {
-            public const string SelectTeam = "Replaying...";
-            public const string LoadingTeams = "Loading History...";
+            public const string SelectGame = "Replaying...";
+            public const string LoadingHistory = "Loading History...";
+            public const string LoadingTeams = "Loading Teams...";
             public const string DeleteGame = "Deleting...";
+            public const string GameOver = "Game Over.";
             public const string GameMessage = "No teams are selected.\nSelect teams or \nreplay a game from history.";
         }
 

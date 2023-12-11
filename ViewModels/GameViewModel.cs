@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
@@ -15,6 +17,7 @@ namespace Volleyball_Teams.ViewModels
         ILogger<GameViewModel> logger;
         readonly IPlayerStore playerStore;
         readonly ITeamStore teamStore;
+        readonly IGameStore gameStore;
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
@@ -45,13 +48,17 @@ namespace Volleyball_Teams.ViewModels
         private bool isLoading;
 
         [ObservableProperty]
-        private string loadText = Constants.Loading.LoadingTeams;
+        private bool showLoader;
+
+        [ObservableProperty]
+        private string loadText = Constants.Loading.GameMessage;
 
         private bool IsGameOver;
-        public GameViewModel(IPlayerStore playerStore, ITeamStore teamStore, ILogger<GameViewModel> logger, IGlobalVariables globalVariables)
+        public GameViewModel(IPlayerStore playerStore, ITeamStore teamStore, IGameStore gameStore, ILogger<GameViewModel> logger, IGlobalVariables globalVariables)
         {
             this.playerStore = playerStore;
             this.teamStore = teamStore;
+            this.gameStore = gameStore;
             this.logger = logger;
             this.globalVariables = globalVariables;
             IsBusy = false;
@@ -63,15 +70,38 @@ namespace Volleyball_Teams.ViewModels
 
         public void OnAppearing()
         {
-            IsLoading = false;
-            DidNotFinishLoading = true;
             UseRank = Settings.UseRank;
+            if (IsGameOver)
+            {
+                if (!globalVariables.NewGame)
+                {
+                    return;
+                }
+                else
+                {
+                    IsLoading = false;
+                    LoadGame();
+                }
+            }
+            else
+            {
+                IsLoading = false;
+                LoadGame();
+            }
+        }
+
+        private void LoadGame()
+        {
+            globalVariables.NewGame = false;
             LeftTeam = globalVariables.LeftTeam;
             RightTeam = globalVariables.RightTeam;
+            LeftScore = globalVariables.LeftScore;
+            RightScore = globalVariables.RightScore;
             IsGameOver = false;
             if (LeftTeam == null || RightTeam == null)
             {
                 IsLoading = true;
+                ShowLoader = false;
                 LoadText = Constants.Loading.GameMessage;
             }
             else
@@ -136,6 +166,8 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task OpenHistory(object obj)
         {
+            LoadText = Constants.Loading.LoadingHistory;
+            ShowLoader = true;
             IsLoading = true;
             await Shell.Current.GoToAsync($"{nameof(HistoryPage)}");
             IsLoading = false;
@@ -155,9 +187,71 @@ namespace Volleyball_Teams.ViewModels
             return result;
         }
 
-        private async Task EndGame(bool leftWins)
+        [RelayCommand]
+        private async Task SaveGame()
         {
-            
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Save this game for later?", "OK", "Cancel");
+            if (result)
+            {
+                await EndGame(false, false);
+            }
+
+        }
+
+        [RelayCommand]
+        private async Task Reset()
+        {
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Reset this game?", "OK", "Cancel");
+            if (result)
+            {
+                IsLoading = false;
+                IsGameOver = false;
+                LeftScore = 0;
+                RightScore = 0;
+            }
+        }
+
+        private TeamDB MakeTeamDB(Team team)
+        {
+            TeamDB db = new TeamDB();
+            db.Name = team.Name;
+            db.NumWins = team.NumWins;
+            db.NumLosses = team.NumLosses;
+            db.Power = team.Power;
+            StringBuilder idstr = new StringBuilder();
+            foreach (Player player in team)
+            {
+                idstr.Append(player.Id + ",");
+            }
+            db.PlayerIdStr = idstr.ToString().Substring(0, idstr.Length - 1);
+            return db;
+        }
+
+        private async Task EndGame(bool leftWins, bool hasWinner = true)
+        {
+            IsGameOver = true;
+            await EnterGameIntoDB(leftWins, hasWinner);
+            string loadstr = Constants.Loading.GameOver;
+            if (hasWinner)
+            {
+                if (leftWins) loadstr += "\n" + LeftTeam.NameDisplay + " Wins!";
+                else loadstr += "\n" + RightTeam.NameDisplay + " Wins!";
+            }
+            LoadText = loadstr;
+            ShowLoader = false;
+            IsLoading = true;
+        }
+
+        private async Task EnterGameIntoDB(bool leftWins, bool hasWinner)
+        {
+            GameDB g = new GameDB();
+            g.LeftTeamId = LeftTeam.Id;
+            g.RightTeamId = RightTeam.Id;
+            g.LeftTeamScore = LeftScore;
+            g.RightTeamScore = RightScore;
+            g.HasWinner = hasWinner;
+            g.LeftWins = leftWins;
+            await gameStore.AddGameAsync(g);
         }
     }
 }

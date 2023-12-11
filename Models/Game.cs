@@ -9,8 +9,12 @@ namespace Volleyball_Teams.Models
     public class Game: List<Team>
     {
         public int Id { get; set; }
-        public int Winner { get; set; }
-        public int Team1Score { get; set; }
-        public int Team2Score { get; set; }
+        public bool LeftWins { get; set; }
+        public bool HasWinner { get; set; }
+        public string Winner { get; set; } = "";
+        public Team LeftTeam { get; set; }
+        public Team RightTeam { get; set; }
+        public int LeftTeamScore { get; set; }
+        public int RightTeamScore { get; set; }
     }
 }

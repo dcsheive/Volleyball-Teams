@@ -16,11 +16,22 @@
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem
+            Command="{Binding ResetCommand}"
+            IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                        Color=White,
+                                        Glyph={x:Static style:FontAwesomeSolid.Reply}}"
+            Text="Reset" />
+        <ToolbarItem
+            Command="{Binding SaveGameCommand}"
+            IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
+                                        Color=White,
+                                        Glyph={x:Static style:FontAwesomeSolid.Save}}"
+            Text="Save" />
+        <ToolbarItem
             Command="{Binding OpenHistoryCommand}"
             IconImageSource="{FontImage FontFamily=FontAwesomeSolid,
                                         Color=White,
                                         Glyph={x:Static style:FontAwesomeSolid.List}}"
-            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
             Text="History" />
     </ContentPage.ToolbarItems>
     <AbsoluteLayout>
@@ -173,26 +184,11 @@
                 </Border>
             </StackLayout>
         </Grid>
-        <ContentView
+        <template:LoadingControl
             AbsoluteLayout.LayoutBounds="0,0,1,1"
             AbsoluteLayout.LayoutFlags="All"
-            BackgroundColor="#333"
-            IsVisible="{Binding IsLoading}"
-            Opacity="0.5" />
-        <StackLayout
-            AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
-            AbsoluteLayout.LayoutFlags="PositionProportional"
-            IsVisible="{Binding IsLoading}">
-            <Label
-                x:Name="myLabel"
-                FontSize="Large"
-                HorizontalOptions="CenterAndExpand"
-                HorizontalTextAlignment="Center"
-                IsVisible="{Binding IsLoading}"
-                LineBreakMode="WordWrap"
-                Text="{Binding LoadText}"
-                TextColor="White"
-                VerticalOptions="CenterAndExpand" />
-        </StackLayout>
+            IsLoading="{Binding IsLoading}"
+            LoadText="{Binding LoadText}"
+            ShowLoader="{Binding ShowLoader}" />
     </AbsoluteLayout>
 </ContentPage>

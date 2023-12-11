@@ -177,6 +177,7 @@
             </Switch>
         </FlexLayout>
         <Button Command="{Binding ZeroScoresCommand}" Text="RESET SCORES" />
+        <Button Command="{Binding ClearHistoryCommand}" Text="CLEAR GAME HISTORY" />
         <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL RECORDS" />
     </VerticalStackLayout>
 </ContentPage>

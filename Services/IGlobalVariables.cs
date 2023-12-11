@@ -11,5 +11,8 @@ namespace Volleyball_Teams.Services
     {
         Team LeftTeam { get; set; }
         Team RightTeam { get; set; }
+        int LeftScore { get; set; }
+        int RightScore { get; set; }
+        bool NewGame { get; set; }
     }
 }

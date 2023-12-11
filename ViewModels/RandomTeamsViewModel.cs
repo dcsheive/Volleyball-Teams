@@ -225,6 +225,9 @@ namespace Volleyball_Teams.ViewModels
             {
                 globalVariables.LeftTeam = LeftTeam;
                 globalVariables.RightTeam = RightTeam;
+                globalVariables.LeftScore = 0;
+                globalVariables.RightScore = 0;
+                globalVariables.NewGame = true;
                 await Shell.Current.GoToAsync($"///{nameof(GamePage)}");
             }
         }

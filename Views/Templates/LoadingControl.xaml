@@ -14,7 +14,10 @@
             BackgroundColor="#333"
             Opacity="0.5" />
         <StackLayout AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1" AbsoluteLayout.LayoutFlags="PositionProportional">
-            <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}" />
+            <ActivityIndicator
+                x:Name="myLoader"
+                IsRunning="True"
+                Color="{StaticResource Primary}" />
             <Label
                 x:Name="myLabel"
                 FontSize="20"

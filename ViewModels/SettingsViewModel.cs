@@ -113,6 +113,16 @@ namespace Volleyball_Teams.ViewModels
         }
 
         [RelayCommand]
+        private async Task ClearHistory()
+        {
+            bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete the game history?", "Yes", "No");
+            if (result)
+            {
+                await gameStore.DeleteAllGamesAsync();
+            }
+        }
+
+        [RelayCommand]
         private async Task ZeroScores()
         {
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to reset all scores?", "Yes", "No");

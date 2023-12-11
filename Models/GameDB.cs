@@ -12,11 +12,12 @@ namespace Volleyball_Teams.Models
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        public int Team1 { get; set; }
-        public int Team2 { get; set; }
-        public int Winner { get; set; }
-        public int Team1Score { get; set; }
-        public int Team2Score { get; set; }
+        public int LeftTeamId { get; set; }
+        public int RightTeamId { get; set; }
+        public bool LeftWins { get; set; }
+        public bool HasWinner { get; set; }
+        public int LeftTeamScore { get; set; }
+        public int RightTeamScore { get; set; }
 
     }
 }
