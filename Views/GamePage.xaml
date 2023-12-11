@@ -83,7 +83,7 @@
                     FontSize="Large"
                     HorizontalTextAlignment="Center"
                     MaxLines="1"
-                    Text="{Binding LeftTeam.Name}" />
+                    Text="{Binding LeftTeam.NameDisplay}" />
                 <Border
                     Margin="5,0,0,0"
                     Padding="5"
@@ -162,7 +162,7 @@
                     FontSize="Large"
                     HorizontalTextAlignment="Center"
                     MaxLines="1"
-                    Text="{Binding RightTeam.Name}" />
+                    Text="{Binding RightTeam.NameDisplay}" />
                 <Border
                     Margin="0,0,5,0"
                     Padding="5"
