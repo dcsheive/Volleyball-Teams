@@ -43,6 +43,12 @@ namespace Volleyball_Teams.ViewModels
         [ObservableProperty]
         private int power;
 
+        [ObservableProperty]
+        private bool isBusy;
+
+        [ObservableProperty]
+        private string sortText;
+
         private int TeamCount;
         private TeamDB MyTeamDB = new TeamDB();
         public NewTeamViewModel(ITeamStore teamStore, IPlayerStore playerStore, ILogger<NewTeamViewModel> logger)
@@ -50,6 +56,7 @@ namespace Volleyball_Teams.ViewModels
             this.teamStore = teamStore;
             this.playerStore = playerStore;
             this.logger = logger;
+            SortText = Settings.NewTeamSortBy;
             Title = Constants.Title.NewTeam;
         }
         async public void OnAppearing()
@@ -123,12 +130,16 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand(CanExecute = nameof(ValidateSave))]
         private async Task Save()
         {
+            List<Player> list = Players.Where(p => p.IsChecked).ToList();
+            if (list.Count == 0) {
+                await Application.Current.MainPage.DisplayAlert("Failed", "You must add one or more players to the team.", "OK");
+                return;
+            }
             logger.LogDebug("Save: Name: {name}", Name);
             MyTeamDB.Name = Name;
             MyTeamDB.NumWins = Wins;
             MyTeamDB.NumLosses = Losses;
             MyTeamDB.Power = Power;
-            List<Player> list = Players.Where(p => p.IsChecked).ToList();
             StringBuilder idstr = new StringBuilder();
             foreach (Player player in list)
             {
@@ -149,9 +160,88 @@ namespace Volleyball_Teams.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
+        [RelayCommand]
+        private void Sort()
+        {
+            Task.Run(() => DoSort());
+        }
+        private void DoSort()
+        {
+            if (IsBusy) return;
+            IsBusy = true;
+            logger.LogDebug($"IsBusy = {IsBusy}");
+            try
+            {
+                if (SortText == Constants.Settings.SortByName)
+                {
+                    SortText = Constants.Settings.SortByRank;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByRank();
+                    Settings.NewTeamSortBy = Constants.Settings.SortByRank;
+                }
+                else if (SortText == Constants.Settings.SortByRank)
+                {
+                    SortText = Constants.Settings.SortByWins;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByWins();
+                    Settings.NewTeamSortBy = Constants.Settings.SortByWins;
+                }
+                else if (SortText == Constants.Settings.SortByWins)
+                {
+                    SortText = Constants.Settings.SortByRatio;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByRatio();
+                    Settings.NewTeamSortBy = Constants.Settings.SortByRatio;
+                }
+                else if (SortText == Constants.Settings.SortByRatio)
+                {
+                    SortText = Constants.Settings.SortByLoss;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByLosses();
+                    Settings.NewTeamSortBy = Constants.Settings.SortByLoss;
+                }
+                else
+                {
+                    SortText = Constants.Settings.SortByName;
+                    logger.LogDebug($"Sort = {SortText}");
+                    SortByName();
+                    Settings.NewTeamSortBy = Constants.Settings.SortByName;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("{ex}", ex);
+            }
+            finally
+            {
+                IsBusy = false;
+                logger.LogDebug($"IsBusy = {IsBusy}");
+            }
+        }
+
+        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
+
+        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
+
+        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
+
+        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
+        {
+            if (p.NumLosses == 0) return p.NumWins;
+            else if (p.NumWins == 0) return -1 * p.NumLosses;
+            else return p.NumWins / p.NumLosses;
+        }));
+
+        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
+
         private async Task LoadPlayers()
         {
             Players = new ObservableCollection<Player>(await playerStore.GetPlayersAsync());
+            if (SortText == Constants.Settings.SortByName) { SortByName(); }
+            else if (SortText == Constants.Settings.SortByRank) { SortByRank(); }
+            else if (SortText == Constants.Settings.SortByWins) { SortByWins(); }
+            else if (SortText == Constants.Settings.SortByRatio) { SortByRatio(); }
+            else { SortByLosses(); }
         }
 
         private async Task<bool> CheckDB()

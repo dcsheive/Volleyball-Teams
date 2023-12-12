@@ -119,26 +119,25 @@
                     </ImageButton>
                 </StackLayout>
             </FlexLayout>
-            <StackLayout VerticalOptions="End">
-                <StackLayout
-                    Margin="0,10"
-                    Orientation="Horizontal"
-                    Spacing="10">
-                    <Button
-                        Command="{Binding CancelCommand}"
-                        HorizontalOptions="FillAndExpand"
-                        Text="Cancel" />
-                    <Button
-                        Clicked="Page_Unloaded"
-                        Command="{Binding SaveCommand}"
-                        HorizontalOptions="FillAndExpand"
-                        Text="Save" />
-                </StackLayout>
+            <StackLayout
+                Margin="0,10"
+                Orientation="Horizontal"
+                Spacing="10"
+                VerticalOptions="End">
+                <Button
+                    Command="{Binding CancelCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Cancel" />
                 <Button
                     Command="{Binding DeleteCommand}"
                     HorizontalOptions="FillAndExpand"
                     IsVisible="{Binding ShowDelete}"
                     Text="Delete" />
+                <Button
+                    Clicked="Page_Unloaded"
+                    Command="{Binding SaveCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Save" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -90,7 +90,7 @@ namespace Volleyball_Teams.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            logger.LogDebug($"IsBusy={IsBusy}");
+            logger.LogDebug($"IsBusy = {IsBusy}");
             try
             {
                 if (SortText == Constants.Settings.SortByName)
