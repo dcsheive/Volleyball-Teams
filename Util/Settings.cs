@@ -11,6 +11,7 @@ namespace Volleyball_Teams.Util
         const bool useScore = false;
         const string sortBy = Constants.Settings.SortByName;
         const string teamsSortBy = Constants.Settings.SortByName;
+        const string newTeamSortBy = Constants.Settings.SortByName;
         const int numTeams = 2;
 
         public static int Theme
@@ -41,6 +42,11 @@ namespace Volleyball_Teams.Util
         {
             get => Preferences.Get(nameof(TeamsSortBy), teamsSortBy);
             set => Preferences.Set(nameof(TeamsSortBy), value);
+        }
+        public static string NewTeamSortBy
+        {
+            get => Preferences.Get(nameof(NewTeamSortBy), newTeamSortBy);
+            set => Preferences.Set(nameof(NewTeamSortBy), value);
         }
 
         public static int NumTeams

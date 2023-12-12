@@ -25,7 +25,11 @@
             Text="Add" />
     </ContentPage.ToolbarItems>
     <Grid RowDefinitions="*,13*">
-        <Grid Grid.Row="0" Margin="10,0">
+        <Grid
+            Grid.Row="0"
+            Padding="10,0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource LightGray},
+                                              Dark={StaticResource DarkerGray}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
