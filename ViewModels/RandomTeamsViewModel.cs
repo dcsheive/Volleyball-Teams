@@ -7,6 +7,7 @@ using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
 using Volleyball_Teams.Views;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -18,13 +19,13 @@ namespace Volleyball_Teams.ViewModels
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
-        private ObservableCollection<Team> teams;
+        private ObservableRangeCollection<Team> teams;
 
         [ObservableProperty]
-        private ObservableCollection<Team> leftTeams;
+        private ObservableRangeCollection<Team> leftTeams;
 
         [ObservableProperty]
-        private ObservableCollection<Team> rightTeams;
+        private ObservableRangeCollection<Team> rightTeams;
 
         public bool AtLeast2Teams
         {
@@ -71,7 +72,9 @@ namespace Volleyball_Teams.ViewModels
             IsBusy = false;
             DidNotFinishLoading = true;
             Title = Constants.Title.RandomTeams;
-            Teams = new ObservableCollection<Team>();
+            Teams = new ObservableRangeCollection<Team>();
+            LeftTeams = new ObservableRangeCollection<Team>();
+            RightTeams = new ObservableRangeCollection<Team>();
             Players = new List<Player>();
             NumTeams = Settings.NumTeams;
             OnPropertyChanged(nameof(AtLeast2Teams));
@@ -97,6 +100,9 @@ namespace Volleyball_Teams.ViewModels
             NumTeams++;
             Settings.NumTeams = NumTeams;
             LoadPlayers();
+            OnPropertyChanged(nameof(Teams));
+            OnPropertyChanged(nameof(LeftTeams));
+            OnPropertyChanged(nameof(RightTeams));
         }
 
         [RelayCommand]
@@ -111,6 +117,9 @@ namespace Volleyball_Teams.ViewModels
             NumTeams--;
             Settings.NumTeams = NumTeams;
             LoadPlayers();
+            OnPropertyChanged(nameof(Teams));
+            OnPropertyChanged(nameof(LeftTeams));
+            OnPropertyChanged(nameof(RightTeams));
         }
 
         [RelayCommand]
@@ -177,7 +186,7 @@ namespace Volleyball_Teams.ViewModels
                 }
                 logger.LogDebug($"ItemDropped: [{playerToMove?.Name}] => [{playerToInsertBefore?.Name}], target index = [{insertAtIndex}]");
                 var teams = Teams.ToList();
-                Teams = new ObservableCollection<Team>(teams);
+                Teams.ReplaceRange(teams);
             }
             catch (Exception ex)
             {
@@ -203,6 +212,9 @@ namespace Volleyball_Teams.ViewModels
                 else
                     SortRandom();
                 ResetTeamOptions();
+                OnPropertyChanged(nameof(Teams));
+                OnPropertyChanged(nameof(LeftTeams));
+                OnPropertyChanged(nameof(RightTeams));
             }
             catch (Exception ex)
             {
@@ -261,24 +273,27 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
-        private async void ResetTeamOptions()
+        private void ResetTeamOptions()
         {
             OnPropertyChanged(nameof(AtLeast2Teams));
             if (NumTeams > 1)
             {
                 disableSelect = true;
-                LeftTeams = new ObservableCollection<Team>(Teams.ToList());
-                RightTeams = new ObservableCollection<Team>(Teams.ToList());
-                await Task.Delay(200);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LeftTeams.ReplaceRange(Teams.ToList());
+                    RightTeams.ReplaceRange(Teams.ToList());
+                });
                 LeftTeam = LeftTeams[0];
                 RightTeam = RightTeams[1];
+                OnPropertyChanged(nameof(LeftTeam));
+                OnPropertyChanged(nameof(RightTeam));
                 disableSelect = false;
             }
         }
 
         private Team[] MakeTeams()
         {
-            Teams.Clear();
             Constants.Shuffle(Players);
             if (NumTeams > Players.Count) NumTeams = Players.Count;
             if (NumTeams == 0 && Players.Count > 0)
@@ -306,7 +321,8 @@ namespace Volleyball_Teams.ViewModels
                 player.Team = team;
                 counter++;
             }
-            Teams = new ObservableCollection<Team>(teams);
+            MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(teams); });
+            OnPropertyChanged(nameof(Teams));
         }
 
         private void SortWithRank()
@@ -324,7 +340,11 @@ namespace Volleyball_Teams.ViewModels
                 player.Team = smallest;
                 smallest.Power += int.Parse(player.NumStars);
             }
-            Teams = new ObservableCollection<Team>(teams);
+            MainThread.BeginInvokeOnMainThread(() => { 
+                Teams.ReplaceRange(teams); 
+            });
+            OnPropertyChanged(nameof(Teams));
+
         }
     }
 }
