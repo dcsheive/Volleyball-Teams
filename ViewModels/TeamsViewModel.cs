@@ -274,13 +274,22 @@ namespace Volleyball_Teams.ViewModels
             if (NumTeams > 1)
             {
                 disableSelect = true;
-                LeftTeams.ReplaceRange(Teams.ToList());
-                RightTeams.ReplaceRange(Teams.ToList());
-                await Task.Delay(200);
-                LeftTeam = LeftTeams[0];
-                RightTeam = RightTeams[1];
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LeftTeams.ReplaceRange(Teams.ToList());
+                    RightTeams.ReplaceRange(Teams.ToList());
+                    UpdateTeamSelection();
+                });
                 disableSelect = false;
             }
+        }
+
+        private async Task UpdateTeamSelection()
+        {
+            LeftTeam = LeftTeams[0];
+            RightTeam = RightTeams[1];
+            OnPropertyChanged(nameof(LeftTeam));
+            OnPropertyChanged(nameof(RightTeam));
         }
 
         private void SortByName() => MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(Teams.ToList().OrderBy(p => p.Name)); });

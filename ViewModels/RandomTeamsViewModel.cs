@@ -283,13 +283,18 @@ namespace Volleyball_Teams.ViewModels
                 {
                     LeftTeams.ReplaceRange(Teams.ToList());
                     RightTeams.ReplaceRange(Teams.ToList());
+                    UpdateTeamSelection();
                 });
-                LeftTeam = LeftTeams[0];
-                RightTeam = RightTeams[1];
-                OnPropertyChanged(nameof(LeftTeam));
-                OnPropertyChanged(nameof(RightTeam));
                 disableSelect = false;
             }
+        }
+
+        private async Task UpdateTeamSelection()
+        {
+            LeftTeam = LeftTeams[0];
+            RightTeam = RightTeams[1];
+            OnPropertyChanged(nameof(LeftTeam));
+            OnPropertyChanged(nameof(RightTeam));
         }
 
         private Team[] MakeTeams()
