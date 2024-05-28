@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Sentry;
 using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
 using Volleyball_Teams.Views;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Constants = Volleyball_Teams.Util.Constants;
 
 namespace Volleyball_Teams.ViewModels
@@ -19,13 +19,13 @@ namespace Volleyball_Teams.ViewModels
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
-        private ObservableCollection<Team> teams;
+        private ObservableRangeCollection<Team> teams;
 
         [ObservableProperty]
-        private ObservableCollection<Team> leftTeams;
+        private ObservableRangeCollection<Team> leftTeams;
 
         [ObservableProperty]
-        private ObservableCollection<Team> rightTeams;
+        private ObservableRangeCollection<Team> rightTeams;
 
         public bool AtLeast2Teams
         {
@@ -76,7 +76,9 @@ namespace Volleyball_Teams.ViewModels
             IsBusy = false;
             DidNotFinishLoading = true;
             Players = new List<Player>();
-            Teams = new ObservableCollection<Team>();
+            Teams = new ObservableRangeCollection<Team>();
+            LeftTeams = new ObservableRangeCollection<Team>();
+            RightTeams = new ObservableRangeCollection<Team>();
             SortText = Settings.TeamsSortBy;
             if (string.IsNullOrEmpty(SortText))
             {
@@ -219,12 +221,11 @@ namespace Volleyball_Teams.ViewModels
         {
             if (IsBusy) return;
             IsBusy = true;
-            Teams.Clear();
             logger.LogDebug($"IsBusy = {IsBusy}");
             logger.LogDebug($"Run DoLoadTeams");
+            List<Team> newTeams = new();
             try
             {
-                Players.Clear();
                 Players = await playerStore.GetPlayersAsync();
                 var teamdbs = await teamStore.GetTeamsAsync();
                 int count = 0;
@@ -244,8 +245,9 @@ namespace Volleyball_Teams.ViewModels
                     team.Name = teamdb.Name;
                     team.Power = teamdb.Power;
                     team.Id = teamdb.Id;
-                    Teams.Add(team);
+                    newTeams.Add(team);
                 }
+                await MainThread.InvokeOnMainThreadAsync(() => { Teams.ReplaceRange(newTeams); });
                 logger.LogDebug($"Sort = {SortText}");
                 if (SortText == Constants.Settings.SortByName) { SortByName(); }
                 else if (SortText == Constants.Settings.SortByPower) { SortByPower(); }
@@ -272,26 +274,37 @@ namespace Volleyball_Teams.ViewModels
             if (NumTeams > 1)
             {
                 disableSelect = true;
-                LeftTeams = new ObservableCollection<Team>(Teams.ToList());
-                RightTeams = new ObservableCollection<Team>(Teams.ToList());
-                await Task.Delay(200);
-                LeftTeam = LeftTeams[0];
-                RightTeam = RightTeams[1];
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LeftTeams.ReplaceRange(Teams.ToList());
+                    RightTeams.ReplaceRange(Teams.ToList());
+                    UpdateTeamSelection();
+                });
                 disableSelect = false;
             }
         }
 
-        private void SortByName() => Teams = new ObservableCollection<Team>(Teams.ToList().OrderBy(p => p.Name));
-        private void SortByWins() => Teams = new ObservableCollection<Team>(Teams.ToList().OrderByDescending(p => p.NumWins));
-
-        private void SortByRatio() => Teams = new ObservableCollection<Team>(Teams.ToList().OrderByDescending(p =>
+        private async Task UpdateTeamSelection()
         {
-            if (p.NumLosses == 0) return p.NumWins;
-            else if (p.NumWins == 0) return -1 * p.NumLosses;
-            else return p.NumWins / p.NumLosses;
-        }));
+            LeftTeam = LeftTeams[0];
+            RightTeam = RightTeams[1];
+            OnPropertyChanged(nameof(LeftTeam));
+            OnPropertyChanged(nameof(RightTeam));
+        }
 
-        private void SortByLosses() => Teams = new ObservableCollection<Team>(Teams.ToList().OrderByDescending(p => p.NumLosses));
-        private void SortByPower() => Teams = new ObservableCollection<Team>(Teams.ToList().OrderByDescending(p => p.Power));
+        private void SortByName() => MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(Teams.ToList().OrderBy(p => p.Name)); });
+        private void SortByWins() => MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(Teams.ToList().OrderByDescending(p => p.NumWins)); });
+        private void SortByRatio() => MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Teams.ReplaceRange(Teams.ToList().OrderByDescending(p =>
+            {
+                if (p.NumLosses == 0) return p.NumWins;
+                else if (p.NumWins == 0) return -1 * p.NumLosses;
+                else return p.NumWins / p.NumLosses;
+            }));
+        });
+
+        private void SortByLosses() => MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(Teams.ToList().OrderByDescending(p => p.NumLosses)); });
+        private void SortByPower() => MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(Teams.ToList().OrderByDescending(p => p.Power)); });
     }
 }

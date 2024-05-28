@@ -6,6 +6,7 @@ using System.Text;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -19,7 +20,7 @@ namespace Volleyball_Teams.ViewModels
         readonly IPlayerStore playerStore;
 
         [ObservableProperty]
-        private ObservableCollection<Player> players;
+        private ObservableRangeCollection<Player> players;
 
         [ObservableProperty]
         private string selectedStar;
@@ -56,6 +57,7 @@ namespace Volleyball_Teams.ViewModels
             this.teamStore = teamStore;
             this.playerStore = playerStore;
             this.logger = logger;
+            Players = new();
             SortText = Settings.NewTeamSortBy;
             Title = Constants.Title.NewTeam;
         }
@@ -81,7 +83,7 @@ namespace Volleyball_Teams.ViewModels
         private void CalcPower()
         {
             int pow = 0;
-            foreach( Player p in Players)
+            foreach (Player p in Players)
             {
                 if (p.IsChecked) pow += int.Parse(p.NumStars);
             }
@@ -131,7 +133,8 @@ namespace Volleyball_Teams.ViewModels
         private async Task Save()
         {
             List<Player> list = Players.Where(p => p.IsChecked).ToList();
-            if (list.Count == 0) {
+            if (list.Count == 0)
+            {
                 await Application.Current.MainPage.DisplayAlert("Failed", "You must add one or more players to the team.", "OK");
                 return;
             }
@@ -219,24 +222,27 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
-        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
+        private void SortByName() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderBy(p => p.Name)); });
 
-        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
+        private void SortByRank() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumStarsDisplay)); });
 
-        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
+        private void SortByWins() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumWins)); });
 
-        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
+        private void SortByRatio() => MainThread.BeginInvokeOnMainThread(() =>
         {
-            if (p.NumLosses == 0) return p.NumWins;
-            else if (p.NumWins == 0) return -1 * p.NumLosses;
-            else return p.NumWins / p.NumLosses;
-        }));
+            Players.ReplaceRange(Players.ToList().OrderByDescending(p =>
+            {
+                if (p.NumLosses == 0) return p.NumWins;
+                else if (p.NumWins == 0) return -1 * p.NumLosses;
+                else return p.NumWins / p.NumLosses;
+            }));
+        });
 
-        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
+        private void SortByLosses() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumLosses)); });
 
         private async Task LoadPlayers()
         {
-            Players = new ObservableCollection<Player>(await playerStore.GetPlayersAsync());
+            Players.ReplaceRange(await playerStore.GetPlayersAsync());
             if (SortText == Constants.Settings.SortByName) { SortByName(); }
             else if (SortText == Constants.Settings.SortByRank) { SortByRank(); }
             else if (SortText == Constants.Settings.SortByWins) { SortByWins(); }
@@ -260,7 +266,7 @@ namespace Volleyball_Teams.ViewModels
 
         private async Task GetTeam()
         {
-            TeamDB teamdb = await teamStore.GetTeamAsync(int.Parse(ID));            
+            TeamDB teamdb = await teamStore.GetTeamAsync(int.Parse(ID));
             string[] playerids = teamdb.PlayerIdStr.Split(",");
             foreach (string playerid in playerids)
             {

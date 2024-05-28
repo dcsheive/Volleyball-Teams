@@ -21,6 +21,9 @@ namespace Volleyball_Teams.ViewModels
         private bool useRank;
 
         [ObservableProperty]
+        private int targetWinScore;
+
+        [ObservableProperty]
         private bool useScore;
 
         [ObservableProperty]
@@ -44,6 +47,7 @@ namespace Volleyball_Teams.ViewModels
         {
             UseRank = Settings.UseRank;
             UseScore = Settings.UseScore;
+            TargetWinScore = Settings.WinningScore;
             switch (Settings.Theme)
             {
                 case 0:
@@ -82,6 +86,21 @@ namespace Volleyball_Teams.ViewModels
                     break;
             }
             TheTheme.SetTheme();
+        }
+
+        [RelayCommand]
+        private void AddWinScore()
+        {
+            TargetWinScore++;
+            Settings.WinningScore = TargetWinScore;
+        }
+
+        [RelayCommand]
+        private void MinusWinScore()
+        {
+            if (TargetWinScore <=2) { return; }
+            TargetWinScore--;
+            Settings.WinningScore = TargetWinScore;
         }
 
         [RelayCommand]

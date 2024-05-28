@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace Volleyball_Teams.ViewModels
 {
@@ -18,7 +19,7 @@ namespace Volleyball_Teams.ViewModels
         readonly IGlobalVariables globalVariables;
 
         [ObservableProperty]
-        private ObservableCollection<Game> games;
+        private ObservableRangeCollection<Game> games;
 
         [ObservableProperty]
         private string? title;
@@ -53,7 +54,7 @@ namespace Volleyball_Teams.ViewModels
             DidNotFinishLoading = true;
             Players = new List<Player>();
             Teams = new List<Team>();
-            Games = new ObservableCollection<Game>();
+            Games = new ObservableRangeCollection<Game>();
         }
 
         public void OnAppearing()
@@ -115,9 +116,7 @@ namespace Volleyball_Teams.ViewModels
             logger.LogDebug($"IsBusy = {IsBusy}");
             try
             {
-                Players.Clear();
                 Teams.Clear();
-                Games.Clear();
                 Players = await playerStore.GetPlayersAsync();
                 List<TeamDB> teamdbs = await teamStore.GetTeamsAsync();
                 int count = 0;
@@ -140,6 +139,7 @@ namespace Volleyball_Teams.ViewModels
                 }
                 List<GameDB> gamedbs = await gameStore.GetGamesAsync();
                 gamedbs.Reverse();
+                List<Game> newGames = new();
                 foreach (var gamedb in gamedbs)
                 {
                     Game game = new Game();
@@ -155,8 +155,9 @@ namespace Volleyball_Teams.ViewModels
                         if (game.LeftWins) game.Winner = game.LeftTeam.NameDisplay;
                         else game.Winner = game.RightTeam.NameDisplay;
                     }
-                    Games.Add(game);
+                    newGames.Add(game);
                 }
+                Games.ReplaceRange(newGames);
 
             }
             catch (Exception ex)

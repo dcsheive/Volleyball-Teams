@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
-using Sentry;
 using System.Collections.ObjectModel;
 using Volleyball_Teams.Models;
 using Volleyball_Teams.Services;
 using Volleyball_Teams.Util;
 using Volleyball_Teams.Views;
+using Xamarin.CommunityToolkit.ObjectModel;
 using Constants = Volleyball_Teams.Util.Constants;
 
 namespace Volleyball_Teams.ViewModels
@@ -19,7 +19,7 @@ namespace Volleyball_Teams.ViewModels
         readonly ITeamStore teamStore;
 
         [ObservableProperty]
-        private ObservableCollection<Player> players;
+        private ObservableRangeCollection<Player> players;
 
         [ObservableProperty]
         private string? title;
@@ -59,7 +59,7 @@ namespace Volleyball_Teams.ViewModels
             IsAllHere = true;
             DoNotRunHere = false;
             DidNotFinishLoading = true;
-            Players = new ObservableCollection<Player>();
+            Players = new ObservableRangeCollection<Player>();
             HereText = Constants.Settings.AllHere;
             SortText = Settings.SortBy;
             if (string.IsNullOrEmpty(SortText))
@@ -183,14 +183,9 @@ namespace Volleyball_Teams.ViewModels
             logger.LogDebug($"Run DoLoadPlayers");
             try
             {
-                Players.Clear();
                 HereCount = 0;
                 var players = await playerStore.GetPlayersAsync();
-                foreach (var player in players)
-                {
-                    Players.Add(player);
-                    logger.LogDebug($"{player.Name}, {player.IsHere}");
-                }
+                MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(players); });
                 UpdateHereCount();
                 logger.LogDebug($"Sort = {SortText}");
                 if (SortText == Constants.Settings.SortByName) { SortByName(); }
@@ -250,20 +245,26 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
-        private void SortByName() => Players = new ObservableCollection<Player>(Players.ToList().OrderBy(p => p.Name));
+        private void SortByName() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderBy(p => p.Name)); });
 
-        private void SortByRank() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumStarsDisplay));
+        private void SortByRank() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumStarsDisplay)); });
 
-        private void SortByWins() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumWins));
+        private void SortByWins() => MainThread.BeginInvokeOnMainThread(() => { Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumWins)); });
 
-        private void SortByRatio() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p =>
+        private void SortByRatio() => MainThread.BeginInvokeOnMainThread(() =>
         {
-            if (p.NumLosses == 0) return p.NumWins;
-            else if (p.NumWins == 0) return -1 * p.NumLosses;
-            else return p.NumWins / p.NumLosses;
-        }));
+            Players.ReplaceRange(Players.ToList().OrderByDescending(p =>
+            {
+                if (p.NumLosses == 0) return p.NumWins;
+                else if (p.NumWins == 0) return -1 * p.NumLosses;
+                else return p.NumWins / p.NumLosses;
+            }));
+        });
 
-        private void SortByLosses() => Players = new ObservableCollection<Player>(Players.ToList().OrderByDescending(p => p.NumLosses));
+        private void SortByLosses() => MainThread.BeginInvokeOnMainThread(() =>
+        {
+            Players.ReplaceRange(Players.ToList().OrderByDescending(p => p.NumLosses));
+        });
 
         void UpdateHereCount()
         {

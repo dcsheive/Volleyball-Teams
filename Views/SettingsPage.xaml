@@ -176,6 +176,38 @@
                 </Switch.Behaviors>
             </Switch>
         </FlexLayout>
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween">
+            <Label
+                FontSize="Medium"
+                Text="Win Score"
+                VerticalTextAlignment="Center" />
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <ImageButton Command="{Binding MinusWinScoreCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.MinusCircle}"
+                            Size="30"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
+                <Label
+                    FontSize="Medium"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding TargetWinScore}"
+                    WidthRequest="50" />
+                <ImageButton Command="{Binding AddWinScoreCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource
+                            FontFamily="FontAwesomeSolid"
+                            Glyph="{x:Static style:FontAwesomeSolid.PlusCircle}"
+                            Size="30"
+                            Color="{StaticResource Primary}" />
+                    </ImageButton.Source>
+                </ImageButton>
+            </StackLayout>
+        </FlexLayout>
+
         <Button Command="{Binding ZeroScoresCommand}" Text="RESET SCORES" />
         <Button Command="{Binding ClearHistoryCommand}" Text="CLEAR GAME HISTORY" />
         <Button Command="{Binding DeleteAllCommand}" Text="DELETE ALL RECORDS" />
