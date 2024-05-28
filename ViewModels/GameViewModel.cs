@@ -94,6 +94,12 @@ namespace Volleyball_Teams.ViewModels
             }
         }
 
+        public void OnDisappearing()
+        {
+            globalVariables.LeftScore = LeftScore;
+            globalVariables.RightScore = RightScore;
+        }
+
         private void LoadGame()
         {
             globalVariables.NewGame = false;
@@ -128,7 +134,7 @@ namespace Volleyball_Teams.ViewModels
         private async Task AddLeftScore()
         {
             if (IsGameOver) return;
-            if (LeftScore == 20)
+            if (LeftScore == Settings.WinningScore - 1)
             {
                 bool confirmed = await ConfirmWin(true);
                 if (confirmed)
@@ -153,7 +159,7 @@ namespace Volleyball_Teams.ViewModels
         private async Task AddRightScore()
         {
             if (IsGameOver) return;
-            if (RightScore == 20)
+            if (RightScore == Settings.WinningScore - 1)
             {
                 bool confirmed = await ConfirmWin(false);
                 if (confirmed)

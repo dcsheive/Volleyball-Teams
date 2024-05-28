@@ -247,7 +247,7 @@ namespace Volleyball_Teams.ViewModels
                     team.Id = teamdb.Id;
                     newTeams.Add(team);
                 }
-                MainThread.BeginInvokeOnMainThread(() => { Teams.ReplaceRange(newTeams); });
+                await MainThread.InvokeOnMainThreadAsync(() => { Teams.ReplaceRange(newTeams); });
                 logger.LogDebug($"Sort = {SortText}");
                 if (SortText == Constants.Settings.SortByName) { SortByName(); }
                 else if (SortText == Constants.Settings.SortByPower) { SortByPower(); }
