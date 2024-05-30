@@ -20,13 +20,13 @@ namespace Volleyball_Teams
 			    .ConfigureMauiHandlers(handlers => handlers.AddHandler<Microsoft.Maui.Controls.Picker, Volleyball_Teams.Handlers.PickerHandler>())
 			    .ConfigureMauiHandlers(handlers => handlers.AddHandler<Microsoft.Maui.Controls.Switch, Volleyball_Teams.Handlers.SwitchHandler>())
 #endif
-                //.UseSentry(options =>
-                //{
-                //    options.Dsn = "https://6e1b57ec572513180fee1e7caf32a1f8@o4506345415245824.ingest.sentry.io/4506345416884224";
-                //    options.Debug = false;
-                //    options.TracesSampleRate = 1.0;
-                //    options.Release = AppInfo.PackageName + AppInfo.Current.VersionString;
-                //})
+                .UseSentry(options =>
+                {
+                    options.Dsn = "https://6e1b57ec572513180fee1e7caf32a1f8@o4506345415245824.ingest.sentry.io/4506345416884224";
+                    options.Debug = false;
+                    options.TracesSampleRate = 1.0;
+                    options.Release = AppInfo.PackageName + AppInfo.Current.VersionString;
+                })
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("fa-regular-400.ttf", "FontAwesomeRegular");
