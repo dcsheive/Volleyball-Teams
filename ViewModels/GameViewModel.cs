@@ -200,6 +200,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task SaveGame()
         {
+            if (LeftTeam == null || RightTeam == null) return;
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Save this game for later?", "OK", "Cancel");
             if (result)
             {
@@ -211,6 +212,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task Reset()
         {
+            if (LeftTeam == null || RightTeam == null) return;
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Reset this game?", "OK", "Cancel");
             if (result)
             {
