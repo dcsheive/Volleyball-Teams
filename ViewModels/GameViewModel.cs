@@ -200,7 +200,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task SaveGame()
         {
-            if (LeftTeam == null || RightTeam == null) return;
+            if (LeftTeam == null || RightTeam == null) { await Application.Current.MainPage.DisplayAlert("Error", $"No teams are selected!", "OK"); return; }
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Save this game for later?", "OK", "Cancel");
             if (result)
             {
@@ -212,7 +212,7 @@ namespace Volleyball_Teams.ViewModels
         [RelayCommand]
         private async Task Reset()
         {
-            if (LeftTeam == null || RightTeam == null) return;
+            if (LeftTeam == null || RightTeam == null) { await Application.Current.MainPage.DisplayAlert("Error", $"No teams are selected!", "OK"); return; }
             bool result = await Application.Current.MainPage.DisplayAlert("Confirmation", $"Reset this game?", "OK", "Cancel");
             if (result)
             {
